@@ -5,7 +5,7 @@ import { BouncingSlop } from './components/BouncingSlop';
 import { DraggablePanel } from './components/DraggablePanel';
 import { CloudShell } from './components/CloudShell';
 import { RealGrafanaPanel } from './components/RealGrafanaPanel';
-import { LifeSlop } from './components/LifeSlop/LifeSlop';
+import { LifeSlop, SLOP_THEMES } from './components/LifeSlop/LifeSlop';
 import './NerdHome.css';
 
 const ALLITERATIVE_NAMES = [
@@ -67,8 +67,8 @@ export const NerdHome: React.FC = () => {
   };
 
   const triggerLifeSlop = () => {
-    const randomThemes = ['gt.m', 'just_intonation', 'arch_btw', 'yottadb'];
-    setLifeTheme(randomThemes[Math.floor(Math.random() * randomThemes.length)]);
+    const themeKeys = Object.keys(SLOP_THEMES);
+    setLifeTheme(themeKeys[Math.floor(Math.random() * themeKeys.length)]);
     setShowLifeSlop(true);
   };
 
