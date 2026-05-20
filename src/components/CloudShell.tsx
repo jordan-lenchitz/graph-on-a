@@ -8,11 +8,12 @@ interface CloudShellProps {
   onVmStart?: () => void;
   onShowOsi?: () => void;
   onShowOpenStack?: () => void;
+  onShowHorse?: () => void;
 }
 
 type CommandHandler = (args: string[], print: (content: React.ReactNode) => void, finish: () => void) => void | Promise<void>;
 
-export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, onVmStart, onShowOsi, onShowOpenStack }) => {
+export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, onVmStart, onShowOsi, onShowOpenStack, onShowHorse }) => {
   const [history, setHistory] = useState<(React.ReactNode)[]>([
     'welcome to the jordan lenchitz cloud shell.',
     '---------------------------------------------------------------------------------',
@@ -133,6 +134,42 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       await new Promise(r => setTimeout(r, 800));
       if (onShowOpenStack) onShowOpenStack();
       print(<div className="text-green">success: openstack telemetry window spawned at (20, 450).</div>);
+      finish();
+    },
+    horse: async (_args, print, finish) => {
+      print('[horse] initializing equine categorization engine...');
+      await new Promise(r => setTimeout(r, 600));
+      if (onShowHorse) onShowHorse();
+      print(<div className="text-orange">success: equine categorization engine v2000 active. (100% urine free)</div>);
+      finish();
+    },
+    osi_panic: async (_args, print, finish) => {
+      print('[osi_panic] CRITICAL: BGP ROUTE FLAPPING DETECTED ON LAYER 3.');
+      await new Promise(r => setTimeout(r, 300));
+      print('re-calculating spanning tree... [FAILED]');
+      print('recursive loop detected in vlan 42.');
+      
+      // Trigger visual chaos
+      document.body.classList.add('panic-shake');
+      
+      const flood = [
+        'bgp_update: withdrawal 10.0.0.0/8 as_path: {666, 1337}',
+        'bgp_update: withdrawal 172.16.0.0/12 as_path: {666, 1337}',
+        'bgp_update: withdrawal 192.168.0.0/16 as_path: {666, 1337}',
+        'ospf_neighbor_change: down (dead timer expired)',
+        'isis_adj_change: down (adj filter mismatch)',
+        'icmp_redirect: source 0.0.0.0 -> target void',
+        'critical: layer 1 hyper-spectral reality de-syncing...'
+      ];
+      
+      for (const line of flood) {
+        await new Promise(r => setTimeout(r, 150));
+        print(<div className="text-red">{line}</div>);
+      }
+      
+      await new Promise(r => setTimeout(r, 1000));
+      document.body.classList.remove('panic-shake');
+      print(<div className="text-green">recovery: bgp route dampening applied. virtual dom stabilized.</div>);
       finish();
     },
     slop_hop: async (_args, print, finish) => {

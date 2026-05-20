@@ -6,6 +6,7 @@ import { DraggablePanel } from './components/DraggablePanel';
 import { CloudShell } from './components/CloudShell';
 import { RealGrafanaPanel } from './components/RealGrafanaPanel';
 import { StupidGrafanaPanel } from './components/StupidGrafanaPanel';
+import { HorseEngine } from './components/HorseEngine';
 import { LifeSlop, SLOP_THEMES } from './components/LifeSlop/LifeSlop';
 import './NerdHome.css';
 
@@ -43,6 +44,7 @@ export const NerdHome: React.FC = () => {
   const [showLifeSlop, setShowLifeSlop] = useState(false);
   const [showOsi, setShowOsi] = useState(false);
   const [showOpenStack, setShowOpenStack] = useState(false);
+  const [showHorse, setShowHorse] = useState(false);
   const [lifeTheme, setLifeTheme] = useState('gt.m');
   const [slopSpeed, setSlopSpeed] = useState(15); // Default 15s
 
@@ -114,6 +116,7 @@ export const NerdHome: React.FC = () => {
           onVmStart={handleVmStart}
           onShowOsi={() => setShowOsi(true)}
           onShowOpenStack={() => setShowOpenStack(true)}
+          onShowHorse={() => setShowHorse(true)}
         />
       )}
 
@@ -123,6 +126,11 @@ export const NerdHome: React.FC = () => {
           theme={lifeTheme} 
           onClose={() => setShowLifeSlop(false)} 
         />
+      )}
+
+      {/* Equine Categorization Engine */}
+      {showHorse && (
+        <HorseEngine onClose={() => setShowHorse(false)} />
       )}
 
       {/* Floating Action Buttons */}
