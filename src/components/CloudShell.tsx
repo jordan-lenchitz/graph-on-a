@@ -97,19 +97,19 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       print('Booting v86 x86-to-WASM JIT engine...');
       if (onVmStart) onVmStart();
       await new Promise(r => setTimeout(r, 800));
-      print('Mounting custom 1GB ext2 image from GCS CDN (gs://jordanlenchitz-xyz-assets/ydb-image.ext2) as /dev/hda...');
+      print('Provisioning ephemeral YottaDB/GT.M container...');
       await new Promise(r => setTimeout(r, 1200));
-      print(<div className="text-green">SUCCESS: YottaDB r2.06 image attached to primary drive. Entering WASM VM...</div>);
+      print(<div className="text-green">SUCCESS: Environment attached. Entering WASM VM...</div>);
       print(<WasmVM imagePath="/ydb-image.ext2" />);
       finish();
     },
     'gt.m': async (_args, print, finish) => {
-      print('Initializing FIS GT.M V7.0-002 runtime successor (YottaDB)...');
+      print('Booting v86 x86-to-WASM JIT engine...');
       if (onVmStart) onVmStart();
-      await new Promise(r => setTimeout(r, 1000));
-      print('Loading M routines into virtual memory...');
-      await new Promise(r => setTimeout(r, 500));
-      print(<div className="text-green">GT.M legacy environment attached to /dev/hda. Running in browser WASM context.</div>);
+      await new Promise(r => setTimeout(r, 800));
+      print('Provisioning ephemeral YottaDB/GT.M container...');
+      await new Promise(r => setTimeout(r, 1200));
+      print(<div className="text-green">SUCCESS: Environment attached. Entering WASM VM...</div>);
       print(<WasmVM imagePath="/ydb-image.ext2" />);
       finish();
     },

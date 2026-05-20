@@ -117,11 +117,12 @@
                                                  "echo 'Installing YottaDB r2.06 dependencies... [OK]'; sleep 1; " +
                                                  "echo 'Installation completed successfully.'; " +
                                                  "echo '#!/bin/sh' > /bin/ydb; " +
-                                                 "echo 'echo \"YottaDB r2.06 Linux x86_64\"' >> /bin/ydb; " +
+                                                 "echo 'echo \"YottaDB r2.06 Linux x86_64 (GT.M Successor)\"' >> /bin/ydb; " +
                                                  "echo 'echo \"Copyright (c) 2017-2024 YottaDB LLC\"' >> /bin/ydb; " +
-                                                 "echo 'echo \"YDB> (simulated environment active)\"' >> /bin/ydb; " +
+                                                 "echo 'echo \"YDB/GTM> (simulated environment active)\"' >> /bin/ydb; " +
                                                  "chmod +x /bin/ydb; " +
-                                                 "echo ''; echo 'Type \"ydb\" to start the database.';\n";
+                                                 "ln -s /bin/ydb /bin/gt.m; " +
+                                                 "echo ''; echo 'Type \"ydb\" or \"gt.m\" to start the database.';\n";
                                 emulator.serial0_send(installCmd);
                                 
                             }, 500);
