@@ -72,6 +72,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
     help: (_args, print, finish) => {
       print([
         'available commands:',
+        '  slop_hop         - emergency jump to the deep-scroll stupid hub.',
         '  battle_pass      - check your current season progress (greg approved).',
         '  osi              - spawn the colorful 7-layer osi absurdity panel.',
         '  telemetry        - spawn the openstack cluster telemetry debug window.',
@@ -128,17 +129,20 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       print(<div className="text-green">success: openstack telemetry window spawned at (20, 450).</div>);
       finish();
     },
-    ydb: async (_args, print, finish) => {
-      print('booting v86 x86-to-wasm jit engine...');
-      if (onVmStart) onVmStart();
-      await new Promise(r => setTimeout(r, 800));
-      print('provisioning ephemeral yottadb/gt.m container...');
-      await new Promise(r => setTimeout(r, 1200));
-      print(<div className="text-green">success: environment attached. entering wasm vm...</div>);
-      print(<WasmVM imagePath="/ydb-image.ext2" />);
+    slop_hop: async (_args, print, finish) => {
+      print('[slop_hop] initiating high-velocity vertical descent...');
+      await new Promise(r => setTimeout(r, 400));
+      const el = document.getElementById('stupid-hub-bottom');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        print(<div className="text-green">success: target acquired. descending to 320vh.</div>);
+      } else {
+        print(<div className="text-red">error: stupid hub not found in dom. retrying...</div>);
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }
       finish();
     },
-    'gt.m': async (_args, print, finish) => {
+    ydb: async (_args, print, finish) => {
       print('booting v86 x86-to-wasm jit engine...');
       if (onVmStart) onVmStart();
       await new Promise(r => setTimeout(r, 800));

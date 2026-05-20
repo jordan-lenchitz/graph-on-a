@@ -17,7 +17,7 @@ export const RealGrafanaPanel: React.FC = () => {
         style={{ padding: 0, height: '400px', width: '600px', backgroundColor: '#111217', overflow: 'hidden' }} 
       >
         <iframe 
-          src="https://grafana-absurdist-336490534272.us-central1.run.app/d/absurdist-home?orgId=1&refresh=5s&v=2" 
+          src="https://grafana-absurdist-336490534272.us-central1.run.app/d/absurdist-home?orgId=1&refresh=5s&v=3" 
           width="100%" 
           height="100%" 
           frameBorder="0"

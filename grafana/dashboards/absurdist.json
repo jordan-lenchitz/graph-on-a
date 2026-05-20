@@ -37,11 +37,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Latency v2",
+          "alias": "Latency v3",
           "stringInput": "seed_1"
         }
       ],
-      "title": "Latency v2",
+      "title": "Latency v3",
       "type": "stat"
     },
     {
@@ -80,11 +80,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Availability v2",
+          "alias": "Availability v3",
           "stringInput": "seed_2"
         }
       ],
-      "title": "Availability v2",
+      "title": "Availability v3",
       "type": "stat"
     },
     {
@@ -97,7 +97,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "Mbps",
+          "unit": "none",
           "min": 0,
           "max": 100
         },
@@ -123,11 +123,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Throughput v2",
+          "alias": "SONDHEIM DENSITY",
           "stringInput": "seed_3"
         }
       ],
-      "title": "Throughput v2",
+      "title": "SONDHEIM DENSITY",
       "type": "stat"
     },
     {
@@ -140,7 +140,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "percent",
+          "unit": "Mbps",
           "min": 0,
           "max": 100
         },
@@ -166,11 +166,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Success Rate v2",
+          "alias": "Throughput v3",
           "stringInput": "seed_4"
         }
       ],
-      "title": "Success Rate v2",
+      "title": "Throughput v3",
       "type": "stat"
     },
     {
@@ -209,11 +209,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Compute Load v2",
+          "alias": "Success Rate v3",
           "stringInput": "seed_5"
         }
       ],
-      "title": "Compute Load v2",
+      "title": "Success Rate v3",
       "type": "gauge"
     },
     {
@@ -252,11 +252,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Memory Load v2",
+          "alias": "Compute Load v3",
           "stringInput": "seed_6"
         }
       ],
-      "title": "Memory Load v2",
+      "title": "Compute Load v3",
       "type": "gauge"
     },
     {
@@ -269,7 +269,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "ms",
+          "unit": "percent",
           "min": 0,
           "max": 100
         },
@@ -295,11 +295,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "I/O Wait v2",
+          "alias": "Memory Load v3",
           "stringInput": "seed_7"
         }
       ],
-      "title": "I/O Wait v2",
+      "title": "Memory Load v3",
       "type": "gauge"
     },
     {
@@ -312,7 +312,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none",
+          "unit": "ms",
           "min": 0,
           "max": 100
         },
@@ -338,11 +338,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Sessions v2",
+          "alias": "I/O Wait v3",
           "stringInput": "seed_8"
         }
       ],
-      "title": "Sessions v2",
+      "title": "I/O Wait v3",
       "type": "gauge"
     },
     {
@@ -355,7 +355,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "percent",
+          "unit": "none",
           "min": 0,
           "max": 100
         },
@@ -387,11 +387,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Packet Loss v2",
+          "alias": "Sessions v3",
           "stringInput": "seed_9"
         }
       ],
-      "title": "Packet Loss v2",
+      "title": "Sessions v3",
       "type": "timeseries"
     },
     {
@@ -436,11 +436,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Cache Hit v2",
+          "alias": "Packet Loss v3",
           "stringInput": "seed_10"
         }
       ],
-      "title": "Cache Hit v2",
+      "title": "Packet Loss v3",
       "type": "timeseries"
     },
     {
@@ -453,7 +453,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "ms",
+          "unit": "percent",
           "min": 0,
           "max": 100
         },
@@ -485,11 +485,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Handshake v2",
+          "alias": "Cache Hit v3",
           "stringInput": "seed_11"
         }
       ],
-      "title": "Handshake v2",
+      "title": "Cache Hit v3",
       "type": "timeseries"
     },
     {
@@ -534,11 +534,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Latency v2",
+          "alias": "Handshake v3",
           "stringInput": "seed_12"
         }
       ],
-      "title": "Latency v2",
+      "title": "Handshake v3",
       "type": "timeseries"
     },
     {
@@ -551,7 +551,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "percent",
+          "unit": "ms",
           "min": 0,
           "max": 100
         },
@@ -583,11 +583,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Availability v2",
+          "alias": "Latency v3",
           "stringInput": "seed_13"
         }
       ],
-      "title": "Availability v2",
+      "title": "Latency v3",
       "type": "timeseries"
     },
     {
@@ -600,7 +600,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "Mbps",
+          "unit": "percent",
           "min": 0,
           "max": 100
         },
@@ -632,11 +632,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Throughput v2",
+          "alias": "Availability v3",
           "stringInput": "seed_14"
         }
       ],
-      "title": "Throughput v2",
+      "title": "Availability v3",
       "type": "timeseries"
     },
     {
@@ -649,7 +649,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "percent",
+          "unit": "none",
           "min": 0,
           "max": 100
         },
@@ -681,11 +681,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Success Rate v2",
+          "alias": "SONDHEIM DENSITY",
           "stringInput": "seed_15"
         }
       ],
-      "title": "Success Rate v2",
+      "title": "SONDHEIM DENSITY",
       "type": "timeseries"
     },
     {
@@ -698,7 +698,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "percent",
+          "unit": "Mbps",
           "min": 0,
           "max": 100
         },
@@ -730,11 +730,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Compute Load v2",
+          "alias": "Throughput v3",
           "stringInput": "seed_16"
         }
       ],
-      "title": "Compute Load v2",
+      "title": "Throughput v3",
       "type": "timeseries"
     },
     {
@@ -779,11 +779,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Memory Load v2",
+          "alias": "Success Rate v3",
           "stringInput": "seed_17"
         }
       ],
-      "title": "Memory Load v2",
+      "title": "Success Rate v3",
       "type": "timeseries"
     },
     {
@@ -796,7 +796,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "ms",
+          "unit": "percent",
           "min": 0,
           "max": 100
         },
@@ -828,11 +828,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "I/O Wait v2",
+          "alias": "Compute Load v3",
           "stringInput": "seed_18"
         }
       ],
-      "title": "I/O Wait v2",
+      "title": "Compute Load v3",
       "type": "timeseries"
     },
     {
@@ -845,7 +845,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none",
+          "unit": "percent",
           "min": 0,
           "max": 100
         },
@@ -877,11 +877,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Sessions v2",
+          "alias": "Memory Load v3",
           "stringInput": "seed_19"
         }
       ],
-      "title": "Sessions v2",
+      "title": "Memory Load v3",
       "type": "timeseries"
     },
     {
@@ -894,7 +894,7 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "percent",
+          "unit": "ms",
           "min": 0,
           "max": 100
         },
@@ -926,11 +926,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Packet Loss v2",
+          "alias": "I/O Wait v3",
           "stringInput": "seed_20"
         }
       ],
-      "title": "Packet Loss v2",
+      "title": "I/O Wait v3",
       "type": "timeseries"
     }
   ],
@@ -940,7 +940,7 @@
     "from": "now-5m",
     "to": "now"
   },
-  "title": "infrastructure_telemetry_v2",
+  "title": "infrastructure_telemetry_v3",
   "uid": "absurdist-home",
   "refresh": "5s"
 }
