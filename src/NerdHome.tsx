@@ -55,6 +55,22 @@ export const NerdHome: React.FC = () => {
   const [vmCpu, setVmCpu] = useState('0.00');
   const [vmMem, setVmMem] = useState('67.1');
 
+  const [inferenceWs, setInferenceWs] = useState<WebSocket | null>(null);
+
+  useEffect(() => {
+    // Recursive Spatial Expansion: Connect to Anceps Inference
+    const socket = new WebSocket("ws://localhost:8000/ws");
+    socket.onopen = () => console.log('Spatial Expansion: Connected to Inference');
+    setInferenceWs(socket);
+    return () => socket.close();
+  }, []);
+
+  useEffect(() => {
+    if (inferenceWs && inferenceWs.readyState === WebSocket.OPEN) {
+      inferenceWs.send(JSON.stringify({ type: 'depth', value: maxDepth }));
+    }
+  }, [maxDepth, inferenceWs]);
+
   useEffect(() => {
     const hash = window.location.hash;
     if (hash.includes('?')) {
