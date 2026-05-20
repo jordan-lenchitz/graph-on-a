@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   metrics-server:
     image: node:18-alpine
