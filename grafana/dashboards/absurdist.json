@@ -1,68 +1,388 @@
 {
-  "uid": "absurdist-telemetry",
-  "title": "Absurdist Telemetry (Real)",
-  "refresh": "1s",
-  "schemaVersion": 38,
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
   "panels": [
     {
-      "type": "gauge",
-      "title": "Slop Throughput (GB/s)",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
-      "targets": [ { "expr": "slop_throughput_bytes", "refId": "A" } ],
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
       "fieldConfig": {
         "defaults": {
-          "min": 0, "max": 1500,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "orange", "value": 500 },
-              { "color": "red", "value": 800 }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "type": "stat",
-      "title": "Cowardice Index (%)",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
-      "targets": [ { "expr": "cowardice_index_percent", "refId": "A" } ],
-      "fieldConfig": {
-        "defaults": {
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "red", "value": null },
-              { "color": "orange", "value": 50 },
-              { "color": "green", "value": 90 }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "type": "timeseries",
-      "title": "Quantum Jitter (ms)",
-      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 8 },
-      "targets": [ { "expr": "quantum_jitter_ms", "refId": "A" } ],
-      "fieldConfig": {
-        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
             "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineWidth": 2,
-            "fillOpacity": 10
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null },
-              { "color": "red", "value": 4 }
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "tbs"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "alias": "recursive_slop_throughput",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "recursive_slop_throughput (real-time)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "alias": "gcp_billing_burn",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "theoretical_gcp_burn",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
             ]
           }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 4
+      },
+      "id": 3,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
         }
-      }
+      },
+      "targets": [
+        {
+          "alias": "server_composition",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "refId": "A",
+          "scenarioId": "csv_metric_values",
+          "stringInput": "dave,99\nnot_dave,1"
+        }
+      ],
+      "title": "server_infra_composition",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "targets": [
+        {
+          "alias": "global_absurdity_index",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "global_absurdity_index",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 5,
+      "options": {
+        "content": "<div style=\"text-align: center; padding-top: 20px;\">\n  <h2 style=\"color: #00ff00;\">https://jordanlenchitz.xyz</h2>\n  <p style=\"font-family: monospace; color: #888;\">operational status: absurd</p>\n  <div style=\"font-size: 40px; margin-top: 20px;\">👾</div>\n  <p style=\"margin-top: 20px; font-size: 12px; color: #555;\">telemetry stream established via avian carriers (rfc 1149)</p>\n</div>",
+        "mode": "html"
+      },
+      "targets": [],
+      "title": "site_identity_monitor",
+      "type": "text"
     }
-  ]
+  ],
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [
+    "absurdist",
+    "slop"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "absurdist_telemetry_hub",
+  "uid": "absurdist-home",
+  "version": 1,
+  "weekStart": ""
 }

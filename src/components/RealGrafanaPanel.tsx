@@ -34,7 +34,7 @@ export const RealGrafanaPanel: React.FC = () => {
         onClick={handleInteract}
       >
         <iframe 
-          src="https://grafana-absurdist-336490534272.us-central1.run.app/login" 
+          src="https://grafana-absurdist-336490534272.us-central1.run.app/d/absurdist-home/absurdist-telemetry-hub?orgId=1&refresh=5s" 
           width="100%" 
           height="100%" 
           frameBorder="0"
