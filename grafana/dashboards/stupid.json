@@ -11,7 +11,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none"
+          "unit": "none",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -35,7 +37,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Existential Dread"
+          "alias": "Existential Dread",
+          "stringInput": "1,1"
         }
       ],
       "title": "Existential Dread",
@@ -51,7 +54,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none"
+          "unit": "none",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -75,7 +80,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Horse Sense Index"
+          "alias": "Horse Sense Index",
+          "stringInput": "1,2"
         }
       ],
       "title": "Horse Sense Index",
@@ -91,7 +97,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none"
+          "unit": "none",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -115,7 +123,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Recursion Pressure"
+          "alias": "Recursion Pressure",
+          "stringInput": "1,3"
         }
       ],
       "title": "Recursion Pressure",
@@ -131,7 +140,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "bytes"
+          "unit": "bytes",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -155,7 +166,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Slop Throughput"
+          "alias": "Slop Throughput",
+          "stringInput": "1,4"
         }
       ],
       "title": "Slop Throughput",
@@ -171,7 +183,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "percent"
+          "unit": "percent",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -195,7 +209,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Cowardice Index"
+          "alias": "Cowardice Index",
+          "stringInput": "1,5"
         }
       ],
       "title": "Cowardice Index",
@@ -211,7 +226,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "ms"
+          "unit": "ms",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -235,7 +252,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Quantum Jitter"
+          "alias": "Quantum Jitter",
+          "stringInput": "1,6"
         }
       ],
       "title": "Quantum Jitter",
@@ -251,7 +269,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "ops"
+          "unit": "ops",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -275,7 +295,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "YDB Throughput"
+          "alias": "YDB Throughput",
+          "stringInput": "1,7"
         }
       ],
       "title": "YDB Throughput",
@@ -291,7 +312,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "ms"
+          "unit": "ms",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -315,7 +338,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Avian Carrier Latency"
+          "alias": "Avian Carrier Latency",
+          "stringInput": "1,8"
         }
       ],
       "title": "Avian Carrier Latency",
@@ -331,7 +355,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none"
+          "unit": "none",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -361,7 +387,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Sondheim Lyric Density"
+          "alias": "Sondheim Lyric Density",
+          "stringInput": "1,9"
         }
       ],
       "title": "Sondheim Lyric Density",
@@ -377,7 +404,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none"
+          "unit": "none",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -407,7 +436,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Entropy Drift"
+          "alias": "Entropy Drift",
+          "stringInput": "1,10"
         }
       ],
       "title": "Entropy Drift",
@@ -423,7 +453,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "percent"
+          "unit": "percent",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -453,7 +485,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Neuro-Sync Rate"
+          "alias": "Neuro-Sync Rate",
+          "stringInput": "1,11"
         }
       ],
       "title": "Neuro-Sync Rate",
@@ -469,7 +502,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none"
+          "unit": "none",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -499,7 +534,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Existential Dread"
+          "alias": "Existential Dread",
+          "stringInput": "1,12"
         }
       ],
       "title": "Existential Dread",
@@ -515,7 +551,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none"
+          "unit": "none",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -545,7 +583,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Horse Sense Index"
+          "alias": "Horse Sense Index",
+          "stringInput": "1,13"
         }
       ],
       "title": "Horse Sense Index",
@@ -561,7 +600,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none"
+          "unit": "none",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -591,7 +632,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Recursion Pressure"
+          "alias": "Recursion Pressure",
+          "stringInput": "1,14"
         }
       ],
       "title": "Recursion Pressure",
@@ -607,7 +649,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "bytes"
+          "unit": "bytes",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -637,7 +681,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Slop Throughput"
+          "alias": "Slop Throughput",
+          "stringInput": "1,15"
         }
       ],
       "title": "Slop Throughput",
@@ -653,7 +698,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "percent"
+          "unit": "percent",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -683,7 +730,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Cowardice Index"
+          "alias": "Cowardice Index",
+          "stringInput": "1,16"
         }
       ],
       "title": "Cowardice Index",
@@ -699,7 +747,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "ms"
+          "unit": "ms",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -729,7 +779,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Quantum Jitter"
+          "alias": "Quantum Jitter",
+          "stringInput": "1,17"
         }
       ],
       "title": "Quantum Jitter",
@@ -745,7 +796,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "ops"
+          "unit": "ops",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -775,7 +828,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "YDB Throughput"
+          "alias": "YDB Throughput",
+          "stringInput": "1,18"
         }
       ],
       "title": "YDB Throughput",
@@ -791,7 +845,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "ms"
+          "unit": "ms",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -821,7 +877,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Avian Carrier Latency"
+          "alias": "Avian Carrier Latency",
+          "stringInput": "1,19"
         }
       ],
       "title": "Avian Carrier Latency",
@@ -837,7 +894,9 @@
           "color": {
             "mode": "palette-classic"
           },
-          "unit": "none"
+          "unit": "none",
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
@@ -867,7 +926,8 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Sondheim Lyric Density"
+          "alias": "Sondheim Lyric Density",
+          "stringInput": "1,20"
         }
       ],
       "title": "Sondheim Lyric Density",
@@ -881,5 +941,6 @@
     "to": "now"
   },
   "title": "absurdist_stupid_hub",
-  "uid": "absurdist-stupid"
+  "uid": "absurdist-stupid",
+  "refresh": "5s"
 }
