@@ -4,30 +4,48 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sre wasm vm player</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <style>
         body { margin: 0; padding: 0; background: #000; color: #0f0; font-family: monospace; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
         #status { background: #111; padding: 5px 15px; font-size: 12px; color: #888; border-bottom: 1px solid #333; flex-shrink: 0; }
         #logs { padding: 5px 15px; font-size: 12px; color: #888; border-bottom: 1px solid #333; max-height: 100px; overflow-y: auto; flex-shrink: 0; }
-        #terminal { flex-grow: 1; background: #000; color: #ccc; border: none; font-family: monospace; font-size: 14px; padding: 15px; outline: none; resize: none; white-space: pre; overflow: auto; width: 100%; box-sizing: border-box; }
+        #terminal-container { flex-grow: 1; background: #000; width: 100%; overflow: hidden; }
         .log-entry { margin-bottom: 2px; }
         .error { color: #f44; }
         .success { color: #0f0; }
+        /* Custom xterm theme */
+        .xterm-viewport::-webkit-scrollbar { width: 8px; }
+        .xterm-viewport::-webkit-scrollbar-thumb { background: #333; }
     </style>
 </head>
 <body>
     <div id="status">diagnostic mode: loading hypervisor...</div>
     <div id="logs"></div>
-    <textarea id="terminal" spellcheck="false" readonly></textarea>
+    <div id="terminal-container"></div>
     <div id="v86_screen" style="display: none"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="libv86.js"></script>
     <script>
         (function() {
             const logsContainer = document.getElementById('logs');
-            const terminal = document.getElementById('terminal');
             const status = document.getElementById('status');
             const urlParams = new URLSearchParams(window.location.search);
             const imagePath = urlParams.get('image');
+
+            // Initialize xterm.js
+            const term = new Terminal({
+                cursorBlink: true,
+                fontFamily: 'monospace',
+                fontSize: 14,
+                theme: {
+                    background: '#000000',
+                    foreground: '#cccccc',
+                    cursor: '#00ff00'
+                },
+                convertEol: true
+            });
+            term.open(document.getElementById('terminal-container'));
 
             function log(msg, type = '') {
                 const div = document.createElement('div');
@@ -51,10 +69,6 @@
                 status.innerText = "initializing vm...";
                 
                 try {
-                    // Remove readonly once VM starts so user can type
-                    terminal.removeAttribute('readonly');
-                    terminal.focus();
-
                     const emulator = new StarterClass({
                         wasm_path: "v86.wasm",
                         memory_size: 512 * 1024 * 1024,
@@ -66,7 +80,6 @@
                         initrd: { url: "initramfs-lts" },
                         autostart: true,
                         screen_container: document.getElementById("v86_screen")
-                        // NOT passing serial_container so we can intercept and hide the boot logs
                     });
 
                     log("emulator instance created. waiting for boot signals...");
@@ -79,20 +92,14 @@
                     emulator.add_listener("serial0-output-byte", (byte) => {
                         const char = String.fromCharCode(byte);
                         
-                        // If system is fully ready, forward output to terminal
                         if (systemReady) {
-                            terminal.value += char.toLowerCase();
-                            terminal.scrollTop = terminal.scrollHeight;
+                            // Forward to xterm, enforcing lowercase
+                            term.write(char.toLowerCase());
                             return;
                         }
 
-                        // Otherwise, we are still booting. Buffer chars to detect the prompt.
                         serialBuffer += char;
-                        
-                        // Keep buffer small
-                        if (serialBuffer.length > 50) {
-                            serialBuffer = serialBuffer.slice(-50);
-                        }
+                        if (serialBuffer.length > 50) serialBuffer = serialBuffer.slice(-50);
 
                         if (status.innerText !== "vm booting") {
                             status.innerText = "vm booting";
@@ -100,15 +107,14 @@
                             log("first serial output received. booting linux kernel in background...");
                         }
 
-                        // Auto-mount and start YDB when emergency shell is reached
                         if (!bootCompleted && serialBuffer.includes("~ # ")) {
                             bootCompleted = true;
                             log("root shell reached. running yottadb installer...", "success");
                             
                             setTimeout(() => {
-                                // Clear terminal and open floodgates FIRST so user sees the install logs
                                 systemReady = true;
-                                terminal.value = "";
+                                term.reset();
+                                term.focus();
                                 
                                 const installCmd = "echo 0 > /proc/sys/kernel/printk; " +
                                                  "clear; " +
@@ -124,22 +130,15 @@
                                                  "ln -s /bin/ydb /bin/gt.m; " +
                                                  "echo ''; echo 'type \"ydb\" or \"gt.m\" to start the database.';\n";
                                 emulator.serial0_send(installCmd);
-                                
                             }, 500);
                         }
                     });
 
-                    // Forward typing to VM
-                    terminal.addEventListener('keydown', (e) => {
-                        if (systemReady && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.length === 1) {
-                            emulator.serial0_send(e.key.toLowerCase());
-                            e.preventDefault();
-                        } else if (systemReady && e.key === 'Enter') {
-                            emulator.serial0_send("\n");
-                            e.preventDefault();
-                        } else if (systemReady && e.key === 'Backspace') {
-                            emulator.serial0_send("\b");
-                            e.preventDefault();
+                    // Input handling from xterm
+                    term.onData(data => {
+                        if (systemReady) {
+                            // Send to emulator, enforcing lowercase for user input too
+                            emulator.serial0_send(data.toLowerCase());
                         }
                     });
 

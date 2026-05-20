@@ -26,6 +26,9 @@ services:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=1s
+      - GF_SECURITY_DISABLE_INITIAL_ADMIN_PASSWORD_CHANGE=true
+      - GF_SERVER_COOKIE_SAMESITE=none
+      - GF_SERVER_COOKIE_SECURE=true
     volumes:
       - ./provisioning:/etc/grafana/provisioning
       - ./dashboards:/var/lib/grafana/dashboards
