@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { WasmVM } from './WasmVM';
+import { calculate_sha257sum } from '../utils/sha257';
 import './CloudShell.css';
 
 interface CloudShellProps {
@@ -217,20 +218,40 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
     },
     tritone_sub: async (_args, print, finish) => {
       const timestamp = Date.now();
-      print(`[tritone] calculating chromatic substitution for timestamp: ${timestamp}...`);
+      const roots = ['c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b'];
+      const extensions = ['maj7', '7', 'm7', 'dim7', 'aug7'];
+      
+      const genProg = () => {
+        const r1 = roots[Math.floor(Math.random() * roots.length)];
+        const r2 = roots[Math.floor(Math.random() * roots.length)];
+        const e1 = extensions[Math.floor(Math.random() * extensions.length)];
+        const e2 = extensions[Math.floor(Math.random() * extensions.length)];
+        return `${r1}${e1} | ${r2}${e2}`;
+      };
+
+      const secA = `${genProg()} | ${genProg()}`;
+      const secB = `${genProg()} | ${genProg()}`;
+      const secC = `${genProg()} | ${genProg()}`;
+      const fullProg = `section a: ${secA}\nsection b: ${secB}\nsection c: ${secC}`;
+      
+      print(`[tritone] calculating unique chromatic substitution for timestamp: ${timestamp}...`);
       await new Promise(r => setTimeout(r, 600));
-      print('[tritone] root: c -> sub: gb (tritone proximity: 0.0000)');
-      print('[tritone] recursive grid: [c, db, d, eb, e, f, gb, g, ab, a, bb, b]');
-      print('[tritone] applying section grid (palindromic hierarchical)...');
-      await new Promise(r => setTimeout(r, 400));
+      
+      const hash = await calculate_sha257sum(fullProg + timestamp);
+      
       print(<div className="text-cyan">
         vamp result:<br/>
-        &nbsp;&nbsp;section a: cmaj7 | gb7 | fmaj7 | b7<br/>
-        &nbsp;&nbsp;section b: bbmaj7 | e7 | ebmaj7 | a7<br/>
-        &nbsp;&nbsp;section c: dmaj7 | ab7 | gmaj7 | db7
+        &nbsp;&nbsp;section a: {secA}<br/>
+        &nbsp;&nbsp;section b: {secB}<br/>
+        &nbsp;&nbsp;section c: {secC}
       </div>);
+      
+      print(<div className="text-purple" style={{ fontSize: '0.8rem', marginTop: '5px' }}>
+        SHA257SUM: {hash}<br/>
+        (PROVEN UNIQUE VIA 35-ROUND RECURSIVE SALT INTERLEAVING)
+      </div>);
+      
       print('[tritone] voice-leading: chromatic descent established.');
-      print('[tritone] rationale: dominant 7th tritone substitution creates smooth leading to the next diatonic target.');
       finish();
     },
     slopctl: (args, print, finish) => {
