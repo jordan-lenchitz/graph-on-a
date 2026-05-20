@@ -33,8 +33,16 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [shellHeight, setShellHeight] = useState(67);
+  const [bpLevel, setBpLevel] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Hidden battle pass data (cheat protection)
+  const _BP = [
+    "WyI9PT0g4pqAIFNNQVNILU1PTiBCQVRUTEUgUEFTUzogU0VBU09OIDEgKE5JTlRFTkRPIFNMT1ApIOKaoCA9PT0iLCAidGllciAxICBb4paI4paI4paI4paI4paI4paI4paI4paI4paI4paIXSAxMDAlIC0gVU5MT0NLRUQ6IFwicGlrYWNodV9tYWluXCIgdGl0bGUiLCAidGllciAyICBb4paI4paI4paI4paI4paI4paI4paI4paI4paI4paIXSAxMDAlIC0gVU5MT0NLRUQ6IGhvbG9ncmFwaGljIG1ldy10d28gc3RvY2sgb3B0aW9uIiwgInRpZXIgMyAgW+KWiOKWiOKWiOKWiOKWiOKWiOKWiOKWiOKWiOKWiF0gMTAwJSAtIFVOTE9DS0VEOiBtYXN0ZXIgYmFsbCAoY29udGFpbnMgYSBndXkgbmFtZWQgZGF2ZSkiLCAidGllciA0ICBb4paI4paI4paI4paI4paI4paI4paI4paI4paI4paIXSAxMDAlIC0gVU5MT0NLRUQ6IGtpcmJ5LWZsYXZvcmVkIHJlY3Vyc2l2ZSBzbG9wIiwgInRpZXIgNSAgW+KWiOKWiOKWiOKWiOKWiOKWiOKWkeKWkeKWkeKWkV0gNjAlICAtIElOIFBST0dSRVNTOiBtYXJpbydzIGJyb3dzZXIgaGlzdG9yeSAocmVkYWN0ZWQpIiwgInRpZXIgNiAgW+KWkeKWkeKWkeKWkeKWkeKWkeKWkeKWkeKWkeKWkV0gMCUgICAtIExPQ0tFRDogXCJtaXNzaW5nX25vXCIgZ29sZGVuIHNraW4iLCAiLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0iLCAiY2F0Y2ggJ2VtIGFsbCBvciBzbWFzaCAnZW0gYWxsIGZvciAkMC4wMC4iXQ==",
+    "WyI9PT0g4pqAIFNFQVNPTiAxIFdSQVAtVVA6IFRIRSBGSU5BTCBTTE9QIOKaoCA9PT0iLCAidGllciA2ICBb4paI4paI4paI4paI4paI4paI4paI4paI4paI4paIXSAxMDAlIC0gVU5MT0NLRUQ6IFwibWlzc2luZ19ub1wiIGdvbGRlbiBza2luIiwgInRpZXIgNyAgW+KWiOKWiOKWiOKWiOKWiOKWiOKWiOKWiOKWiOKWiF0gMTAwJSAtIFVOTE9DS0VEOiAxLXdheSB0aWNrZXQgdG8gdGhlIGZpbmFsIGRlc3RpbmF0aW9uIChubyBpdGVtcykiLCAidGllciA4ICBb4paI4paI4paI4paI4paI4paI4paI4paI4paI4paIXSAxMDAlIC0gVU5MT0NLRUQ6IHdpaSBzcG9ydHMgYm93bGluZyBiYWxsICgxLjJwYiBzaXplKSIsICJTRUFTT04gMSBDT01QTEVURS4gUExFQVNFIFBBWSAkMC4wMCBUTyBVTkxPQ0sgU0VBU09OIDIuIiwgIk1BTkRBVE9SWSBNSUNST1RSQU5TQUNUSU9OIElOSVRJQVRFRC4uLiBbT0tdIiwgIlJFV0FSRDogMXggVklSVFVBTCBIVUcgRlJPTSBSRUNVUlNJVkUgS0lSQlkiXQ==",
+    "WyI9PT0g4p2E77i9IFNNQVNILU1PTiBCQVRUTEUgUEFTUzogU0VBU09OIDIgKElDRSBDTElNQkVSIEVYVFJFTUUpIOKdhO++vSA9PT0iLCAidGllciAxICBb4paI4paI4paI4paI4paI4paI4paI4paI4paI4paIXSAxMDAlIC0gVU5MT0NLRUQ6IFwicGl4ZWxfcGlvbmVlclwiIGJhZGdlIiwgInRpZXIgMiAgW+KWiOKWiOKWiOKWiOKWiOKWiOKWkeKWkeKWkeKWkV0gNjAlICAtIElOIFBST0dSRVNTOiBpbmZpbml0ZSByZWNvdmVyeSBoYWNrIiwgInRpZXIgMyAgW+KWkeKWkeKWkeKWkeKWkeKWkeKWkeKWkeKWkeKWkV0gMCUgICAtIExPQ0tFRDogbHVpZ2kncyBtYW5zaW9uIGRlZWQgKGhhdW50ZWQpIiwgIlVMVElNQVRFIFJFV0FSRCAoTEVWRUwgMTAwKTogYmVjb21pbmcgYSBjbG91ZCBydW4gaW5zdGFuY2UgKHBlcm1hbmVudCkiXQ=="
+  ];
 
   useEffect(() => {
     if (inputRef.current && !isExecuting) inputRef.current.focus();
@@ -100,19 +108,17 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       onClose();
     },
     battle_pass: async (_args, print, finish) => {
-      print('=== ⚡ SMASH-MON BATTLE PASS: SEASON 1 (NINTENDO SLOP) ⚡ ===');
-      await new Promise(r => setTimeout(r, 400));
-      print('tier 1  [██████████] 100% - UNLOCKED: "pikachu_main" title');
-      print('tier 2  [██████████] 100% - UNLOCKED: holographic mew-two stock option');
-      print('tier 3  [██████████] 100% - UNLOCKED: master ball (contains a guy named dave)');
-      await new Promise(r => setTimeout(r, 400));
-      print('tier 4  [██████████] 100% - UNLOCKED: kirby-flavored recursive slop');
-      print('tier 5  [██████░░░░] 60%  - IN PROGRESS: mario\'s browser history (redacted)');
-      print('tier 6  [░░░░░░░░░░] 0%   - LOCKED: "missing_no" golden skin');
-      await new Promise(r => setTimeout(r, 600));
-      print(<div className="text-yellow" style={{ fontWeight: 'bold' }}>ULTIMATE REWARD (LEVEL 100): a direct invite to smash bros (but you only play as a cloud run instance)</div>);
-      print('---------------------------------------------------------');
-      print('catch \'em all or smash \'em all for $0.00.');
+      const idx = Math.min(bpLevel, _BP.length - 1);
+      try {
+        const lines = JSON.parse(atob(_BP[idx]));
+        for (const line of lines) {
+          await new Promise(r => setTimeout(r, 200));
+          print(line);
+        }
+        setBpLevel(prev => prev + 1);
+      } catch (e) {
+        print("error: battle pass module corrupted. please buy more slop.");
+      }
       finish();
     },
     osi: async (_args, print, finish) => {
