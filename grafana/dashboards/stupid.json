@@ -1,0 +1,889 @@
+{
+  "editable": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {},
+        "tooltip": {}
+      },
+      "targets": [
+        {
+          "alias": "Existential Dread (absurdity level 1)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Existential Dread (absurdity level 1)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {},
+        "tooltip": {}
+      },
+      "targets": [
+        {
+          "alias": "Horse Sense Index (absurdity level 2)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Horse Sense Index (absurdity level 2)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "legend": {},
+        "tooltip": {}
+      },
+      "targets": [
+        {
+          "alias": "Recursion Pressure (absurdity level 3)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Recursion Pressure (absurdity level 3)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "legend": {},
+        "tooltip": {}
+      },
+      "targets": [
+        {
+          "alias": "Slop Throughput (absurdity level 4)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Slop Throughput (absurdity level 4)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
+      "id": 5,
+      "options": {
+        "legend": {},
+        "tooltip": {}
+      },
+      "targets": [
+        {
+          "alias": "Cowardice Index (absurdity level 5)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Cowardice Index (absurdity level 5)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 6
+      },
+      "id": 6,
+      "options": {
+        "legend": {},
+        "tooltip": {}
+      },
+      "targets": [
+        {
+          "alias": "Quantum Jitter (absurdity level 6)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Quantum Jitter (absurdity level 6)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 6
+      },
+      "id": 7,
+      "options": {
+        "legend": {},
+        "tooltip": {}
+      },
+      "targets": [
+        {
+          "alias": "YDB Throughput (absurdity level 7)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "YDB Throughput (absurdity level 7)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 6
+      },
+      "id": 8,
+      "options": {
+        "legend": {},
+        "tooltip": {}
+      },
+      "targets": [
+        {
+          "alias": "Avian Carrier Latency (absurdity level 8)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Avian Carrier Latency (absurdity level 8)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 12
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Sondheim Lyric Density (absurdity level 9)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Sondheim Lyric Density (absurdity level 9)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 12
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Entropy Drift (absurdity level 10)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Entropy Drift (absurdity level 10)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 12
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Neuro-Sync Rate (absurdity level 11)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Neuro-Sync Rate (absurdity level 11)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 12
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Existential Dread (absurdity level 12)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Existential Dread (absurdity level 12)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 18
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Horse Sense Index (absurdity level 13)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Horse Sense Index (absurdity level 13)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 18
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Recursion Pressure (absurdity level 14)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Recursion Pressure (absurdity level 14)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 18
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Slop Throughput (absurdity level 15)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Slop Throughput (absurdity level 15)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 18
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Cowardice Index (absurdity level 16)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Cowardice Index (absurdity level 16)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 24
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Quantum Jitter (absurdity level 17)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Quantum Jitter (absurdity level 17)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 24
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "YDB Throughput (absurdity level 18)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "YDB Throughput (absurdity level 18)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 24
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Avian Carrier Latency (absurdity level 19)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Avian Carrier Latency (absurdity level 19)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 24
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "alias": "Sondheim Lyric Density (absurdity level 20)",
+          "refId": "A",
+          "datasource": {
+            "type": "testdata",
+            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+          },
+          "scenarioId": "random_walk",
+          "seriesCount": 1
+        }
+      ],
+      "title": "Sondheim Lyric Density (absurdity level 20)",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [
+    "absurdist",
+    "slop"
+  ],
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "title": "absurdist_stupid_hub",
+  "uid": "absurdist-stupid"
+}

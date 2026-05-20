@@ -5,6 +5,7 @@ import { BouncingSlop } from './components/BouncingSlop';
 import { DraggablePanel } from './components/DraggablePanel';
 import { CloudShell } from './components/CloudShell';
 import { RealGrafanaPanel } from './components/RealGrafanaPanel';
+import { StupidGrafanaPanel } from './components/StupidGrafanaPanel';
 import { LifeSlop, SLOP_THEMES } from './components/LifeSlop/LifeSlop';
 import './NerdHome.css';
 
@@ -228,6 +229,8 @@ export const NerdHome: React.FC = () => {
       </DraggablePanel>
 
       <RealGrafanaPanel />
+
+      <StupidGrafanaPanel />
 
       {showOpenStack && (
         <DraggablePanel className="telemetry-panel">
