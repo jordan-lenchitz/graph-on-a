@@ -7,11 +7,16 @@ ENV GF_SECURITY_ALLOW_EMBEDDING=true
 ENV GF_AUTH_COOKIE_SAMESITE=none
 ENV GF_AUTH_COOKIE_SECURE=true
 
-# Copy provisioning configuration
-COPY provisioning/dashboards/provider.yaml /etc/grafana/provisioning/dashboards/provider.yaml
+# Set the default home dashboard
+ENV GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/etc/grafana/provisioning/dashboards/json/absurdist.json
 
-# Copy dashboard JSON files (wildcard handles case where folder might be empty during dev)
-COPY dashboards/*.json* /etc/grafana/provisioning/dashboards/json/
+# Copy provisioning configurations
+COPY provisioning/dashboards/provider.yaml /etc/grafana/provisioning/dashboards/provider.yaml
+COPY provisioning/datasources/datasource.yml /etc/grafana/provisioning/datasources/datasource.yml
+
+# Copy dashboard JSON files
+RUN mkdir -p /etc/grafana/provisioning/dashboards/json
+COPY dashboards/*.json /etc/grafana/provisioning/dashboards/json/
 
 # Expose the default Grafana port
 EXPOSE 3000
