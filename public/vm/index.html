@@ -7,13 +7,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <style>
         body { margin: 0; padding: 0; background: #000; color: #0f0; font-family: monospace; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
-        #status { background: #111; padding: 5px 15px; font-size: 12px; color: #888; border-bottom: 1px solid #333; flex-shrink: 0; }
-        #logs { padding: 5px 15px; font-size: 12px; color: #888; border-bottom: 1px solid #333; max-height: 100px; overflow-y: auto; flex-shrink: 0; }
-        #terminal-container { flex-grow: 1; background: #000; width: 100%; overflow: hidden; }
+        #status { background: #111; padding: 5px 15px; font-size: 12px; color: #888; border-bottom: 1px solid #333; flex-shrink: 0; text-transform: lowercase; }
+        #logs { padding: 5px 15px; font-size: 12px; color: #888; border-bottom: 1px solid #333; max-height: 100px; overflow-y: auto; flex-shrink: 0; text-transform: lowercase; }
+        #terminal-container { flex-grow: 1; background: #000; width: 100%; overflow: hidden; padding: 5px; box-sizing: border-box; }
         .log-entry { margin-bottom: 2px; }
         .error { color: #f44; }
         .success { color: #0f0; }
-        /* Custom xterm theme */
         .xterm-viewport::-webkit-scrollbar { width: 8px; }
         .xterm-viewport::-webkit-scrollbar-thumb { background: #333; }
     </style>
@@ -25,6 +24,7 @@
     <div id="v86_screen" style="display: none"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
     <script src="libv86.js"></script>
     <script>
         (function() {
@@ -45,7 +45,12 @@
                 },
                 convertEol: true
             });
+            const fitAddon = new FitAddon.FitAddon();
+            term.loadAddon(fitAddon);
             term.open(document.getElementById('terminal-container'));
+            fitAddon.fit();
+
+            window.addEventListener('resize', () => fitAddon.fit());
 
             function log(msg, type = '') {
                 const div = document.createElement('div');
@@ -88,13 +93,11 @@
                     let systemReady = false;
                     let serialBuffer = "";
 
-                    // Intercept serial output
                     emulator.add_listener("serial0-output-byte", (byte) => {
                         const char = String.fromCharCode(byte);
                         
                         if (systemReady) {
-                            // Forward to xterm, enforcing lowercase
-                            term.write(char.toLowerCase());
+                            term.write(char);
                             return;
                         }
 
@@ -134,11 +137,10 @@
                         }
                     });
 
-                    // Input handling from xterm
+                    // Raw input passthrough - no more forced lowercasing on input!
                     term.onData(data => {
                         if (systemReady) {
-                            // Send to emulator, enforcing lowercase for user input too
-                            emulator.serial0_send(data.toLowerCase());
+                            emulator.serial0_send(data);
                         }
                     });
 
