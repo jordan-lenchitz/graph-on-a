@@ -37,11 +37,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Edge Network Latency",
-          "stringInput": "1,1"
+          "alias": "Latency v2",
+          "stringInput": "seed_1"
         }
       ],
-      "title": "Edge Network Latency",
+      "title": "Latency v2",
       "type": "stat"
     },
     {
@@ -80,11 +80,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Global API Availability",
-          "stringInput": "1,2"
+          "alias": "Availability v2",
+          "stringInput": "seed_2"
         }
       ],
-      "title": "Global API Availability",
+      "title": "Availability v2",
       "type": "stat"
     },
     {
@@ -123,11 +123,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Egress Throughput",
-          "stringInput": "1,3"
+          "alias": "Throughput v2",
+          "stringInput": "seed_3"
         }
       ],
-      "title": "Egress Throughput",
+      "title": "Throughput v2",
       "type": "stat"
     },
     {
@@ -166,11 +166,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Request Success Rate",
-          "stringInput": "1,4"
+          "alias": "Success Rate v2",
+          "stringInput": "seed_4"
         }
       ],
-      "title": "Request Success Rate",
+      "title": "Success Rate v2",
       "type": "stat"
     },
     {
@@ -209,11 +209,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Cluster Compute Load",
-          "stringInput": "1,5"
+          "alias": "Compute Load v2",
+          "stringInput": "seed_5"
         }
       ],
-      "title": "Cluster Compute Load",
+      "title": "Compute Load v2",
       "type": "gauge"
     },
     {
@@ -252,11 +252,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Memory Utilization",
-          "stringInput": "1,6"
+          "alias": "Memory Load v2",
+          "stringInput": "seed_6"
         }
       ],
-      "title": "Memory Utilization",
+      "title": "Memory Load v2",
       "type": "gauge"
     },
     {
@@ -295,11 +295,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Disk I/O Wait",
-          "stringInput": "1,7"
+          "alias": "I/O Wait v2",
+          "stringInput": "seed_7"
         }
       ],
-      "title": "Disk I/O Wait",
+      "title": "I/O Wait v2",
       "type": "gauge"
     },
     {
@@ -338,11 +338,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Active Peer Sessions",
-          "stringInput": "1,8"
+          "alias": "Sessions v2",
+          "stringInput": "seed_8"
         }
       ],
-      "title": "Active Peer Sessions",
+      "title": "Sessions v2",
       "type": "gauge"
     },
     {
@@ -387,11 +387,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Packet Loss Rate",
-          "stringInput": "1,9"
+          "alias": "Packet Loss v2",
+          "stringInput": "seed_9"
         }
       ],
-      "title": "Packet Loss Rate",
+      "title": "Packet Loss v2",
       "type": "timeseries"
     },
     {
@@ -436,11 +436,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "CDN Cache Hit Rate",
-          "stringInput": "1,10"
+          "alias": "Cache Hit v2",
+          "stringInput": "seed_10"
         }
       ],
-      "title": "CDN Cache Hit Rate",
+      "title": "Cache Hit v2",
       "type": "timeseries"
     },
     {
@@ -485,11 +485,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "TLS Handshake Latency",
-          "stringInput": "1,11"
+          "alias": "Handshake v2",
+          "stringInput": "seed_11"
         }
       ],
-      "title": "TLS Handshake Latency",
+      "title": "Handshake v2",
       "type": "timeseries"
     },
     {
@@ -534,11 +534,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Edge Network Latency",
-          "stringInput": "1,12"
+          "alias": "Latency v2",
+          "stringInput": "seed_12"
         }
       ],
-      "title": "Edge Network Latency",
+      "title": "Latency v2",
       "type": "timeseries"
     },
     {
@@ -583,11 +583,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Global API Availability",
-          "stringInput": "1,13"
+          "alias": "Availability v2",
+          "stringInput": "seed_13"
         }
       ],
-      "title": "Global API Availability",
+      "title": "Availability v2",
       "type": "timeseries"
     },
     {
@@ -632,11 +632,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Egress Throughput",
-          "stringInput": "1,14"
+          "alias": "Throughput v2",
+          "stringInput": "seed_14"
         }
       ],
-      "title": "Egress Throughput",
+      "title": "Throughput v2",
       "type": "timeseries"
     },
     {
@@ -681,11 +681,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Request Success Rate",
-          "stringInput": "1,15"
+          "alias": "Success Rate v2",
+          "stringInput": "seed_15"
         }
       ],
-      "title": "Request Success Rate",
+      "title": "Success Rate v2",
       "type": "timeseries"
     },
     {
@@ -730,11 +730,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Cluster Compute Load",
-          "stringInput": "1,16"
+          "alias": "Compute Load v2",
+          "stringInput": "seed_16"
         }
       ],
-      "title": "Cluster Compute Load",
+      "title": "Compute Load v2",
       "type": "timeseries"
     },
     {
@@ -779,11 +779,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Memory Utilization",
-          "stringInput": "1,17"
+          "alias": "Memory Load v2",
+          "stringInput": "seed_17"
         }
       ],
-      "title": "Memory Utilization",
+      "title": "Memory Load v2",
       "type": "timeseries"
     },
     {
@@ -828,11 +828,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Disk I/O Wait",
-          "stringInput": "1,18"
+          "alias": "I/O Wait v2",
+          "stringInput": "seed_18"
         }
       ],
-      "title": "Disk I/O Wait",
+      "title": "I/O Wait v2",
       "type": "timeseries"
     },
     {
@@ -877,11 +877,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Active Peer Sessions",
-          "stringInput": "1,19"
+          "alias": "Sessions v2",
+          "stringInput": "seed_19"
         }
       ],
-      "title": "Active Peer Sessions",
+      "title": "Sessions v2",
       "type": "timeseries"
     },
     {
@@ -926,11 +926,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Packet Loss Rate",
-          "stringInput": "1,20"
+          "alias": "Packet Loss v2",
+          "stringInput": "seed_20"
         }
       ],
-      "title": "Packet Loss Rate",
+      "title": "Packet Loss v2",
       "type": "timeseries"
     }
   ],
@@ -940,7 +940,7 @@
     "from": "now-5m",
     "to": "now"
   },
-  "title": "infrastructure_telemetry_hub",
+  "title": "infrastructure_telemetry_v2",
   "uid": "absurdist-home",
   "refresh": "5s"
 }

@@ -9,7 +9,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
           "unit": "none",
           "min": 0,
@@ -37,11 +37,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Existential Dread",
-          "stringInput": "1,1"
+          "alias": "SONDHEIM DENSITY",
+          "stringInput": "seed_1"
         }
       ],
-      "title": "Existential Dread",
+      "title": "SONDHEIM DENSITY",
       "type": "stat"
     },
     {
@@ -52,7 +52,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
           "unit": "none",
           "min": 0,
@@ -80,11 +80,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Horse Sense Index",
-          "stringInput": "1,2"
+          "alias": "EXISTENTIAL DREAD",
+          "stringInput": "seed_2"
         }
       ],
-      "title": "Horse Sense Index",
+      "title": "EXISTENTIAL DREAD",
       "type": "stat"
     },
     {
@@ -95,7 +95,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
           "unit": "none",
           "min": 0,
@@ -123,11 +123,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Recursion Pressure",
-          "stringInput": "1,3"
+          "alias": "HORSE SENSE",
+          "stringInput": "seed_3"
         }
       ],
-      "title": "Recursion Pressure",
+      "title": "HORSE SENSE",
       "type": "stat"
     },
     {
@@ -138,9 +138,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "bytes",
+          "unit": "none",
           "min": 0,
           "max": 100
         },
@@ -166,11 +166,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Slop Throughput",
-          "stringInput": "1,4"
+          "alias": "RECURSION PRESSURE",
+          "stringInput": "seed_4"
         }
       ],
-      "title": "Slop Throughput",
+      "title": "RECURSION PRESSURE",
       "type": "stat"
     },
     {
@@ -181,9 +181,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "percent",
+          "unit": "bytes",
           "min": 0,
           "max": 100
         },
@@ -209,11 +209,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Cowardice Index",
-          "stringInput": "1,5"
+          "alias": "SLOP THRU",
+          "stringInput": "seed_5"
         }
       ],
-      "title": "Cowardice Index",
+      "title": "SLOP THRU",
       "type": "gauge"
     },
     {
@@ -224,9 +224,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "ms",
+          "unit": "percent",
           "min": 0,
           "max": 100
         },
@@ -252,11 +252,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Quantum Jitter",
-          "stringInput": "1,6"
+          "alias": "COWARDICE",
+          "stringInput": "seed_6"
         }
       ],
-      "title": "Quantum Jitter",
+      "title": "COWARDICE",
       "type": "gauge"
     },
     {
@@ -267,9 +267,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "ops",
+          "unit": "ms",
           "min": 0,
           "max": 100
         },
@@ -295,11 +295,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "YDB Throughput",
-          "stringInput": "1,7"
+          "alias": "JITTER",
+          "stringInput": "seed_7"
         }
       ],
-      "title": "YDB Throughput",
+      "title": "JITTER",
       "type": "gauge"
     },
     {
@@ -310,9 +310,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "ms",
+          "unit": "ops",
           "min": 0,
           "max": 100
         },
@@ -338,11 +338,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Avian Carrier Latency",
-          "stringInput": "1,8"
+          "alias": "YDB OPS",
+          "stringInput": "seed_8"
         }
       ],
-      "title": "Avian Carrier Latency",
+      "title": "YDB OPS",
       "type": "gauge"
     },
     {
@@ -353,9 +353,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "none",
+          "unit": "ms",
           "min": 0,
           "max": 100
         },
@@ -387,11 +387,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Sondheim Lyric Density",
-          "stringInput": "1,9"
+          "alias": "AVIAN LATENCY",
+          "stringInput": "seed_9"
         }
       ],
-      "title": "Sondheim Lyric Density",
+      "title": "AVIAN LATENCY",
       "type": "timeseries"
     },
     {
@@ -402,7 +402,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
           "unit": "none",
           "min": 0,
@@ -436,11 +436,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Entropy Drift",
-          "stringInput": "1,10"
+          "alias": "ENTROPY DRIFT",
+          "stringInput": "seed_10"
         }
       ],
-      "title": "Entropy Drift",
+      "title": "ENTROPY DRIFT",
       "type": "timeseries"
     },
     {
@@ -451,7 +451,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
           "unit": "percent",
           "min": 0,
@@ -485,11 +485,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Neuro-Sync Rate",
-          "stringInput": "1,11"
+          "alias": "NEURO-SYNC",
+          "stringInput": "seed_11"
         }
       ],
-      "title": "Neuro-Sync Rate",
+      "title": "NEURO-SYNC",
       "type": "timeseries"
     },
     {
@@ -500,7 +500,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
           "unit": "none",
           "min": 0,
@@ -534,11 +534,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Existential Dread",
-          "stringInput": "1,12"
+          "alias": "SONDHEIM DENSITY",
+          "stringInput": "seed_12"
         }
       ],
-      "title": "Existential Dread",
+      "title": "SONDHEIM DENSITY",
       "type": "timeseries"
     },
     {
@@ -549,7 +549,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
           "unit": "none",
           "min": 0,
@@ -583,11 +583,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Horse Sense Index",
-          "stringInput": "1,13"
+          "alias": "EXISTENTIAL DREAD",
+          "stringInput": "seed_13"
         }
       ],
-      "title": "Horse Sense Index",
+      "title": "EXISTENTIAL DREAD",
       "type": "timeseries"
     },
     {
@@ -598,7 +598,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
           "unit": "none",
           "min": 0,
@@ -632,11 +632,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Recursion Pressure",
-          "stringInput": "1,14"
+          "alias": "HORSE SENSE",
+          "stringInput": "seed_14"
         }
       ],
-      "title": "Recursion Pressure",
+      "title": "HORSE SENSE",
       "type": "timeseries"
     },
     {
@@ -647,9 +647,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "bytes",
+          "unit": "none",
           "min": 0,
           "max": 100
         },
@@ -681,11 +681,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Slop Throughput",
-          "stringInput": "1,15"
+          "alias": "RECURSION PRESSURE",
+          "stringInput": "seed_15"
         }
       ],
-      "title": "Slop Throughput",
+      "title": "RECURSION PRESSURE",
       "type": "timeseries"
     },
     {
@@ -696,9 +696,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "percent",
+          "unit": "bytes",
           "min": 0,
           "max": 100
         },
@@ -730,11 +730,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Cowardice Index",
-          "stringInput": "1,16"
+          "alias": "SLOP THRU",
+          "stringInput": "seed_16"
         }
       ],
-      "title": "Cowardice Index",
+      "title": "SLOP THRU",
       "type": "timeseries"
     },
     {
@@ -745,9 +745,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "ms",
+          "unit": "percent",
           "min": 0,
           "max": 100
         },
@@ -779,11 +779,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Quantum Jitter",
-          "stringInput": "1,17"
+          "alias": "COWARDICE",
+          "stringInput": "seed_17"
         }
       ],
-      "title": "Quantum Jitter",
+      "title": "COWARDICE",
       "type": "timeseries"
     },
     {
@@ -794,9 +794,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "ops",
+          "unit": "ms",
           "min": 0,
           "max": 100
         },
@@ -828,11 +828,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "YDB Throughput",
-          "stringInput": "1,18"
+          "alias": "JITTER",
+          "stringInput": "seed_18"
         }
       ],
-      "title": "YDB Throughput",
+      "title": "JITTER",
       "type": "timeseries"
     },
     {
@@ -843,9 +843,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "ms",
+          "unit": "ops",
           "min": 0,
           "max": 100
         },
@@ -877,11 +877,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Avian Carrier Latency",
-          "stringInput": "1,19"
+          "alias": "YDB OPS",
+          "stringInput": "seed_19"
         }
       ],
-      "title": "Avian Carrier Latency",
+      "title": "YDB OPS",
       "type": "timeseries"
     },
     {
@@ -892,9 +892,9 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "continuous-Purples"
           },
-          "unit": "none",
+          "unit": "ms",
           "min": 0,
           "max": 100
         },
@@ -926,11 +926,11 @@
           },
           "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Sondheim Lyric Density",
-          "stringInput": "1,20"
+          "alias": "AVIAN LATENCY",
+          "stringInput": "seed_20"
         }
       ],
-      "title": "Sondheim Lyric Density",
+      "title": "AVIAN LATENCY",
       "type": "timeseries"
     }
   ],
@@ -940,7 +940,7 @@
     "from": "now-5m",
     "to": "now"
   },
-  "title": "absurdist_stupid_hub",
+  "title": "absurdist_stupid_v2",
   "uid": "absurdist-stupid",
   "refresh": "5s"
 }
