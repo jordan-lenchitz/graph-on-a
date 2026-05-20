@@ -9,7 +9,7 @@ export const RealGrafanaPanel: React.FC = () => {
         style={{ cursor: 'move' }}
       >
         <span className="text-orange">📊</span>
-        <span>real-time telemetry hub (20-panel metric stream)</span>
+        <span>real-time telemetry hub (cloud run grafana)</span>
         <span className="header-right text-red blink">● live_stream</span>
       </div>
       <div 
