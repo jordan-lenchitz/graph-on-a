@@ -1,2 +1,1 @@
-# graph-on-a
-grafana but make it graph-on-a!
+https://jordanlenchitz.xyz
