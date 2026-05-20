@@ -40,6 +40,8 @@ export const NerdHome: React.FC = () => {
   const [maxDepth, setMaxDepth] = useState(0);
   const [showTerminal, setShowTerminal] = useState(false);
   const [showLifeSlop, setShowLifeSlop] = useState(false);
+  const [showOsi, setShowOsi] = useState(false);
+  const [showOpenStack, setShowOpenStack] = useState(false);
   const [lifeTheme, setLifeTheme] = useState('gt.m');
   const [slopSpeed, setSlopSpeed] = useState(15); // Default 15s
 
@@ -109,6 +111,8 @@ export const NerdHome: React.FC = () => {
           onClose={() => setShowTerminal(false)} 
           onSlopChange={(s) => setSlopSpeed(s)}
           onVmStart={handleVmStart}
+          onShowOsi={() => setShowOsi(true)}
+          onShowOpenStack={() => setShowOpenStack(true)}
         />
       )}
 
@@ -142,59 +146,61 @@ export const NerdHome: React.FC = () => {
       */}
 
       {/* Left Panel: OSI Absurdity */}
-      <DraggablePanel className="osi-panel">
-        <div className="panel-header">
-          <span className="dot purple-dot"></span>
-          <span>osi_absurdity_v7</span>
-          <span className="header-right">dream_job_ready</span>
-        </div>
-        <div className="panel-content">
-          <div className="layer-row layer-7">
-            <span className="layer-name">l7: application</span>
-            <span className="layer-desc">silly wholesome stupid (sws)</span>
+      {showOsi && (
+        <DraggablePanel className="osi-panel">
+          <div className="panel-header">
+            <span className="dot purple-dot"></span>
+            <span>osi_absurdity_v7</span>
+            <span className="header-right">dream_job_ready</span>
           </div>
-          <div className="layer-row layer-6">
-            <span className="layer-name">l6: presentation</span>
-            <span className="layer-desc">recursive json-ld slop</span>
-          </div>
-          <div className="layer-row layer-5">
-            <span className="layer-name">l5: session</span>
-            <span className="layer-desc">ghost handshakes</span>
-          </div>
-          <div className="layer-row layer-4">
-            <span className="layer-name">l4: transport</span>
-            <span className="layer-desc">udp (unreliable dreams)</span>
-          </div>
-          <div className="layer-row layer-3">
-            <span className="layer-name">l3: network</span>
-            <span className="layer-desc">rfc 1149 (avian carriers)</span>
-          </div>
-          <div className="layer-row layer-2">
-            <span className="layer-name">l2: data link</span>
-            <span className="layer-desc">quantum jumper cables</span>
-          </div>
-          <div className="layer-row layer-1">
-            <span className="layer-name">l1: physical</span>
-            <span className="layer-desc">hyper-spectral reality</span>
-          </div>
-          
-          <div className="stats-block">
-            <div className="stat-row text-green">l7_proto: h2</div>
-            <div className="stat-row text-green">waf_status: absurdity_filter_active</div>
-            <div className="stat-row text-cyan">serverless_servers: 0 detected (true null)</div>
-            <div className="stat-row text-purple mt-2">stateless_state (forgetting...):</div>
-            <div className="stat-row text-purple">quine -&gt; sws -&gt; rfc1149 -&gt; null -&gt; sws</div>
-            
-            <div className="metrics-box mt-2 text-green">
-              <div>sre_dream_job_metrics:</div>
-              <div className="flex-between"><span>slo (slop_availability):</span><span>99.999%</span></div>
-              <div className="flex-between"><span>error_budget:</span><span>$0.00 (exhausted)</span></div>
-              <div className="flex-between"><span>toil_reduction:</span><span>infinite_loop</span></div>
+          <div className="panel-content">
+            <div className="layer-row layer-7">
+              <span className="layer-name">l7: application</span>
+              <span className="layer-desc">silly wholesome stupid (sws)</span>
             </div>
-            <div className="text-muted text-right text-small mt-2">net_reliability_engineering_orchestrator // 2026</div>
+            <div className="layer-row layer-6">
+              <span className="layer-name">l6: presentation</span>
+              <span className="layer-desc">recursive json-ld slop</span>
+            </div>
+            <div className="layer-row layer-5">
+              <span className="layer-name">l5: session</span>
+              <span className="layer-desc">ghost handshakes</span>
+            </div>
+            <div className="layer-row layer-4">
+              <span className="layer-name">l4: transport</span>
+              <span className="layer-desc">udp (unreliable dreams)</span>
+            </div>
+            <div className="layer-row layer-3">
+              <span className="layer-name">l3: network</span>
+              <span className="layer-desc">rfc 1149 (avian carriers)</span>
+            </div>
+            <div className="layer-row layer-2">
+              <span className="layer-name">l2: data link</span>
+              <span className="layer-desc">quantum jumper cables</span>
+            </div>
+            <div className="layer-row layer-1">
+              <span className="layer-name">l1: physical</span>
+              <span className="layer-desc">hyper-spectral reality</span>
+            </div>
+            
+            <div className="stats-block">
+              <div className="stat-row text-green">l7_proto: h2</div>
+              <div className="stat-row text-green">waf_status: absurdity_filter_active</div>
+              <div className="stat-row text-cyan">serverless_servers: 0 detected (true null)</div>
+              <div className="stat-row text-purple mt-2">stateless_state (forgetting...):</div>
+              <div className="stat-row text-purple">quine -&gt; sws -&gt; rfc1149 -&gt; null -&gt; sws</div>
+              
+              <div className="metrics-box mt-2 text-green">
+                <div>sre_dream_job_metrics:</div>
+                <div className="flex-between"><span>slo (slop_availability):</span><span>99.999%</span></div>
+                <div className="flex-between"><span>error_budget:</span><span>$0.00 (exhausted)</span></div>
+                <div className="flex-between"><span>toil_reduction:</span><span>infinite_loop</span></div>
+              </div>
+              <div className="text-muted text-right text-small mt-2">net_reliability_engineering_orchestrator // 2026</div>
+            </div>
           </div>
-        </div>
-      </DraggablePanel>
+        </DraggablePanel>
+      )}
 
       {/* Right Top Panel: System Core */}
       <DraggablePanel className={`system-core-panel ${vmStatus === 'online' ? 'border-green' : ''}`}>
@@ -242,66 +248,68 @@ export const NerdHome: React.FC = () => {
       <RealGrafanaPanel />
 
       {/* Right Middle Panel: Telemetry */}
-      <DraggablePanel className="telemetry-panel">
-        <div className="panel-header bg-darker">
-          <span className="text-orange">g</span>
-          <span>openstack cluster / node-01 / telemetry</span>
-          <span className="header-right text-muted">last 5 minutes ⚙</span>
-        </div>
-        <div className="panel-content">
-          <div className="grid-4-col text-center border-bottom pb-2">
-            <div className="telemetry-box border-right">
-              <div className="text-small text-muted">dom interactive</div>
-              <div className="text-large text-blue">102 <span className="text-small">ms</span></div>
-              <div className="text-small text-muted">stable</div>
-            </div>
-            <div className="telemetry-box border-right">
-              <div className="text-small text-muted">first paint</div>
-              <div className="text-large text-green">0 <span className="text-small">ms</span></div>
-              <div className="text-small text-muted">stable</div>
-            </div>
-            <div className="telemetry-box border-right">
-              <div className="text-small text-muted">egress (est)</div>
-              <div className="text-large text-yellow">89 <span className="text-small">kb</span></div>
-              <div className="text-small text-muted">stable</div>
-            </div>
-            <div className="telemetry-box">
-              <div className="text-small text-muted">js heap</div>
-              <div className="text-large text-orange">n/a <span className="text-small">mb</span></div>
-              <div className="text-small text-muted">stable</div>
-            </div>
+      {showOpenStack && (
+        <DraggablePanel className="telemetry-panel">
+          <div className="panel-header bg-darker">
+            <span className="text-orange">g</span>
+            <span>openstack cluster / node-01 / telemetry</span>
+            <span className="header-right text-muted">last 5 minutes ⚙</span>
           </div>
-          
-          <div className="mt-2 text-small text-muted">network_io / protocol: h2</div>
-          <div className="chart-area mt-2">
-            {/* Fake chart bars */}
-            <div className="bar" style={{height: '40%'}}></div>
-            <div className="bar" style={{height: '30%'}}></div>
-            <div className="bar" style={{height: '60%'}}></div>
-            <div className="bar" style={{height: '20%'}}></div>
-            <div className="bar" style={{height: '50%'}}></div>
-            <div className="bar" style={{height: '30%'}}></div>
-            <div className="bar" style={{height: '80%'}}></div>
-            <div className="bar" style={{height: '40%'}}></div>
-            <div className="bar" style={{height: '90%'}}></div>
-            <div className="bar" style={{height: '60%'}}></div>
-          </div>
+          <div className="panel-content">
+            <div className="grid-4-col text-center border-bottom pb-2">
+              <div className="telemetry-box border-right">
+                <div className="text-small text-muted">dom interactive</div>
+                <div className="text-large text-blue">102 <span className="text-small">ms</span></div>
+                <div className="text-small text-muted">stable</div>
+              </div>
+              <div className="telemetry-box border-right">
+                <div className="text-small text-muted">first paint</div>
+                <div className="text-large text-green">0 <span className="text-small">ms</span></div>
+                <div className="text-small text-muted">stable</div>
+              </div>
+              <div className="telemetry-box border-right">
+                <div className="text-small text-muted">egress (est)</div>
+                <div className="text-large text-yellow">89 <span className="text-small">kb</span></div>
+                <div className="text-small text-muted">stable</div>
+              </div>
+              <div className="telemetry-box">
+                <div className="text-small text-muted">js heap</div>
+                <div className="text-large text-orange">n/a <span className="text-small">mb</span></div>
+                <div className="text-small text-muted">stable</div>
+              </div>
+            </div>
+            
+            <div className="mt-2 text-small text-muted">network_io / protocol: h2</div>
+            <div className="chart-area mt-2">
+              {/* Fake chart bars */}
+              <div className="bar" style={{height: '40%'}}></div>
+              <div className="bar" style={{height: '30%'}}></div>
+              <div className="bar" style={{height: '60%'}}></div>
+              <div className="bar" style={{height: '20%'}}></div>
+              <div className="bar" style={{height: '50%'}}></div>
+              <div className="bar" style={{height: '30%'}}></div>
+              <div className="bar" style={{height: '80%'}}></div>
+              <div className="bar" style={{height: '40%'}}></div>
+              <div className="bar" style={{height: '90%'}}></div>
+              <div className="bar" style={{height: '60%'}}></div>
+            </div>
 
-          <div className="flex-between mt-2 pt-2 border-top">
-            <div className="text-small">
-              <div>cilium_identity_map</div>
-              <div className="text-green">[pod] frontend-7d45 -&gt; [service] ydb-native-rpc</div>
-              <div className="text-green">[policy] allow-egress-to-gcs (cidr: 10.0.0.0/8)</div>
-              <div className="text-green">[security] zscaler-tunnel: established</div>
-              <div className="text-green">[trace] 4nwl1f...</div>
-            </div>
-            <div className="health-circle">
-              <div className="text-small text-muted text-center">health</div>
-              <div className="circle text-green">100%</div>
+            <div className="flex-between mt-2 pt-2 border-top">
+              <div className="text-small">
+                <div>cilium_identity_map</div>
+                <div className="text-green">[pod] frontend-7d45 -&gt; [service] ydb-native-rpc</div>
+                <div className="text-green">[policy] allow-egress-to-gcs (cidr: 10.0.0.0/8)</div>
+                <div className="text-green">[security] zscaler-tunnel: established</div>
+                <div className="text-green">[trace] 4nwl1f...</div>
+              </div>
+              <div className="health-circle">
+                <div className="text-small text-muted text-center">health</div>
+                <div className="circle text-green">100%</div>
+              </div>
             </div>
           </div>
-        </div>
-      </DraggablePanel>
+        </DraggablePanel>
+      )}
 
       {/* Bottom Bar */}
       <div className="bottom-bar">

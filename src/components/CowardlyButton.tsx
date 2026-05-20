@@ -2,13 +2,14 @@ import React, { useRef, useEffect } from 'react';
 
 export const CowardlyButton: React.FC = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const pos = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  const pos = useRef({ x: window.innerWidth / 2, y: window.innerHeight * 3.2 });
   const vel = useRef({ x: 3, y: 2 }); 
   const mousePos = useRef({ x: -1000, y: -1000 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      mousePos.current = { x: e.clientX, y: e.clientY };
+      // Adjusted mousePos for scrolling
+      mousePos.current = { x: e.pageX, y: e.pageY };
     };
     window.addEventListener('mousemove', handleMouseMove);
 
@@ -18,9 +19,13 @@ export const CowardlyButton: React.FC = () => {
       if (!buttonRef.current) return;
 
       const rect = buttonRef.current.getBoundingClientRect();
+      // getBoundingClientRect is relative to viewport, but we want relative to page
+      const pageY = pos.current.y;
+      const pageX = pos.current.x;
+
       const center = {
-        x: pos.current.x + rect.width / 2,
-        y: pos.current.y + rect.height / 2,
+        x: pageX + rect.width / 2,
+        y: pageY + rect.height / 2,
       };
 
       const dx = center.x - mousePos.current.x;
@@ -46,6 +51,10 @@ export const CowardlyButton: React.FC = () => {
       pos.current.x += vel.current.x;
       pos.current.y += vel.current.y;
 
+      // Boundary checks for the "slop" section (300vh to 400vh)
+      const minPageY = window.innerHeight * 3;
+      const maxPageY = window.innerHeight * 4;
+
       if (pos.current.x <= 0) {
         pos.current.x = 0;
         vel.current.x *= -1;
@@ -54,11 +63,11 @@ export const CowardlyButton: React.FC = () => {
         vel.current.x *= -1;
       }
 
-      if (pos.current.y <= 0) {
-        pos.current.y = 0;
+      if (pos.current.y <= minPageY) {
+        pos.current.y = minPageY;
         vel.current.y *= -1;
-      } else if (pos.current.y + rect.height >= window.innerHeight) {
-        pos.current.y = window.innerHeight - rect.height;
+      } else if (pos.current.y + rect.height >= maxPageY) {
+        pos.current.y = maxPageY - rect.height;
         vel.current.y *= -1;
       }
 
@@ -79,7 +88,7 @@ export const CowardlyButton: React.FC = () => {
     <button
       ref={buttonRef}
       style={{
-        position: 'fixed',
+        position: 'absolute',
         top: 0,
         left: 0,
         padding: '1rem 2rem',

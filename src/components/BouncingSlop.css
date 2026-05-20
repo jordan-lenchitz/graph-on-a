@@ -1,6 +1,6 @@
 .slop-container {
-  position: fixed;
-  top: 15%;
+  position: absolute;
+  top: 300vh;
   width: 100vw;
   white-space: nowrap;
   overflow: hidden;
