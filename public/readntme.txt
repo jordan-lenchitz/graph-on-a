@@ -1,0 +1,60 @@
+WELCOME TO THE READNTME.TXT
+(please do n't read this)
+
+Here lies the sacred mappings of the 43 Subdomains of Slop.
+Proceed at your own risk.
+
+=========================================
+EXPLICITLY MAPPED ABSURDITIES
+=========================================
+ansible.jordanlenchitz.org              -> serverless_dave
+arch.jordanlenchitz.org                 -> arch_btw
+aws.jordanlenchitz.org                  -> enterprise_plus
+azure.jordanlenchitz.org                -> theoretical_burn
+everything-is-fine.jordanlenchitz.org   -> slo_99
+fis-gtm.jordanlenchitz.org              -> gt.m
+gcp.jordanlenchitz.org                  -> sql_theme
+gentle.axolotl.jordanlenchitz.org       -> gentle_gazelle
+gentoo.jordanlenchitz.org               -> recursion_15
+google.jordanlenchitz.org               -> ram_download
+hannah-montana-linux.jordanlenchitz.org -> absurdity_filter
+huh.jordanlenchitz.org                  -> void_ping
+kali.jordanlenchitz.org                 -> mainframe_bypass
+oops.jordanlenchitz.org                 -> error_budget_0
+openstack.jordanlenchitz.org            -> openstack
+prod.jordanlenchitz.org                 -> compliance_100_absurd
+quantum.puppy.jordanlenchitz.org        -> quantum_hyper
+slop.jordanlenchitz.org                 -> recursive_slop_vol_14
+slopna.jordanlenchitz.org               -> neuro_listening
+slopnt.jordanlenchitz.org               -> neurodiversity
+terraform.jordanlenchitz.org            -> spline_reticulation
+test.jordanlenchitz.org                 -> garbage_collect
+ubuntu.jordanlenchitz.org               -> sws_protocol
+wow.jordanlenchitz.org                  -> spectral
+yeah.jordanlenchitz.org                 -> guy_named_dave
+yeet.jordanlenchitz.org                 -> theoretical_burn
+yolo.jordanlenchitz.org                 -> entropy_sync
+yottadb.jordanlenchitz.org              -> yottadb (+ Auto-Boots Terminal!)
+
+=========================================
+THE UNMAPPED
+=========================================
+(These default to 'recursive_slop_vol_14' but inject their own name into the simulation)
+
+awe.jordanlenchitz.org
+battery.jordanlenchitz.org
+bicep.jordanlenchitz.org
+bing.jordanlenchitz.org
+fun.jordanlenchitz.org
+grafana.jordanlenchitz.org (Actually reserved for real Grafana!)
+microsoft.jordanlenchitz.org
+mint.jordanlenchitz.org
+mumps.jordanlenchitz.org
+netflix.jordanlenchitz.org
+rhel.jordanlenchitz.org
+special.species.jordanlenchitz.org
+windows.jordanlenchitz.org
+yandex.jordanlenchitz.org
+ydb.jordanlenchitz.org
+
+Have a nice n't day!
