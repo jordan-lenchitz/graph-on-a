@@ -157,6 +157,14 @@
   z-index: 25;
 }
 
+.stupid-grafana-panel {
+  position: absolute;
+  top: 320vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+}
+
 .telemetry-panel {
   top: 500px;
   left: 20px;
