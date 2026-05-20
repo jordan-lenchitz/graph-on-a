@@ -1,0 +1,26 @@
+.slop-container {
+  position: fixed;
+  top: 15%;
+  width: 100vw;
+  white-space: nowrap;
+  overflow: hidden;
+  color: black;
+  font-size: 1.5rem;
+  font-family: monospace;
+  z-index: 10;
+  border-top: 2px solid red;
+  border-bottom: 2px solid red;
+  padding: 5px 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee {
+  display: inline-block;
+  animation: marquee 15s linear infinite;
+}

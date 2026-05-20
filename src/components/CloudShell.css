@@ -1,0 +1,79 @@
+.cloud-shell-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background-color: #202124;
+  color: #e8eaed;
+  font-family: 'Courier New', Courier, monospace;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+  text-align: left;
+}
+
+.cloud-shell-resizer {
+  height: 5px;
+  background-color: #5f6368;
+  cursor: ns-resize;
+  width: 100%;
+}
+
+.cloud-shell-resizer:hover {
+  background-color: #8ab4f8;
+}
+
+.cloud-shell-header {
+  background-color: #323639;
+  padding: 5px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  font-family: sans-serif;
+  border-bottom: 1px solid #000;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #e8eaed;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: #fff;
+}
+
+.cloud-shell-body {
+  flex: 1;
+  padding: 10px 15px;
+  overflow-y: auto;
+  font-size: 0.95rem;
+  cursor: text;
+}
+
+.input-line {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.prompt {
+  color: #8ab4f8;
+  margin-right: 8px;
+  white-space: pre;
+}
+
+.input-line input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #e8eaed;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
