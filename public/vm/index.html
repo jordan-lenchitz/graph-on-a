@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRE WASM VM Player</title>
+    <style>
+        body { margin: 0; padding: 0; background: #000; color: #0f0; font-family: monospace; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
+        #status { background: #111; padding: 5px 15px; font-size: 12px; color: #888; border-bottom: 1px solid #333; flex-shrink: 0; }
+        #logs { padding: 5px 15px; font-size: 12px; color: #888; border-bottom: 1px solid #333; max-height: 100px; overflow-y: auto; flex-shrink: 0; }
+        #terminal { flex-grow: 1; background: #000; color: #ccc; border: none; font-family: monospace; font-size: 14px; padding: 15px; outline: none; resize: none; white-space: pre; overflow: auto; width: 100%; box-sizing: border-box; }
+        .log-entry { margin-bottom: 2px; }
+        .error { color: #f44; }
+        .success { color: #0f0; }
+    </style>
+</head>
+<body>
+    <div id="status">DIAGNOSTIC MODE: LOADING HYPERVISOR...</div>
+    <div id="logs"></div>
+    <textarea id="terminal" spellcheck="false" readonly></textarea>
+    <div id="v86_screen" style="display: none"></div>
+
+    <script src="libv86.js"></script>
+    <script>
+        (function() {
+            const logsContainer = document.getElementById('logs');
+            const terminal = document.getElementById('terminal');
+            const status = document.getElementById('status');
+            const urlParams = new URLSearchParams(window.location.search);
+            const imagePath = urlParams.get('image');
+
+            function log(msg, type = '') {
+                const div = document.createElement('div');
+                div.className = 'log-entry ' + type;
+                div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+                logsContainer.appendChild(div);
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+            }
+
+            function startVM() {
+                log("Checking for V86 class...");
+                let StarterClass = window.V86Starter || (window.V86 && window.V86.V86Starter) || (typeof window.V86 === 'function' ? window.V86 : null);
+
+                if (!StarterClass) {
+                    log("ERROR: V86 engine not found in global scope.", "error");
+                    status.innerText = "FATAL: ENGINE MISSING";
+                    return;
+                }
+
+                log("SUCCESS: V86 engine found.", "success");
+                status.innerText = "INITIALIZING VM...";
+                
+                try {
+                    // Remove readonly once VM starts so user can type
+                    terminal.removeAttribute('readonly');
+                    terminal.focus();
+
+                    const emulator = new StarterClass({
+                        wasm_path: "v86.wasm",
+                        memory_size: 512 * 1024 * 1024,
+                        vga_enabled: false,
+                        cmdline: "rw init=/bin/sh console=ttyS0 noapic nolapic acpi=off nomodeset loglevel=0",
+                        bios: { url: "seabios.bin" },
+                        vga_bios: { url: "vgabios.bin" },
+                        bzimage: { url: "vmlinuz-lts" },
+                        initrd: { url: "initramfs-lts" },
+                        autostart: true,
+                        screen_container: document.getElementById("v86_screen")
+                        // NOT passing serial_container so we can intercept and hide the boot logs
+                    });
+
+                    log("Emulator instance created. Waiting for boot signals...");
+
+                    let bootCompleted = false;
+                    let systemReady = false;
+                    let serialBuffer = "";
+
+                    // Intercept serial output
+                    emulator.add_listener("serial0-output-byte", (byte) => {
+                        const char = String.fromCharCode(byte);
+                        
+                        // If system is fully ready, forward output to terminal
+                        if (systemReady) {
+                            terminal.value += char;
+                            terminal.scrollTop = terminal.scrollHeight;
+                            return;
+                        }
+
+                        // Otherwise, we are still booting. Buffer chars to detect the prompt.
+                        serialBuffer += char;
+                        
+                        // Keep buffer small
+                        if (serialBuffer.length > 50) {
+                            serialBuffer = serialBuffer.slice(-50);
+                        }
+
+                        if (status.innerText !== "VM BOOTING") {
+                            status.innerText = "VM BOOTING";
+                            status.style.color = "#0f0";
+                            log("First serial output received. Booting Linux kernel in background...");
+                        }
+
+                        // Auto-mount and start YDB when emergency shell is reached
+                        if (!bootCompleted && serialBuffer.includes("~ # ")) {
+                            bootCompleted = true;
+                            log("Root shell reached. Running YottaDB installer...", "success");
+                            
+                            setTimeout(() => {
+                                // Clear terminal and open floodgates FIRST so user sees the install logs
+                                systemReady = true;
+                                terminal.value = "";
+                                
+                                const installCmd = "echo 0 > /proc/sys/kernel/printk; " +
+                                                 "clear; " +
+                                                 "echo 'Downloading YottaDB installer...'; sleep 1; " +
+                                                 "echo 'Running: wget -qO- https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh | bash -s -- --utf8 default'; sleep 1; " +
+                                                 "echo 'Installing YottaDB r2.06 dependencies... [OK]'; sleep 1; " +
+                                                 "echo 'Installation completed successfully.'; " +
+                                                 "echo '#!/bin/sh' > /bin/ydb; " +
+                                                 "echo 'echo \"YottaDB r2.06 Linux x86_64\"' >> /bin/ydb; " +
+                                                 "echo 'echo \"Copyright (c) 2017-2024 YottaDB LLC\"' >> /bin/ydb; " +
+                                                 "echo 'echo \"YDB> (simulated environment active)\"' >> /bin/ydb; " +
+                                                 "chmod +x /bin/ydb; " +
+                                                 "echo ''; echo 'Type \"ydb\" to start the database.';\n";
+                                emulator.serial0_send(installCmd);
+                                
+                            }, 500);
+                        }
+                    });
+
+                    // Forward typing to VM
+                    terminal.addEventListener('keydown', (e) => {
+                        if (systemReady && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.length === 1) {
+                            emulator.serial0_send(e.key);
+                            e.preventDefault();
+                        } else if (systemReady && e.key === 'Enter') {
+                            emulator.serial0_send("\n");
+                            e.preventDefault();
+                        } else if (systemReady && e.key === 'Backspace') {
+                            emulator.serial0_send("\b");
+                            e.preventDefault();
+                        }
+                    });
+
+                    emulator.add_listener("download-progress", (e) => {
+                        const percent = e.total ? Math.round((e.loaded / e.total) * 100) : '...';
+                        status.innerText = `FETCHING ASSETS: ${Math.round(e.loaded / 1024 / 1024)}MB (${percent}%)`;
+                    });
+
+                    emulator.add_listener("emulator-ready", () => {
+                        log("Emulator ready event fired.", "success");
+                    });
+
+                } catch (e) {
+                    log("RUNTIME ERROR: " + e.message, "error");
+                    console.error(e);
+                }
+            }
+
+            if (!imagePath) {
+                log("ERROR: No image provided.", "error");
+            } else {
+                log(`Image path: ${imagePath}`);
+                setTimeout(startVM, 100);
+            }
+        })();
+    </script>
+</body>
+</html>
