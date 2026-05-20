@@ -1,0 +1,68 @@
+{
+  "uid": "absurdist-telemetry",
+  "title": "Absurdist Telemetry (Real)",
+  "refresh": "1s",
+  "schemaVersion": 38,
+  "panels": [
+    {
+      "type": "gauge",
+      "title": "Slop Throughput (GB/s)",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "targets": [ { "expr": "slop_throughput_bytes", "refId": "A" } ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0, "max": 1500,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 500 },
+              { "color": "red", "value": 800 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Cowardice Index (%)",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "targets": [ { "expr": "cowardice_index_percent", "refId": "A" } ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "green", "value": 90 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Quantum Jitter (ms)",
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 8 },
+      "targets": [ { "expr": "quantum_jitter_ms", "refId": "A" } ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 4 }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
