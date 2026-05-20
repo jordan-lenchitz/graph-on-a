@@ -5,4 +5,14 @@ datasources:
     type: testdata
     uid: pd8849646-6085-485a-8326-f77a8342416b
     access: proxy
+    isDefault: false
+
+  - name: Prometheus
+    type: prometheus
+    uid: prometheus_absurdist
+    access: proxy
+    url: http://prometheus:9090
     isDefault: true
+    jsonData:
+      httpMethod: POST
+      manageAlerts: true

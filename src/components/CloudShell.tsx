@@ -6,11 +6,13 @@ interface CloudShellProps {
   onClose: () => void;
   onSlopChange?: (speed: number) => void;
   onVmStart?: () => void;
+  onShowOsi?: () => void;
+  onShowOpenStack?: () => void;
 }
 
 type CommandHandler = (args: string[], print: (content: React.ReactNode) => void, finish: () => void) => void | Promise<void>;
 
-export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, onVmStart }) => {
+export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, onVmStart, onShowOsi, onShowOpenStack }) => {
   const [history, setHistory] = useState<(React.ReactNode)[]>([
     'welcome to the jordan lenchitz cloud shell.',
     '---------------------------------------------------------------------------------',
@@ -70,6 +72,8 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
     help: (_args, print, finish) => {
       print([
         'available commands:',
+        '  osi              - spawn the colorful 7-layer osi absurdity panel.',
+        '  telemetry        - spawn the openstack cluster telemetry debug window.',
         '  ydb              - provision an ephemeral ydb container (wasm).',
         '  gt.m             - provision an ephemeral gt.m container (wasm).',
         '  horse            - initialize the equine categorization engine (100% urine free).',
@@ -92,6 +96,20 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
     },
     exit: () => {
       onClose();
+    },
+    osi: async (_args, print, finish) => {
+      print('[osi] initializing silly wholesome stupid protocol...');
+      await new Promise(r => setTimeout(r, 600));
+      if (onShowOsi) onShowOsi();
+      print(<div className="text-purple">success: osi absurdity panel spawned at viewport coordinates (20, 100).</div>);
+      finish();
+    },
+    telemetry: async (_args, print, finish) => {
+      print('[telemetry] connecting to node-01 clusters...');
+      await new Promise(r => setTimeout(r, 800));
+      if (onShowOpenStack) onShowOpenStack();
+      print(<div className="text-green">success: openstack telemetry window spawned at (20, 450).</div>);
+      finish();
     },
     ydb: async (_args, print, finish) => {
       print('booting v86 x86-to-wasm jit engine...');
