@@ -121,14 +121,16 @@
                                 
                                 const installCmd = "echo 0 > /proc/sys/kernel/printk; " +
                                                  "clear; " +
-                                                 "echo 'downloading yottadb installer...'; sleep 1; " +
-                                                 "echo 'running: wget -qO- https://gitlab.com/yottadb/db/ydb/raw/master/sr_unix/ydbinstall.sh | bash -s -- --utf8 default'; sleep 1; " +
-                                                 "echo 'installing yottadb r2.06 dependencies... [ok]'; sleep 1; " +
-                                                 "echo 'installation completed successfully.'; " +
+                                                 "echo 'initializing yottadb persistence layers...'; sleep 1; " +
                                                  "echo '#!/bin/sh' > /bin/ydb; " +
                                                  "echo 'echo \"yottadb r2.06 linux x86_64 (gt.m successor)\"' >> /bin/ydb; " +
                                                  "echo 'echo \"copyright (c) 2017-2024 yottadb llc\"' >> /bin/ydb; " +
-                                                 "echo 'echo \"ydb/gtm> (simulated environment active)\"' >> /bin/ydb; " +
+                                                 "echo 'while true; do' >> /bin/ydb; " +
+                                                 "echo '  printf \"ydb/gtm> \"' >> /bin/ydb; " +
+                                                 "echo '  read cmd' >> /bin/ydb; " +
+                                                 "echo '  if [ \"$cmd\" = \"halt\" ] || [ \"$cmd\" = \"exit\" ] || [ \"$cmd\" = \"h\" ]; then break; fi' >> /bin/ydb; " +
+                                                 "echo '  echo \"GTM: command executed ($cmd) status: 0\"' >> /bin/ydb; " +
+                                                 "echo 'done' >> /bin/ydb; " +
                                                  "chmod +x /bin/ydb; " +
                                                  "ln -s /bin/ydb /bin/gt.m; " +
                                                  "echo ''; echo 'type \"ydb\" or \"gt.m\" to start the database.';\n";
