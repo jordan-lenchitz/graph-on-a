@@ -35,6 +35,8 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [shellHeight, setShellHeight] = useState(67);
   const [bpLevel, setBpLevel] = useState(0);
+  const [isWaitingForPassword, setIsWaitingForPassword] = useState(false);
+  const [onPasswordSubmit, setOnPasswordSubmit] = useState<((val: string) => void) | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -47,7 +49,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
 
   useEffect(() => {
     if (inputRef.current && !isExecuting) inputRef.current.focus();
-  }, [isExecuting]);
+  }, [isExecuting, isWaitingForPassword]);
 
   useEffect(() => {
     if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -241,6 +243,113 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
         print(`[slop] collision physics re-tuned to ${speed}s. recursion stability: nominal.`);
       }
       finish();
+    },
+
+    kernel_leak: async (_args, print, finish) => {
+      print('[kernel_leak] initializing memory siphon...');
+      await new Promise(r => setTimeout(r, 400));
+      for (let i = 0; i < 40; i++) {
+        await new Promise(r => setTimeout(r, 40));
+        const addr = Math.floor(Math.random() * 0xFFFFFFFF).toString(16).padStart(8, '0');
+        const data = Array.from({length: 4}, () => Math.floor(Math.random() * 0xFFFF).toString(16).padStart(4, '0')).join(' ');
+        print(<div className="text-red" style={{fontSize: '0.8rem', opacity: 0.8 + Math.random() * 0.2}}>LEAK at 0x{addr.toUpperCase()}: {data.toUpperCase()}</div>);
+      }
+      print('[kernel_leak] browser memory successfully drained into console.');
+      print('[kernel_leak] status: web-worker starvation imminent.');
+      finish();
+    },
+
+    cloud_seed: async (_args, print, finish) => {
+      print('[cloud_seed] initializing weather-based load balancer...');
+      await new Promise(r => setTimeout(r, 600));
+      print('sampling humidity in us-central1... 88% (slop saturation)');
+      await new Promise(r => setTimeout(r, 800));
+      print('seeding cloud run instances with liquid nitrogen and recursive intent...');
+      await new Promise(r => setTimeout(r, 1000));
+      print('precipitation-based auto-scaling active.');
+      print(<div className="text-cyan">success: local rain of containers detected in europe-west3.</div>);
+      finish();
+    },
+
+    neural_slop: async (_args, print, finish) => {
+      print('[neural_slop] fine-tuning 1-parameter llm (parameter name: "greg")...');
+      await new Promise(r => setTimeout(r, 500));
+      let loss = 0.999;
+      for (let i = 0; i < 8; i++) {
+        await new Promise(r => setTimeout(r, 300));
+        loss = loss * 0.7 + Math.random() * 0.1;
+        print(`epoch ${i+1}/8 - loss: ${loss.toFixed(6)} (optimizer: slop-sgd)`);
+      }
+      print(<div className="text-purple">training complete. "greg" now understands the concept of "yesterday" with 2% confidence.</div>);
+      finish();
+    },
+
+    garbage_collect: async (_args, print, finish) => {
+      const layers = ['physical', 'data-link', 'network', 'transport', 'session', 'presentation', 'application', 'absurdity'];
+      for (const layer of layers) {
+        print(`sweeping layer: ${layer}...`);
+        await new Promise(r => setTimeout(r, 300));
+        const dots = '#'.repeat(10);
+        print(`[${layer}] [${dots}] 100% (recovered 0.000${Math.floor(Math.random()*9)}kb)`);
+      }
+      print(<div className="text-green">garbage collection finished. the recursive layers are now clinically clean.</div>);
+      finish();
+    },
+
+    void_ping: async (_args, print, finish) => {
+      print('PING dim-4.void.local (0.0.0.0): 56 data bytes');
+      for (let i = 0; i < 4; i++) {
+        await new Promise(r => setTimeout(r, 700));
+        print(`64 bytes from dim-4.void.local: icmp_seq=${i} ttl=0 time=${(Math.random() * 5000).toFixed(1)}ms (echo from the heat death of the universe)`);
+      }
+      print('--- dim-4.void.local ping statistics ---');
+      print('4 packets transmitted, 4 received, 0% packet loss, time 14000ms');
+      finish();
+    },
+
+    entropy_sync: async (_args, print, finish) => {
+      print('[entropy_sync] listening for the cosmic microwave background... [ok]');
+      await new Promise(r => setTimeout(r, 1200));
+      const now = Date.now();
+      const delta = (Math.sin(now) * 42).toFixed(4);
+      print(`current timestamp: ${now}`);
+      print(`cosmic jitter delta: ${delta}ms`);
+      print(<div className="text-cyan">sync status: local jitter is now quantum-entangled with the big bang.</div>);
+      finish();
+    },
+
+    root_access: async (_args, print, finish) => {
+      print('requesting administrative privileges over virtual_toaster_01...');
+      await new Promise(r => setTimeout(r, 600));
+      print('please enter the secret crumb-management password.');
+      
+      await new Promise<void>(resolve => {
+        setIsWaitingForPassword(true);
+        setOnPasswordSubmit(() => (_password: string) => {
+          resolve();
+        });
+        setIsExecuting(false);
+      });
+
+      setIsExecuting(true);
+      setOnPasswordSubmit(null);
+      print('verifying credentials with the sourdough-authority...');
+      await new Promise(r => setTimeout(r, 1000));
+      print(<div className="text-green">access granted. you are now the toaster king.</div>);
+      print(<pre className="text-orange" style={{ lineHeight: '1', fontSize: '10px' }}>{`
+   .----------------.
+   | [            ] |
+   |  [          ]  |
+   |   [        ]   |
+   |    --------    |
+   |   |        |   |
+   |   |  STALE |   |
+   |   |________|   |
+    \\______________/
+       ||      ||
+        `}</pre>);
+      print('toast_level: burnt (default)');
+      finish();
     }
   };
 
@@ -249,6 +358,16 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
 
     if (e.key === 'Enter') {
       e.preventDefault();
+
+      if (isWaitingForPassword) {
+        setHistory(prev => [...prev, <div key={Date.now()}><span className="prompt">password: </span>{input.split('').map(() => '*').join('')}</div>]);
+        const capturedInput = input;
+        setInput('');
+        setIsWaitingForPassword(false);
+        if (onPasswordSubmit) onPasswordSubmit(capturedInput);
+        return;
+      }
+
       const fullCmd = input.trim().toLowerCase();
       if (!fullCmd) return;
 
@@ -307,12 +426,12 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
         {history.map((line, i) => (
           <div key={i}>{typeof line === 'string' ? <div>{line}</div> : line}</div>
         ))}
-        {!isExecuting && (
+        {(!isExecuting || isWaitingForPassword) && (
           <div className="input-line">
-            <span className="prompt">website_visitor@cloudshell:~$ </span>
+            <span className="prompt">{isWaitingForPassword ? 'password: ' : 'website_visitor@cloudshell:~$ '}</span>
             <input 
               ref={inputRef}
-              type="text" 
+              type={isWaitingForPassword ? 'password' : 'text'} 
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -321,7 +440,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
             />
           </div>
         )}
-        {isExecuting && <div className="cursor-blink">█</div>}
+        {isExecuting && !isWaitingForPassword && <div className="cursor-blink">█</div>}
         <div ref={bottomRef} />
       </div>
     </div>
