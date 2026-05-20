@@ -72,6 +72,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
     help: (_args, print, finish) => {
       print([
         'available commands:',
+        '  battle_pass      - check your current season progress (greg approved).',
         '  osi              - spawn the colorful 7-layer osi absurdity panel.',
         '  telemetry        - spawn the openstack cluster telemetry debug window.',
         '  ydb              - provision an ephemeral ydb container (wasm).',
@@ -96,6 +97,22 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
     },
     exit: () => {
       onClose();
+    },
+    battle_pass: async (_args, print, finish) => {
+      print('=== ⚡ SMASH-MON BATTLE PASS: SEASON 1 (NINTENDO SLOP) ⚡ ===');
+      await new Promise(r => setTimeout(r, 400));
+      print('tier 1  [██████████] 100% - UNLOCKED: "pikachu_main" title');
+      print('tier 2  [██████████] 100% - UNLOCKED: holographic mew-two stock option');
+      print('tier 3  [██████████] 100% - UNLOCKED: master ball (contains a guy named dave)');
+      await new Promise(r => setTimeout(r, 400));
+      print('tier 4  [██████████] 100% - UNLOCKED: kirby-flavored recursive slop');
+      print('tier 5  [██████░░░░] 60%  - IN PROGRESS: mario\'s browser history (redacted)');
+      print('tier 6  [░░░░░░░░░░] 0%   - LOCKED: "missing_no" golden skin');
+      await new Promise(r => setTimeout(r, 600));
+      print(<div className="text-yellow" style={{ fontWeight: 'bold' }}>ULTIMATE REWARD (LEVEL 100): a direct invite to smash bros (but you only play as a cloud run instance)</div>);
+      print('---------------------------------------------------------');
+      print('catch \'em all or smash \'em all for $0.00.');
+      finish();
     },
     osi: async (_args, print, finish) => {
       print('[osi] initializing silly wholesome stupid protocol...');
