@@ -94,22 +94,22 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       onClose();
     },
     ydb: async (_args, print, finish) => {
-      print('Booting v86 x86-to-WASM JIT engine...');
+      print('booting v86 x86-to-wasm jit engine...');
       if (onVmStart) onVmStart();
       await new Promise(r => setTimeout(r, 800));
-      print('Provisioning ephemeral YottaDB/GT.M container...');
+      print('provisioning ephemeral yottadb/gt.m container...');
       await new Promise(r => setTimeout(r, 1200));
-      print(<div className="text-green">SUCCESS: Environment attached. Entering WASM VM...</div>);
+      print(<div className="text-green">success: environment attached. entering wasm vm...</div>);
       print(<WasmVM imagePath="/ydb-image.ext2" />);
       finish();
     },
     'gt.m': async (_args, print, finish) => {
-      print('Booting v86 x86-to-WASM JIT engine...');
+      print('booting v86 x86-to-wasm jit engine...');
       if (onVmStart) onVmStart();
       await new Promise(r => setTimeout(r, 800));
-      print('Provisioning ephemeral YottaDB/GT.M container...');
+      print('provisioning ephemeral yottadb/gt.m container...');
       await new Promise(r => setTimeout(r, 1200));
-      print(<div className="text-green">SUCCESS: Environment attached. Entering WASM VM...</div>);
+      print(<div className="text-green">success: environment attached. entering wasm vm...</div>);
       print(<WasmVM imagePath="/ydb-image.ext2" />);
       finish();
     },
@@ -167,7 +167,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
 
     if (e.key === 'Enter') {
       e.preventDefault();
-      const fullCmd = input.trim();
+      const fullCmd = input.trim().toLowerCase();
       if (!fullCmd) return;
 
       // Add to command history
@@ -245,4 +245,3 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
     </div>
   );
 };
-

@@ -124,7 +124,7 @@ export const NerdHome: React.FC = () => {
       <div className="floating-actions">
         {/* Slop Button */}
         <button className="action-btn slop-btn" onClick={triggerLifeSlop}>
-          SPAWN_SLOP
+          spawn_slop
         </button>
 
         {/* MacBook Tilde Key Button */}
@@ -150,31 +150,31 @@ export const NerdHome: React.FC = () => {
         </div>
         <div className="panel-content">
           <div className="layer-row layer-7">
-            <span className="layer-name">L7: application</span>
+            <span className="layer-name">l7: application</span>
             <span className="layer-desc">silly wholesome stupid (sws)</span>
           </div>
           <div className="layer-row layer-6">
-            <span className="layer-name">L6: presentation</span>
+            <span className="layer-name">l6: presentation</span>
             <span className="layer-desc">recursive json-ld slop</span>
           </div>
           <div className="layer-row layer-5">
-            <span className="layer-name">L5: session</span>
+            <span className="layer-name">l5: session</span>
             <span className="layer-desc">ghost handshakes</span>
           </div>
           <div className="layer-row layer-4">
-            <span className="layer-name">L4: transport</span>
+            <span className="layer-name">l4: transport</span>
             <span className="layer-desc">udp (unreliable dreams)</span>
           </div>
           <div className="layer-row layer-3">
-            <span className="layer-name">L3: network</span>
+            <span className="layer-name">l3: network</span>
             <span className="layer-desc">rfc 1149 (avian carriers)</span>
           </div>
           <div className="layer-row layer-2">
-            <span className="layer-name">L2: data link</span>
+            <span className="layer-name">l2: data link</span>
             <span className="layer-desc">quantum jumper cables</span>
           </div>
           <div className="layer-row layer-1">
-            <span className="layer-name">L1: physical</span>
+            <span className="layer-name">l1: physical</span>
             <span className="layer-desc">hyper-spectral reality</span>
           </div>
           
@@ -251,22 +251,22 @@ export const NerdHome: React.FC = () => {
         <div className="panel-content">
           <div className="grid-4-col text-center border-bottom pb-2">
             <div className="telemetry-box border-right">
-              <div className="text-small text-muted">DOM INTERACTIVE</div>
+              <div className="text-small text-muted">dom interactive</div>
               <div className="text-large text-blue">102 <span className="text-small">ms</span></div>
               <div className="text-small text-muted">stable</div>
             </div>
             <div className="telemetry-box border-right">
-              <div className="text-small text-muted">FIRST PAINT</div>
+              <div className="text-small text-muted">first paint</div>
               <div className="text-large text-green">0 <span className="text-small">ms</span></div>
               <div className="text-small text-muted">stable</div>
             </div>
             <div className="telemetry-box border-right">
-              <div className="text-small text-muted">EGRESS (EST)</div>
+              <div className="text-small text-muted">egress (est)</div>
               <div className="text-large text-yellow">89 <span className="text-small">kb</span></div>
               <div className="text-small text-muted">stable</div>
             </div>
             <div className="telemetry-box">
-              <div className="text-small text-muted">JS HEAP</div>
+              <div className="text-small text-muted">js heap</div>
               <div className="text-large text-orange">n/a <span className="text-small">mb</span></div>
               <div className="text-small text-muted">stable</div>
             </div>

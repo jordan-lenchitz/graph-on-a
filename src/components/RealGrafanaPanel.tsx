@@ -24,8 +24,8 @@ export const RealGrafanaPanel: React.FC = () => {
         style={{ cursor: 'move' }}
       >
         <span className="text-orange">📊</span>
-        <span>REAL GRAFANA INSTANCE (CLOUD RUN)</span>
-        <span className="header-right text-red blink">● LIVE</span>
+        <span>real grafana instance (cloud run)</span>
+        <span className="header-right text-red blink">● live</span>
       </div>
       <div 
         className="panel-content" 
@@ -38,7 +38,7 @@ export const RealGrafanaPanel: React.FC = () => {
           width="100%" 
           height="100%" 
           frameBorder="0"
-          title="Real Grafana"
+          title="real grafana"
         ></iframe>
       </div>
     </DraggablePanel>

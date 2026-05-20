@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRE WASM VM Player</title>
+    <title>sre wasm vm player</title>
     <style>
         body { margin: 0; padding: 0; background: #000; color: #0f0; font-family: monospace; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
         #status { background: #111; padding: 5px 15px; font-size: 12px; color: #888; border-bottom: 1px solid #333; flex-shrink: 0; }
@@ -15,7 +15,7 @@
     </style>
 </head>
 <body>
-    <div id="status">DIAGNOSTIC MODE: LOADING HYPERVISOR...</div>
+    <div id="status">diagnostic mode: loading hypervisor...</div>
     <div id="logs"></div>
     <textarea id="terminal" spellcheck="false" readonly></textarea>
     <div id="v86_screen" style="display: none"></div>
@@ -32,23 +32,23 @@
             function log(msg, type = '') {
                 const div = document.createElement('div');
                 div.className = 'log-entry ' + type;
-                div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+                div.textContent = `[${new Date().toLocaleTimeString().toLowerCase()}] ${msg.toLowerCase()}`;
                 logsContainer.appendChild(div);
                 logsContainer.scrollTop = logsContainer.scrollHeight;
             }
 
             function startVM() {
-                log("Checking for V86 class...");
+                log("checking for v86 class...");
                 let StarterClass = window.V86Starter || (window.V86 && window.V86.V86Starter) || (typeof window.V86 === 'function' ? window.V86 : null);
 
                 if (!StarterClass) {
-                    log("ERROR: V86 engine not found in global scope.", "error");
-                    status.innerText = "FATAL: ENGINE MISSING";
+                    log("error: v86 engine not found in global scope.", "error");
+                    status.innerText = "fatal: engine missing";
                     return;
                 }
 
-                log("SUCCESS: V86 engine found.", "success");
-                status.innerText = "INITIALIZING VM...";
+                log("success: v86 engine found.", "success");
+                status.innerText = "initializing vm...";
                 
                 try {
                     // Remove readonly once VM starts so user can type
@@ -69,7 +69,7 @@
                         // NOT passing serial_container so we can intercept and hide the boot logs
                     });
 
-                    log("Emulator instance created. Waiting for boot signals...");
+                    log("emulator instance created. waiting for boot signals...");
 
                     let bootCompleted = false;
                     let systemReady = false;
@@ -81,7 +81,7 @@
                         
                         // If system is fully ready, forward output to terminal
                         if (systemReady) {
-                            terminal.value += char;
+                            terminal.value += char.toLowerCase();
                             terminal.scrollTop = terminal.scrollHeight;
                             return;
                         }
@@ -94,16 +94,16 @@
                             serialBuffer = serialBuffer.slice(-50);
                         }
 
-                        if (status.innerText !== "VM BOOTING") {
-                            status.innerText = "VM BOOTING";
+                        if (status.innerText !== "vm booting") {
+                            status.innerText = "vm booting";
                             status.style.color = "#0f0";
-                            log("First serial output received. Booting Linux kernel in background...");
+                            log("first serial output received. booting linux kernel in background...");
                         }
 
                         // Auto-mount and start YDB when emergency shell is reached
                         if (!bootCompleted && serialBuffer.includes("~ # ")) {
                             bootCompleted = true;
-                            log("Root shell reached. Running YottaDB installer...", "success");
+                            log("root shell reached. running yottadb installer...", "success");
                             
                             setTimeout(() => {
                                 // Clear terminal and open floodgates FIRST so user sees the install logs
@@ -112,17 +112,17 @@
                                 
                                 const installCmd = "echo 0 > /proc/sys/kernel/printk; " +
                                                  "clear; " +
-                                                 "echo 'Downloading YottaDB installer...'; sleep 1; " +
-                                                 "echo 'Running: wget -qO- https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh | bash -s -- --utf8 default'; sleep 1; " +
-                                                 "echo 'Installing YottaDB r2.06 dependencies... [OK]'; sleep 1; " +
-                                                 "echo 'Installation completed successfully.'; " +
+                                                 "echo 'downloading yottadb installer...'; sleep 1; " +
+                                                 "echo 'running: wget -qO- https://gitlab.com/yottadb/db/ydb/raw/master/sr_unix/ydbinstall.sh | bash -s -- --utf8 default'; sleep 1; " +
+                                                 "echo 'installing yottadb r2.06 dependencies... [ok]'; sleep 1; " +
+                                                 "echo 'installation completed successfully.'; " +
                                                  "echo '#!/bin/sh' > /bin/ydb; " +
-                                                 "echo 'echo \"YottaDB r2.06 Linux x86_64 (GT.M Successor)\"' >> /bin/ydb; " +
-                                                 "echo 'echo \"Copyright (c) 2017-2024 YottaDB LLC\"' >> /bin/ydb; " +
-                                                 "echo 'echo \"YDB/GTM> (simulated environment active)\"' >> /bin/ydb; " +
+                                                 "echo 'echo \"yottadb r2.06 linux x86_64 (gt.m successor)\"' >> /bin/ydb; " +
+                                                 "echo 'echo \"copyright (c) 2017-2024 yottadb llc\"' >> /bin/ydb; " +
+                                                 "echo 'echo \"ydb/gtm> (simulated environment active)\"' >> /bin/ydb; " +
                                                  "chmod +x /bin/ydb; " +
                                                  "ln -s /bin/ydb /bin/gt.m; " +
-                                                 "echo ''; echo 'Type \"ydb\" or \"gt.m\" to start the database.';\n";
+                                                 "echo ''; echo 'type \"ydb\" or \"gt.m\" to start the database.';\n";
                                 emulator.serial0_send(installCmd);
                                 
                             }, 500);
@@ -132,7 +132,7 @@
                     // Forward typing to VM
                     terminal.addEventListener('keydown', (e) => {
                         if (systemReady && !e.ctrlKey && !e.altKey && !e.metaKey && e.key.length === 1) {
-                            emulator.serial0_send(e.key);
+                            emulator.serial0_send(e.key.toLowerCase());
                             e.preventDefault();
                         } else if (systemReady && e.key === 'Enter') {
                             emulator.serial0_send("\n");
@@ -145,23 +145,23 @@
 
                     emulator.add_listener("download-progress", (e) => {
                         const percent = e.total ? Math.round((e.loaded / e.total) * 100) : '...';
-                        status.innerText = `FETCHING ASSETS: ${Math.round(e.loaded / 1024 / 1024)}MB (${percent}%)`;
+                        status.innerText = `fetching assets: ${Math.round(e.loaded / 1024 / 1024)}mb (${percent}%)`;
                     });
 
                     emulator.add_listener("emulator-ready", () => {
-                        log("Emulator ready event fired.", "success");
+                        log("emulator ready event fired.", "success");
                     });
 
                 } catch (e) {
-                    log("RUNTIME ERROR: " + e.message, "error");
+                    log("runtime error: " + e.message, "error");
                     console.error(e);
                 }
             }
 
             if (!imagePath) {
-                log("ERROR: No image provided.", "error");
+                log("error: no image provided.", "error");
             } else {
-                log(`Image path: ${imagePath}`);
+                log(`image path: ${imagePath}`);
                 setTimeout(startVM, 100);
             }
         })();

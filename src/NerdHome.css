@@ -34,6 +34,7 @@
   z-index: 20;
   font-size: 0.9rem;
   box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  text-transform: lowercase; /* Force everything in panels to lowercase */
 }
 
 .panel-header {
@@ -66,7 +67,7 @@
 
 /* Specific Panels */
 .osi-panel {
-  top: 50px;
+  top: 20px;
   left: 20px;
   width: 350px;
   border-color: #8a2be2;
@@ -121,8 +122,8 @@
 }
 
 .system-core-panel {
-  top: 50px;
-  right: 20px;
+  top: 20px;
+  left: 390px;
   width: 300px;
   border-color: #ff0000;
 }
@@ -147,9 +148,15 @@
   background-color: #00ff00;
 }
 
+/* Grafana and Telemetry layout for zero overlap */
+.grafana-real-panel {
+  top: 350px;
+  left: 20px;
+}
+
 .telemetry-panel {
   top: 350px;
-  right: 50px;
+  left: 640px;
   width: 600px;
   border-color: #333;
   background-color: #1a1a1a;
@@ -193,6 +200,7 @@
   justify-content: space-between;
   border-top: 2px solid #ff0000;
   z-index: 20;
+  text-transform: lowercase;
 }
 
 .bottom-status {
@@ -200,13 +208,14 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: white;
-  padding: 5px 20px;
+  background-color: #000;
+  color: #888;
+  padding: 2px 20px;
   display: flex;
   justify-content: space-between;
+  font-size: 0.7rem;
   z-index: 20;
-  font-size: 0.8rem;
-  color: black;
+  text-transform: lowercase;
 }
 
 /* Floating Action Buttons */
@@ -230,7 +239,7 @@
   cursor: pointer;
   box-shadow: 3px 3px 0px #0f0;
   transition: all 0.1s;
-  text-transform: uppercase;
+  text-transform: lowercase; /* Force lowercase */
   font-size: 0.8rem;
 }
 
