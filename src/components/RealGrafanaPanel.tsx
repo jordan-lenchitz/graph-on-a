@@ -34,7 +34,7 @@ export const RealGrafanaPanel: React.FC = () => {
         onClick={handleInteract}
       >
         <iframe 
-          src="https://grafana-absurdist-336490534272.us-central1.run.app?orgId=1&kiosk=tv" 
+          src="https://grafana-absurdist-336490534272.us-central1.run.app/login" 
           width="100%" 
           height="100%" 
           frameBorder="0"
