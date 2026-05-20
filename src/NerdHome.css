@@ -208,3 +208,76 @@
   font-size: 0.8rem;
   color: black;
 }
+
+/* Floating Action Buttons */
+.floating-actions {
+  position: absolute;
+  bottom: 80px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 30;
+}
+
+.action-btn {
+  background: #000;
+  color: #0f0;
+  border: 1px solid #0f0;
+  padding: 8px 15px;
+  font-family: monospace;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #0f0;
+  transition: all 0.1s;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.action-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #0f0;
+}
+
+.slop-btn {
+  border-color: #ff9830;
+  color: #ff9830;
+  box-shadow: 3px 3px 0px #ff9830;
+}
+
+.slop-btn:active {
+  box-shadow: 1px 1px 0px #ff9830;
+}
+
+/* MacBook Pro Tilde Key Style */
+.tilde-key {
+  width: 50px;
+  height: 50px;
+  background: #1a1a1a;
+  color: #fff;
+  border: 1px solid #000;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: inset 0 2px 3px rgba(255,255,255,0.1), 0 4px 6px rgba(0,0,0,0.5);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.tilde-key:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 2px 3px rgba(255,255,255,0.05), 0 2px 3px rgba(0,0,0,0.5);
+}
+
+.tilde-top {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.tilde-bottom {
+  font-size: 16px;
+  margin-top: -2px;
+}

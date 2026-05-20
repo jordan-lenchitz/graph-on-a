@@ -5,6 +5,7 @@ import { BouncingSlop } from './components/BouncingSlop';
 import { DraggablePanel } from './components/DraggablePanel';
 import { CloudShell } from './components/CloudShell';
 import { RealGrafanaPanel } from './components/RealGrafanaPanel';
+import { LifeSlop } from './components/LifeSlop/LifeSlop';
 import './NerdHome.css';
 
 const ALLITERATIVE_NAMES = [
@@ -38,6 +39,8 @@ const ALLITERATIVE_NAMES = [
 export const NerdHome: React.FC = () => {
   const [maxDepth, setMaxDepth] = useState(0);
   const [showTerminal, setShowTerminal] = useState(false);
+  const [showLifeSlop, setShowLifeSlop] = useState(false);
+  const [lifeTheme, setLifeTheme] = useState('gt.m');
   const [slopSpeed, setSlopSpeed] = useState(15); // Default 15s
 
   const [vmStatus, setVmStatus] = useState<'offline' | 'online'>('offline');
@@ -61,6 +64,12 @@ export const NerdHome: React.FC = () => {
   const handleVmStart = () => {
     setVmStatus('online');
     setSystemName(ALLITERATIVE_NAMES[Math.floor(Math.random() * ALLITERATIVE_NAMES.length)]);
+  };
+
+  const triggerLifeSlop = () => {
+    const randomThemes = ['gt.m', 'just_intonation', 'arch_btw', 'yottadb'];
+    setLifeTheme(randomThemes[Math.floor(Math.random() * randomThemes.length)]);
+    setShowLifeSlop(true);
   };
 
   useEffect(() => {
@@ -102,6 +111,28 @@ export const NerdHome: React.FC = () => {
           onVmStart={handleVmStart}
         />
       )}
+
+      {/* Conway's Game of Life Slop */}
+      {showLifeSlop && (
+        <LifeSlop 
+          theme={lifeTheme} 
+          onClose={() => setShowLifeSlop(false)} 
+        />
+      )}
+
+      {/* Floating Action Buttons */}
+      <div className="floating-actions">
+        {/* Slop Button */}
+        <button className="action-btn slop-btn" onClick={triggerLifeSlop}>
+          SPAWN_SLOP
+        </button>
+
+        {/* MacBook Tilde Key Button */}
+        <button className="tilde-key" onClick={() => setShowTerminal(prev => !prev)}>
+          <div className="tilde-top">~</div>
+          <div className="tilde-bottom">`</div>
+        </button>
+      </div>
 
       {/* Top Left Links temporarily removed 
       <div className="top-links">
