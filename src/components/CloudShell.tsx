@@ -10,11 +10,12 @@ interface CloudShellProps {
   onShowOsi?: () => void;
   onShowOpenStack?: () => void;
   onShowHorse?: () => void;
+  initialCommand?: string;
 }
 
 type CommandHandler = (args: string[], print: (content: React.ReactNode) => void, finish: () => void) => void | Promise<void>;
 
-export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, onVmStart, onShowOsi, onShowOpenStack, onShowHorse }) => {
+export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, onVmStart, onShowOsi, onShowOpenStack, onShowHorse, initialCommand }) => {
   const [history, setHistory] = useState<(React.ReactNode)[]>([
     'welcome to the jordan lenchitz cloud shell.',
     '---------------------------------------------------------------------------------',
@@ -79,6 +80,35 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
   const print = (content: React.ReactNode) => {
     setHistory(prev => [...prev, content]);
   };
+
+  const runCommand = async (fullCmd: string) => {
+    const trimmed = fullCmd.trim().toLowerCase();
+    if (!trimmed) return;
+
+    const [cmdName, ...args] = trimmed.split(' ');
+    setHistory(prev => [...prev, <div key={Date.now()}><span className="prompt">website_visitor@cloudshell:~$ </span>{trimmed}</div>]);
+
+    const handler = commands[cmdName];
+    if (handler) {
+      if (cmdName !== 'clear') {
+        setIsExecuting(true);
+        await handler(args, print, () => setIsExecuting(false));
+      } else {
+        handler(args, print, () => {});
+      }
+    } else {
+      print(`bash: ${cmdName}: command not found`);
+    }
+  };
+
+  useEffect(() => {
+    if (initialCommand) {
+      const timer = setTimeout(() => {
+        runCommand(initialCommand);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const commands: Record<string, CommandHandler> = {
     help: (_args, print, finish) => {
@@ -395,22 +425,9 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       // Add to command history
       setCommandHistory(prev => [fullCmd, ...prev]);
       setHistoryIndex(-1);
-
-      const [cmdName, ...args] = fullCmd.split(' ');
-      setHistory(prev => [...prev, <div key={Date.now()}><span className="prompt">website_visitor@cloudshell:~$ </span>{fullCmd}</div>]);
       setInput('');
 
-      const handler = commands[cmdName];
-      if (handler) {
-        if (cmdName !== 'clear') {
-          setIsExecuting(true);
-          await handler(args, print, () => setIsExecuting(false));
-        } else {
-          handler(args, print, () => {});
-        }
-      } else {
-        print(`bash: ${cmdName}: command not found`);
-      }
+      await runCommand(fullCmd);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {

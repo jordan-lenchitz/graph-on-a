@@ -47,12 +47,32 @@ export const NerdHome: React.FC = () => {
   const [showHorse, setShowHorse] = useState(false);
   const [lifeTheme, setLifeTheme] = useState('gt.m');
   const [slopSpeed, setSlopSpeed] = useState(15); // Default 15s
+  const [initialCmd, setInitialCmd] = useState<string | undefined>(undefined);
 
   const [vmStatus, setVmStatus] = useState<'offline' | 'online'>('offline');
   const [systemName, setSystemName] = useState('system_core');
   const [vmUptime, setVmUptime] = useState(0);
   const [vmCpu, setVmCpu] = useState('0.00');
   const [vmMem, setVmMem] = useState('67.1');
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes('?')) {
+      const query = hash.split('?')[1];
+      const params = new URLSearchParams(query);
+      const theme = params.get('theme');
+      const cmd = params.get('cmd');
+
+      if (theme && SLOP_THEMES[theme]) {
+        setLifeTheme(theme);
+        setShowLifeSlop(true);
+      }
+      if (cmd) {
+        setInitialCmd(cmd);
+        setShowTerminal(true);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -117,6 +137,7 @@ export const NerdHome: React.FC = () => {
           onShowOsi={() => setShowOsi(true)}
           onShowOpenStack={() => setShowOpenStack(true)}
           onShowHorse={() => setShowHorse(true)}
+          initialCommand={initialCmd}
         />
       )}
 
