@@ -28,14 +28,14 @@
       },
       "targets": [
         {
-          "alias": "Edge Network Latency",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Edge Network Latency"
         }
       ],
       "title": "Edge Network Latency",
@@ -68,14 +68,14 @@
       },
       "targets": [
         {
-          "alias": "Global API Availability",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Global API Availability"
         }
       ],
       "title": "Global API Availability",
@@ -108,14 +108,14 @@
       },
       "targets": [
         {
-          "alias": "Egress Throughput",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Egress Throughput"
         }
       ],
       "title": "Egress Throughput",
@@ -148,14 +148,14 @@
       },
       "targets": [
         {
-          "alias": "Request Success Rate",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Request Success Rate"
         }
       ],
       "title": "Request Success Rate",
@@ -188,14 +188,14 @@
       },
       "targets": [
         {
-          "alias": "Cluster Compute Load",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Cluster Compute Load"
         }
       ],
       "title": "Cluster Compute Load",
@@ -228,14 +228,14 @@
       },
       "targets": [
         {
-          "alias": "Memory Utilization",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Memory Utilization"
         }
       ],
       "title": "Memory Utilization",
@@ -268,14 +268,14 @@
       },
       "targets": [
         {
-          "alias": "Disk I/O Wait",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Disk I/O Wait"
         }
       ],
       "title": "Disk I/O Wait",
@@ -308,14 +308,14 @@
       },
       "targets": [
         {
-          "alias": "Active Peer Sessions",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Active Peer Sessions"
         }
       ],
       "title": "Active Peer Sessions",
@@ -354,14 +354,14 @@
       },
       "targets": [
         {
-          "alias": "Packet Loss Rate",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Packet Loss Rate"
         }
       ],
       "title": "Packet Loss Rate",
@@ -400,14 +400,14 @@
       },
       "targets": [
         {
-          "alias": "CDN Cache Hit Rate",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "CDN Cache Hit Rate"
         }
       ],
       "title": "CDN Cache Hit Rate",
@@ -446,14 +446,14 @@
       },
       "targets": [
         {
-          "alias": "TLS Handshake Latency",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "TLS Handshake Latency"
         }
       ],
       "title": "TLS Handshake Latency",
@@ -492,14 +492,14 @@
       },
       "targets": [
         {
-          "alias": "Edge Network Latency",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Edge Network Latency"
         }
       ],
       "title": "Edge Network Latency",
@@ -538,14 +538,14 @@
       },
       "targets": [
         {
-          "alias": "Global API Availability",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Global API Availability"
         }
       ],
       "title": "Global API Availability",
@@ -584,14 +584,14 @@
       },
       "targets": [
         {
-          "alias": "Egress Throughput",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Egress Throughput"
         }
       ],
       "title": "Egress Throughput",
@@ -630,14 +630,14 @@
       },
       "targets": [
         {
-          "alias": "Request Success Rate",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Request Success Rate"
         }
       ],
       "title": "Request Success Rate",
@@ -676,14 +676,14 @@
       },
       "targets": [
         {
-          "alias": "Cluster Compute Load",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Cluster Compute Load"
         }
       ],
       "title": "Cluster Compute Load",
@@ -722,14 +722,14 @@
       },
       "targets": [
         {
-          "alias": "Memory Utilization",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Memory Utilization"
         }
       ],
       "title": "Memory Utilization",
@@ -768,14 +768,14 @@
       },
       "targets": [
         {
-          "alias": "Disk I/O Wait",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Disk I/O Wait"
         }
       ],
       "title": "Disk I/O Wait",
@@ -814,14 +814,14 @@
       },
       "targets": [
         {
-          "alias": "Active Peer Sessions",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Active Peer Sessions"
         }
       ],
       "title": "Active Peer Sessions",
@@ -860,14 +860,14 @@
       },
       "targets": [
         {
-          "alias": "Packet Loss Rate",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Packet Loss Rate"
         }
       ],
       "title": "Packet Loss Rate",
@@ -876,10 +876,6 @@
   ],
   "schemaVersion": 38,
   "style": "dark",
-  "tags": [
-    "infrastructure",
-    "real-time"
-  ],
   "time": {
     "from": "now-5m",
     "to": "now"
