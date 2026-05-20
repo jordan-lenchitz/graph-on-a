@@ -83,6 +83,7 @@
                         vga_bios: { url: "vgabios.bin" },
                         bzimage: { url: "vmlinuz-lts" },
                         initrd: { url: "initramfs-lts" },
+                        hda: imagePath ? { url: imagePath } : undefined,
                         autostart: true,
                         screen_container: document.getElementById("v86_screen")
                     });
@@ -112,7 +113,7 @@
 
                         if (!bootCompleted && serialBuffer.includes("~ # ")) {
                             bootCompleted = true;
-                            log("root shell reached. running yottadb installer...", "success");
+                            log("root shell reached. attempting real yottadb installation...", "success");
                             
                             setTimeout(() => {
                                 systemReady = true;
@@ -121,18 +122,30 @@
                                 
                                 const installCmd = "echo 0 > /proc/sys/kernel/printk; " +
                                                  "clear; " +
-                                                 "echo 'initializing yottadb persistence layers...'; sleep 1; " +
+                                                 "if [ -b /dev/hda ]; then echo 'found persistent storage. mounting...'; mkdir -p /opt; mount /dev/hda /opt; fi; " +
+                                                 "if [ -f /opt/ydb/bin/ydb ]; then alias ydb='/opt/ydb/bin/ydb'; alias gt.m='/opt/ydb/bin/ydb'; echo 'yottadb restored from disk.'; else " +
+                                                 "echo 'running: wget -qO- https://gitlab.com/yottadb/db/ydb/raw/master/sr_unix/ydbinstall.sh | bash -s -- --utf8 default'; " +
+                                                 "wget -qO- https://gitlab.com/yottadb/db/ydb/raw/master/sr_unix/ydbinstall.sh | bash -s -- --utf8 default; " +
+                                                 "if [ $? -ne 0 ]; then " +
+                                                 "echo 'error: direct installation failed (check internet). providing interactive shell fallback...'; " +
                                                  "echo '#!/bin/sh' > /bin/ydb; " +
                                                  "echo 'echo \"yottadb r2.06 linux x86_64 (gt.m successor)\"' >> /bin/ydb; " +
                                                  "echo 'echo \"copyright (c) 2017-2024 yottadb llc\"' >> /bin/ydb; " +
-                                                 "echo 'while true; do' >> /bin/ydb; " +
+                                                 "echo 'G_MEM=\"\"; while true; do' >> /bin/ydb; " +
                                                  "echo '  printf \"ydb/gtm> \"' >> /bin/ydb; " +
                                                  "echo '  read cmd' >> /bin/ydb; " +
-                                                 "echo '  if [ \"$cmd\" = \"halt\" ] || [ \"$cmd\" = \"exit\" ] || [ \"$cmd\" = \"h\" ]; then break; fi' >> /bin/ydb; " +
-                                                 "echo '  echo \"GTM: command executed ($cmd) status: 0\"' >> /bin/ydb; " +
+                                                 "echo '  case \"$cmd\" in' >> /bin/ydb; " +
+                                                 "echo '    \"w \"*|\"write \"*) echo \"${cmd#* }\" ;;' >> /bin/ydb; " +
+                                                 "echo '    \"s ^\"*|\"set ^\"*) G_MEM=\"$cmd\"; echo \"GTM: global set\" ;;' >> /bin/ydb; " +
+                                                 "echo '    \"zwrite\"*) if [ -n \"$G_MEM\" ]; then echo \"$G_MEM\"; else echo \"GTM: no globals set\"; fi ;;' >> /bin/ydb; " +
+                                                 "echo '    \"halt\"|\"exit\"|\"h\") break ;;' >> /bin/ydb; " +
+                                                 "echo '    \"\") continue ;;' >> /bin/ydb; " +
+                                                 "echo '    *) echo \"GTM: command executed ($cmd) status: 0\" ;;' >> /bin/ydb; " +
+                                                 "echo '  esac' >> /bin/ydb; " +
                                                  "echo 'done' >> /bin/ydb; " +
                                                  "chmod +x /bin/ydb; " +
-                                                 "ln -s /bin/ydb /bin/gt.m; " +
+                                                 "ln -sf /bin/ydb /bin/gt.m; " +
+                                                 "fi; fi; " +
                                                  "echo ''; echo 'type \"ydb\" or \"gt.m\" to start the database.';\n";
                                 emulator.serial0_send(installCmd);
                             }, 500);
