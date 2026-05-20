@@ -28,17 +28,17 @@
       },
       "targets": [
         {
-          "alias": "Existential Dread (absurdity level 1)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Existential Dread"
         }
       ],
-      "title": "Existential Dread (absurdity level 1)",
+      "title": "Existential Dread",
       "type": "stat"
     },
     {
@@ -68,17 +68,17 @@
       },
       "targets": [
         {
-          "alias": "Horse Sense Index (absurdity level 2)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Horse Sense Index"
         }
       ],
-      "title": "Horse Sense Index (absurdity level 2)",
+      "title": "Horse Sense Index",
       "type": "stat"
     },
     {
@@ -108,17 +108,17 @@
       },
       "targets": [
         {
-          "alias": "Recursion Pressure (absurdity level 3)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Recursion Pressure"
         }
       ],
-      "title": "Recursion Pressure (absurdity level 3)",
+      "title": "Recursion Pressure",
       "type": "stat"
     },
     {
@@ -148,17 +148,17 @@
       },
       "targets": [
         {
-          "alias": "Slop Throughput (absurdity level 4)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Slop Throughput"
         }
       ],
-      "title": "Slop Throughput (absurdity level 4)",
+      "title": "Slop Throughput",
       "type": "stat"
     },
     {
@@ -188,17 +188,17 @@
       },
       "targets": [
         {
-          "alias": "Cowardice Index (absurdity level 5)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Cowardice Index"
         }
       ],
-      "title": "Cowardice Index (absurdity level 5)",
+      "title": "Cowardice Index",
       "type": "gauge"
     },
     {
@@ -228,17 +228,17 @@
       },
       "targets": [
         {
-          "alias": "Quantum Jitter (absurdity level 6)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Quantum Jitter"
         }
       ],
-      "title": "Quantum Jitter (absurdity level 6)",
+      "title": "Quantum Jitter",
       "type": "gauge"
     },
     {
@@ -268,17 +268,17 @@
       },
       "targets": [
         {
-          "alias": "YDB Throughput (absurdity level 7)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "YDB Throughput"
         }
       ],
-      "title": "YDB Throughput (absurdity level 7)",
+      "title": "YDB Throughput",
       "type": "gauge"
     },
     {
@@ -308,17 +308,17 @@
       },
       "targets": [
         {
-          "alias": "Avian Carrier Latency (absurdity level 8)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Avian Carrier Latency"
         }
       ],
-      "title": "Avian Carrier Latency (absurdity level 8)",
+      "title": "Avian Carrier Latency",
       "type": "gauge"
     },
     {
@@ -354,17 +354,17 @@
       },
       "targets": [
         {
-          "alias": "Sondheim Lyric Density (absurdity level 9)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Sondheim Lyric Density"
         }
       ],
-      "title": "Sondheim Lyric Density (absurdity level 9)",
+      "title": "Sondheim Lyric Density",
       "type": "timeseries"
     },
     {
@@ -400,17 +400,17 @@
       },
       "targets": [
         {
-          "alias": "Entropy Drift (absurdity level 10)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Entropy Drift"
         }
       ],
-      "title": "Entropy Drift (absurdity level 10)",
+      "title": "Entropy Drift",
       "type": "timeseries"
     },
     {
@@ -446,17 +446,17 @@
       },
       "targets": [
         {
-          "alias": "Neuro-Sync Rate (absurdity level 11)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Neuro-Sync Rate"
         }
       ],
-      "title": "Neuro-Sync Rate (absurdity level 11)",
+      "title": "Neuro-Sync Rate",
       "type": "timeseries"
     },
     {
@@ -492,17 +492,17 @@
       },
       "targets": [
         {
-          "alias": "Existential Dread (absurdity level 12)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Existential Dread"
         }
       ],
-      "title": "Existential Dread (absurdity level 12)",
+      "title": "Existential Dread",
       "type": "timeseries"
     },
     {
@@ -538,17 +538,17 @@
       },
       "targets": [
         {
-          "alias": "Horse Sense Index (absurdity level 13)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Horse Sense Index"
         }
       ],
-      "title": "Horse Sense Index (absurdity level 13)",
+      "title": "Horse Sense Index",
       "type": "timeseries"
     },
     {
@@ -584,17 +584,17 @@
       },
       "targets": [
         {
-          "alias": "Recursion Pressure (absurdity level 14)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Recursion Pressure"
         }
       ],
-      "title": "Recursion Pressure (absurdity level 14)",
+      "title": "Recursion Pressure",
       "type": "timeseries"
     },
     {
@@ -630,17 +630,17 @@
       },
       "targets": [
         {
-          "alias": "Slop Throughput (absurdity level 15)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Slop Throughput"
         }
       ],
-      "title": "Slop Throughput (absurdity level 15)",
+      "title": "Slop Throughput",
       "type": "timeseries"
     },
     {
@@ -676,17 +676,17 @@
       },
       "targets": [
         {
-          "alias": "Cowardice Index (absurdity level 16)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Cowardice Index"
         }
       ],
-      "title": "Cowardice Index (absurdity level 16)",
+      "title": "Cowardice Index",
       "type": "timeseries"
     },
     {
@@ -722,17 +722,17 @@
       },
       "targets": [
         {
-          "alias": "Quantum Jitter (absurdity level 17)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Quantum Jitter"
         }
       ],
-      "title": "Quantum Jitter (absurdity level 17)",
+      "title": "Quantum Jitter",
       "type": "timeseries"
     },
     {
@@ -768,17 +768,17 @@
       },
       "targets": [
         {
-          "alias": "YDB Throughput (absurdity level 18)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "YDB Throughput"
         }
       ],
-      "title": "YDB Throughput (absurdity level 18)",
+      "title": "YDB Throughput",
       "type": "timeseries"
     },
     {
@@ -814,17 +814,17 @@
       },
       "targets": [
         {
-          "alias": "Avian Carrier Latency (absurdity level 19)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Avian Carrier Latency"
         }
       ],
-      "title": "Avian Carrier Latency (absurdity level 19)",
+      "title": "Avian Carrier Latency",
       "type": "timeseries"
     },
     {
@@ -860,26 +860,22 @@
       },
       "targets": [
         {
-          "alias": "Sondheim Lyric Density (absurdity level 20)",
           "refId": "A",
           "datasource": {
             "type": "testdata",
             "uid": "pd8849646-6085-485a-8326-f77a8342416b"
           },
           "scenarioId": "random_walk",
-          "seriesCount": 1
+          "seriesCount": 1,
+          "alias": "Sondheim Lyric Density"
         }
       ],
-      "title": "Sondheim Lyric Density (absurdity level 20)",
+      "title": "Sondheim Lyric Density",
       "type": "timeseries"
     }
   ],
   "schemaVersion": 38,
   "style": "dark",
-  "tags": [
-    "absurdist",
-    "slop"
-  ],
   "time": {
     "from": "now-5m",
     "to": "now"
