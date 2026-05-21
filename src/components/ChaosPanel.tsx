@@ -57,9 +57,8 @@ export const ChaosPanel: React.FC = () => {
         </div>
 
         <div className="mt-4 p-2 border-green-dashed text-small text-green">
-          <div className="mb-1">!! ATTENTION !!</div>
-          <div>Pressing the GREEN BUTTON will evacuate all traffic from the current region. 
-          Expect 100% downtime for 2-5 minutes during global DNS propagation.</div>
+          <div className="mb-1">!! EDGE ROUTING ACTIVE !!</div>
+          <div>0% downtime failover via Cloudflare Worker. Pressing the GREEN BUTTON triggers an instantaneous global PoP migration via KV state swap.</div>
         </div>
 
         <div className="text-muted text-right text-small mt-2">gcp_loadbalancer_mutator // v1.0</div>
