@@ -233,7 +233,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       print('[quota smash] initializing architecture expansion...');
       await new Promise(r => setTimeout(r, 500));
       print('[quota smash] deployment target: global (32 regions)');
-      const regions = ['us-central1', 'europe-west1', 'asia-east1', 'australia-southeast1', 'southamerica-east1'];
+      const regions = ['us-central1', 'europe-west4', 'asia-east1', 'africa-south1', 'australia-southeast2'];
       for (const r of regions) {
         await new Promise(res => setTimeout(res, 200));
         print(`[quota smash] region: ${r} -> tier: enterprise plus (smashing quota...)`);
