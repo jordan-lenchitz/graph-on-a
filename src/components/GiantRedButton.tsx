@@ -14,7 +14,11 @@ export const GiantRedButton: React.FC = () => {
     setError(null);
 
     try {
-      const res = await fetch('/api/failover', { method: 'POST' });
+      const res = await fetch(`/infra/failover?t=${Date.now()}`, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chaos: true })
+      });
       if (!res.ok) throw new Error('Failover rejected by infrastructure.');
       
       const data = await res.json();

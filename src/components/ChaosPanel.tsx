@@ -17,7 +17,7 @@ export const ChaosPanel: React.FC = () => {
   useEffect(() => {
     const fetchRegion = async () => {
       try {
-        const res = await fetch('/api/region');
+        const res = await fetch(`/infra/region?t=${Date.now()}`);
         if (res.ok) {
           const json = await res.json();
           setData(json);
@@ -33,19 +33,19 @@ export const ChaosPanel: React.FC = () => {
   }, []);
 
   return (
-    <DraggablePanel className="chaos-panel border-red">
-      <div className="panel-header bg-red">
+    <DraggablePanel className="chaos-panel border-green">
+      <div className="panel-header bg-green">
         <span className="dot white-dot"></span>
         <span className="text-white">CHAOS_ENGINEERING_CORE_v1</span>
         <span className="header-right text-white">LIVE_METRICS</span>
       </div>
       <div className="panel-content bg-dark">
-        <div className="flex-between text-red mb-2">
+        <div className="flex-between text-green mb-2">
           <span>FAILOVER_STATUS</span>
           <span className="blink">{data.status}</span>
         </div>
         
-        <div className="grid-2-col mt-4 text-red">
+        <div className="grid-2-col mt-4 text-green">
           <div>
             <div className="text-small opacity-50">active_geo_region</div>
             <div className="text-large">{data.region}</div>
@@ -56,9 +56,9 @@ export const ChaosPanel: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-4 p-2 border-red-dashed text-small text-red">
+        <div className="mt-4 p-2 border-green-dashed text-small text-green">
           <div className="mb-1">!! ATTENTION !!</div>
-          <div>Pressing the RED BUTTON will evacuate all traffic from the current region. 
+          <div>Pressing the GREEN BUTTON will evacuate all traffic from the current region. 
           Expect 100% downtime for 2-5 minutes during global DNS propagation.</div>
         </div>
 

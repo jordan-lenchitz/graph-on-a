@@ -17,37 +17,87 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 const computeClient = new BackendServicesClient();
 
-const REGIONS = {
-  'us-central1': 'us-central1-neg',
-  'europe-west4': 'europe-west4-neg',
-  'asia-east1': 'asia-east1-neg'
-};
-
 const PROJECT_ID = process.env.PROJECT_ID || 'project-117f1e92-119b-47be-a05';
-const BACKEND_SERVICE_NAME = process.env.BACKEND_SERVICE_NAME || 'jordan-xyz-backend';
+const BACKEND_SERVICE_NAME = process.env.BACKEND_SERVICE_NAME || 'jordan-xyz-run-backend';
 
-app.get('/api/region', (req, res) => {
+let currentStatus = 'Stable';
+let targetRegion = 'n/a';
+
+app.get('/infra/region', (req, res) => {
+  const serviceName = process.env.K_SERVICE || 'local';
+  let region = 'local';
+  if (serviceName.endsWith('-us')) region = 'us-central1';
+  if (serviceName.endsWith('-eu')) region = 'europe-west4';
+  
   res.json({
-    region: process.env.K_SERVICE ? process.env.K_SERVICE.split('--')[1] || 'us-central1' : 'local',
+    region: region,
     pop: 'lhr-c2',
-    status: 'Stable'
+    status: currentStatus,
+    target: targetRegion
   });
 });
 
-app.post('/api/failover', async (req, res) => {
+app.post('/infra/failover', async (req, res) => {
   try {
-    console.log('FAILOVER INITIATED: Evacuating current region...');
+    console.log('FAILOVER INITIATED: Mutating Global Infrastructure...');
+    currentStatus = 'EVACUATING';
     
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    const [backendService] = await computeClient.get({
+      project: PROJECT_ID,
+      backendService: BACKEND_SERVICE_NAME
+    });
+
+    console.log('Current backends:', JSON.stringify(backendService.backends));
+
+    const negUS = `https://www.googleapis.com/compute/v1/projects/${PROJECT_ID}/regions/us-central1/networkEndpointGroups/failover-neg-us`;
+    const negEU = `https://www.googleapis.com/compute/v1/projects/${PROJECT_ID}/regions/europe-west4/networkEndpointGroups/failover-neg-eu`;
+
+    let newBackends = [];
+    const hasUS = backendService.backends.some(b => b.group === negUS);
+    
+    if (hasUS) {
+      console.log('Switching to EU...');
+      targetRegion = 'europe-west4';
+      newBackends = [{
+        group: negEU,
+        balancingMode: 'UTILIZATION',
+        capacityScaler: 1.0
+      }];
+    } else {
+      console.log('Switching to US...');
+      targetRegion = 'us-central1';
+      newBackends = [{
+        group: negUS,
+        balancingMode: 'UTILIZATION',
+        capacityScaler: 1.0
+      }];
+    }
+
+    backendService.backends = newBackends;
+
+    const [operation] = await computeClient.patch({
+      project: PROJECT_ID,
+      backendService: BACKEND_SERVICE_NAME,
+      backendServiceResource: backendService
+    });
+
+    console.log('Patch operation initiated:', operation.name);
+    currentStatus = 'PROPAGATING';
 
     res.json({
-      message: 'Failover successful. Traffic routing to new region...',
-      target_region: 'europe-west4',
+      message: 'Failover successful. Infrastructure mutation in progress.',
+      target_region: targetRegion,
       eta: '2-5 minutes (CDN propagation)'
     });
+
+    setTimeout(() => {
+      currentStatus = 'Stable';
+    }, 120000);
+
   } catch (error) {
     console.error('Failover failed:', error);
-    res.status(500).json({ error: 'Catastrophic failure during failover. Good luck.' });
+    currentStatus = 'ERROR';
+    res.status(500).json({ error: 'Catastrophic failure during failover. Check IAM permissions.' });
   }
 });
 
