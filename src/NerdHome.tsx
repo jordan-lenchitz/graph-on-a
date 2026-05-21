@@ -8,6 +8,8 @@ import { RealGrafanaPanel } from './components/RealGrafanaPanel';
 import { StupidGrafanaPanel } from './components/StupidGrafanaPanel';
 import { HorseEngine } from './components/HorseEngine';
 import { LifeSlop, SLOP_THEMES } from './components/LifeSlop/LifeSlop';
+import { ChaosPanel } from './components/ChaosPanel';
+import { GiantRedButton } from './components/GiantRedButton';
 import './NerdHome.css';
 
 const ALLITERATIVE_NAMES = [
@@ -172,6 +174,9 @@ export const NerdHome: React.FC = () => {
 
       {/* Floating Action Buttons */}
       <div className="floating-actions">
+        {/* Chaos Button */}
+        <GiantRedButton />
+
         {/* Slop Button */}
         <button className="action-btn slop-btn" onClick={triggerLifeSlop}>
           spawn_slop
@@ -190,6 +195,9 @@ export const NerdHome: React.FC = () => {
         <div>j. lenchitz (google scholar)</div>
       </div>
       */}
+
+      {/* Chaos Panel */}
+      <ChaosPanel />
 
       {/* Left Panel: OSI Absurdity */}
       {showOsi && (

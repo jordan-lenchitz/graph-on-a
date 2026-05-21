@@ -1,0 +1,55 @@
+.giant-red-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.giant-red-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ff4d4d, #cc0000);
+  border: 3px solid #800000;
+  color: white;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  transition: all 0.1s active;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.giant-red-button:hover {
+  background: radial-gradient(circle at 30% 30%, #ff6666, #e60000);
+  transform: scale(1.05);
+}
+
+.giant-red-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.giant-red-button.is-failing-over {
+  animation: alarm-pulse 0.5s infinite alternate;
+  cursor: wait;
+}
+
+@keyframes alarm-pulse {
+  from { background-color: #cc0000; box-shadow: 0 0 10px #ff0000; }
+  to { background-color: #ff0000; box-shadow: 0 0 30px #ff0000; }
+}
+
+.failover-error {
+  color: #ff4d4d;
+  font-size: 9px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 2px 4px;
+  border: 1px solid #ff4d4d;
+  max-width: 100px;
+  text-align: center;
+}
