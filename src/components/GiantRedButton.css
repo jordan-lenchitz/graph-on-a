@@ -9,8 +9,8 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #ff4d4d, #cc0000);
-  border: 3px solid #800000;
+  background: radial-gradient(circle at 30% 30%, #4dff4d, #00cc00);
+  border: 3px solid #008000;
   color: white;
   font-weight: bold;
   font-family: 'Courier New', Courier, monospace;
@@ -25,7 +25,7 @@
 }
 
 .giant-red-button:hover {
-  background: radial-gradient(circle at 30% 30%, #ff6666, #e60000);
+  background: radial-gradient(circle at 30% 30%, #66ff66, #00e600);
   transform: scale(1.05);
 }
 
@@ -40,16 +40,16 @@
 }
 
 @keyframes alarm-pulse {
-  from { background-color: #cc0000; box-shadow: 0 0 10px #ff0000; }
-  to { background-color: #ff0000; box-shadow: 0 0 30px #ff0000; }
+  from { background-color: #00cc00; box-shadow: 0 0 10px #00ff00; }
+  to { background-color: #00ff00; box-shadow: 0 0 30px #00ff00; }
 }
 
 .failover-error {
-  color: #ff4d4d;
+  color: #4dff4d;
   font-size: 9px;
   background: rgba(0, 0, 0, 0.8);
   padding: 2px 4px;
-  border: 1px solid #ff4d4d;
+  border: 1px solid #4dff4d;
   max-width: 100px;
   text-align: center;
 }

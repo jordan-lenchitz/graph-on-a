@@ -18,59 +18,99 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 const computeClient = new BackendServicesClient();
 
-// Regions for failover
-const REGIONS = {
-  'us-central1': 'us-central1-neg',
-  'europe-west4': 'europe-west4-neg',
-  'asia-east1': 'asia-east1-neg'
-};
-
 const PROJECT_ID = process.env.PROJECT_ID || 'project-117f1e92-119b-47be-a05';
-const BACKEND_SERVICE_NAME = process.env.BACKEND_SERVICE_NAME || 'jordan-xyz-backend';
+const BACKEND_SERVICE_NAME = process.env.BACKEND_SERVICE_NAME || 'jordan-xyz-run-backend';
 
-app.get('/api/region', (req, res) => {
+// Status tracking
+let currentStatus = 'Stable';
+let targetRegion = 'n/a';
+
+app.get('/infra/region', (req, res) => {
+  const serviceName = process.env.K_SERVICE || 'local';
+  let region = 'local';
+  if (serviceName.endsWith('-us')) region = 'us-central1';
+  if (serviceName.endsWith('-eu')) region = 'europe-west4';
+  
   res.json({
-    region: process.env.K_SERVICE ? process.env.K_SERVICE.split('--')[1] || 'us-central1' : 'local',
-    pop: 'lhr-c2', // Hardcoded for absurdity or retrieved from metadata
-    status: 'Stable'
+    region: region,
+    pop: 'lhr-c2',
+    status: currentStatus,
+    target: targetRegion
   });
 });
 
-app.post('/api/failover', async (req, res) => {
+app.post('/infra/failover', async (req, res) => {
   try {
-    console.log('FAILOVER INITIATED: Evacuating current region...');
+    console.log('FAILOVER INITIATED: Mutating Global Infrastructure...');
+    currentStatus = 'EVACUATING';
     
-    // In a real implementation, this would involve updating the Backend Service's backends
-    // This is a simplified "Chaos" simulation that would actually trigger a GCP update.
-    
-    /* 
+    // 1. Get the current Backend Service
     const [backendService] = await computeClient.get({
       project: PROJECT_ID,
       backendService: BACKEND_SERVICE_NAME
     });
 
-    // Toggle logic would go here:
-    // 1. Identify current region NEG
-    // 2. Identify target region NEG
-    // 3. Update backendService.backends
-    // 4. await computeClient.patch(...)
-    */
+    console.log('Current backends:', JSON.stringify(backendService.backends));
 
-    // Simulate delay for absurdity
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    // 2. Logic: Toggle between US and EU
+    const negUS = `https://www.googleapis.com/compute/v1/projects/${PROJECT_ID}/regions/us-central1/networkEndpointGroups/failover-neg-us`;
+    const negEU = `https://www.googleapis.com/compute/v1/projects/${PROJECT_ID}/regions/europe-west4/networkEndpointGroups/failover-neg-eu`;
+
+    let newBackends = [];
+    const hasUS = backendService.backends.some(b => b.group === negUS);
+    
+    if (hasUS) {
+      console.log('Switching to EU...');
+      targetRegion = 'europe-west4';
+      newBackends = [{
+        group: negEU,
+        balancingMode: 'UTILIZATION',
+        capacityScaler: 1.0
+      }];
+    } else {
+      console.log('Switching to US...');
+      targetRegion = 'us-central1';
+      newBackends = [{
+        group: negUS,
+        balancingMode: 'UTILIZATION',
+        capacityScaler: 1.0
+      }];
+    }
+
+    // 3. Update the Backend Service
+    backendService.backends = newBackends;
+
+    // 4. Patch (Update) the Backend Service
+    const [operation] = await computeClient.patch({
+      project: PROJECT_ID,
+      backendService: BACKEND_SERVICE_NAME,
+      backendServiceResource: backendService
+    });
+
+    console.log('Patch operation initiated:', operation.name);
+    currentStatus = 'PROPAGATING';
+
+    // Note: We don't wait for completion here to respond to the frontend quickly.
+    // The CDN will propagate the change in 2-5 minutes.
 
     res.json({
-      message: 'Failover successful. Traffic routing to new region...',
-      target_region: 'europe-west4',
+      message: 'Failover successful. Infrastructure mutation in progress.',
+      target_region: targetRegion,
       eta: '2-5 minutes (CDN propagation)'
     });
+
+    // Reset status after a delay (simulating propagation end)
+    setTimeout(() => {
+      currentStatus = 'Stable';
+    }, 120000); // 2 minutes
+
   } catch (error) {
     console.error('Failover failed:', error);
-    res.status(500).json({ error: 'Catastrophic failure during failover. Good luck.' });
+    currentStatus = 'ERROR';
+    res.status(500).json({ error: 'Catastrophic failure during failover. Check IAM permissions.' });
   }
 });
 
-// Fallback to index.html for React Router
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });

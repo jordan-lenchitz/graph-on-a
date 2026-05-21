@@ -95,9 +95,17 @@
 .layer-1 { color: #8a2be2; border-color: #8a2be2; }
 
 .text-green { color: #00ff00; }
+.bg-green { background-color: #00ff00; }
+.border-green { border-color: #00ff00; }
+.border-green-dashed { border: 1px dashed #00ff00; }
+
 .text-cyan { color: #00ffff; }
 .text-purple { color: #8a2be2; }
+
 .text-red { color: #ff0000; }
+.bg-red { background-color: #ff0000; }
+.border-red { border-color: #ff0000; }
+.border-red-dashed { border: 1px dashed #ff0000; }
 .text-yellow { color: #ffff00; }
 .text-orange { color: #ffa500; }
 .text-blue { color: #00bfff; }
@@ -210,7 +218,7 @@
   padding: 5px 20px;
   display: flex;
   justify-content: space-between;
-  border-top: 2px solid #ff0000;
+  border-top: 2px solid #00ff00;
   z-index: 50;
   text-transform: lowercase;
 }
