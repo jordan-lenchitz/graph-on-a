@@ -6,7 +6,7 @@ export const GiantRedButton: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleFailover = async () => {
-    if (!window.confirm("WARNING: This will take the site DOWN globally for 2-5 minutes while we swap regions. Proceed?")) {
+    if (!window.confirm("INITIATE EDGE FAILOVER? (0% Downtime swap via Cloudflare Worker)")) {
       return;
     }
 
