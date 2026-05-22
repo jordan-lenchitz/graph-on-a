@@ -355,6 +355,15 @@
     max-width: 90vw;
   }
   
+  .system-core-panel {
+    position: fixed !important;
+    bottom: 120px !important;
+    right: 10px !important;
+    width: 250px !important;
+    margin: 0 !important;
+    z-index: 100 !important;
+  }
+  
   .stupid-grafana-panel {
     top: auto !important;
     transform: none !important;
