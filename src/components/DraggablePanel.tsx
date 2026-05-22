@@ -13,65 +13,46 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({ className, child
   const dragStart = useRef({ x: 0, y: 0 });
   const offsetStart = useRef({ x: 0, y: 0 });
 
-  const startDrag = (clientX: number, clientY: number, target: EventTarget) => {
-    if ((target as HTMLElement).closest('.panel-header')) {
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('.panel-header')) {
+      e.preventDefault();
+      if (!e.isPrimary) return;
+      
       setIsDragging(true);
-      dragStart.current = { x: clientX, y: clientY };
+      dragStart.current = { x: e.clientX, y: e.clientY };
       offsetStart.current = { ...offset };
+      
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      
       if (onDragStart) onDragStart();
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    startDrag(e.clientX, e.clientY, e.target);
-  };
-
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    const touch = e.touches[0];
-    startDrag(touch.clientX, touch.clientY, e.target);
-  };
-
   useEffect(() => {
-    const handleMove = (clientX: number, clientY: number) => {
-      if (!isDragging) return;
-      const dx = clientX - dragStart.current.x;
-      const dy = clientY - dragStart.current.y;
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!isDragging || !e.isPrimary) return;
+      const dx = e.clientX - dragStart.current.x;
+      const dy = e.clientY - dragStart.current.y;
       setOffset({ x: offsetStart.current.x + dx, y: offsetStart.current.y + dy });
       if (onDrag) onDrag();
     };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      handleMove(e.clientX, e.clientY);
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isDragging) {
-        e.preventDefault(); 
-      }
-      const touch = e.touches[0];
-      handleMove(touch.clientX, touch.clientY);
-    };
     
-    const handleUp = () => {
-      if (isDragging) {
+    const handlePointerUp = (e: PointerEvent) => {
+      if (isDragging && e.isPrimary) {
         setIsDragging(false);
       }
     };
 
     if (isDragging) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleUp);
-      window.addEventListener('touchmove', handleTouchMove, { passive: false });
-      window.addEventListener('touchend', handleUp);
-      window.addEventListener('touchcancel', handleUp);
+      window.addEventListener('pointermove', handlePointerMove);
+      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener('pointercancel', handlePointerUp);
     }
     
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleUp);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleUp);
-      window.removeEventListener('touchcancel', handleUp);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerUp);
     };
   }, [isDragging]);
 
@@ -79,8 +60,7 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({ className, child
     <div 
       className={`panel ${className || ''}`}
       style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
-      onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchStart}
+      onPointerDown={handlePointerDown}
     >
       {children}
     </div>
