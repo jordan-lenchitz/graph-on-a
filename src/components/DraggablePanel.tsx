@@ -15,6 +15,8 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({ className, child
   const currentOffset = useRef({ x: 0, y: 0 });
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (window.innerWidth <= 768) return;
+
     if ((e.target as HTMLElement).closest('.panel-header')) {
       if (!e.isPrimary) return;
       
@@ -55,13 +57,13 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({ className, child
     }
   };
 
-  const panelStyle: CSSProperties = {
+  const panelStyle: CSSProperties = window.innerWidth > 768 ? {
     transform: `translate(${currentOffset.current.x}px, ${currentOffset.current.y}px)`,
     touchAction: 'none',
     userSelect: 'none',
     WebkitUserSelect: 'none',
     WebkitTouchCallout: 'none'
-  };
+  } : {};
 
   return (
     <div 
