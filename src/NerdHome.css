@@ -45,6 +45,7 @@
   align-items: center;
   gap: 10px;
   cursor: grab;
+  touch-action: none; /* Prevent mobile browser from hijacking drag for scrolling */
 }
 
 .panel-header:active {
