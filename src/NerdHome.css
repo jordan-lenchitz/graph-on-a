@@ -133,8 +133,8 @@
 }
 
 .system-core-panel {
-  top: 20px;
-  left: 20px;
+  bottom: 100px;
+  right: 20px;
   width: 280px;
   border-color: #ff0000;
 }
