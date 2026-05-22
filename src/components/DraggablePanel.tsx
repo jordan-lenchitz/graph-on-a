@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
+import type { CSSProperties } from 'react';
 
 interface DraggablePanelProps {
   className?: string;
@@ -8,63 +9,71 @@ interface DraggablePanelProps {
 }
 
 export const DraggablePanel: React.FC<DraggablePanelProps> = ({ className, children, onDrag, onDragStart }) => {
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const dragStart = useRef({ x: 0, y: 0 });
-  const offsetStart = useRef({ x: 0, y: 0 });
+  const panelRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startPos = useRef({ x: 0, y: 0 });
+  const currentOffset = useRef({ x: 0, y: 0 });
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     // Only initiate drag if the user clicks/touches within the header
     if ((e.target as HTMLElement).closest('.panel-header')) {
-      // Prevent text selection while dragging
-      e.preventDefault();
-      // Only capture primary pointer (prevents multi-touch weirdness)
       if (!e.isPrimary) return;
       
-      setIsDragging(true);
-      dragStart.current = { x: e.clientX, y: e.clientY };
-      offsetStart.current = { ...offset };
+      isDragging.current = true;
+      startPos.current = { x: e.clientX, y: e.clientY };
       
-      // Capture the pointer to ensure we don't lose the event if it leaves the window briefly
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
-      
+      if (panelRef.current) {
+        panelRef.current.setPointerCapture(e.pointerId);
+      }
       if (onDragStart) onDragStart();
     }
   };
 
-  useEffect(() => {
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!isDragging || !e.isPrimary) return;
-      const dx = e.clientX - dragStart.current.x;
-      const dy = e.clientY - dragStart.current.y;
-      setOffset({ x: offsetStart.current.x + dx, y: offsetStart.current.y + dy });
-      if (onDrag) onDrag();
-    };
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging.current || !e.isPrimary) return;
     
-    const handlePointerUp = (e: PointerEvent) => {
-      if (isDragging && e.isPrimary) {
-        setIsDragging(false);
-      }
-    };
-
-    if (isDragging) {
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('pointerup', handlePointerUp);
-      window.addEventListener('pointercancel', handlePointerUp);
+    const dx = e.clientX - startPos.current.x;
+    const dy = e.clientY - startPos.current.y;
+    
+    currentOffset.current.x += dx;
+    currentOffset.current.y += dy;
+    
+    if (panelRef.current) {
+      panelRef.current.style.transform = `translate(${currentOffset.current.x}px, ${currentOffset.current.y}px)`;
     }
     
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
-      window.removeEventListener('pointercancel', handlePointerUp);
-    };
-  }, [isDragging]);
+    startPos.current = { x: e.clientX, y: e.clientY };
+    
+    if (onDrag) onDrag();
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isDragging.current && e.isPrimary) {
+      isDragging.current = false;
+      if (panelRef.current) {
+        panelRef.current.releasePointerCapture(e.pointerId);
+      }
+    }
+  };
+
+  // Inline styles for nuclear touch control
+  const panelStyle: CSSProperties = {
+    transform: `translate(${currentOffset.current.x}px, ${currentOffset.current.y}px)`,
+    touchAction: 'none',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    WebkitTouchCallout: 'none'
+  };
 
   return (
     <div 
+      ref={panelRef}
       className={`panel ${className || ''}`}
-      style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
+      style={panelStyle}
       onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
     >
       {children}
     </div>
