@@ -133,10 +133,12 @@
 }
 
 .system-core-panel {
+  position: fixed;
   bottom: 100px;
   right: 20px;
   width: 280px;
   border-color: #ff0000;
+  z-index: 45;
 }
 .system-core-panel.border-green {
   border-color: #00ff00;
