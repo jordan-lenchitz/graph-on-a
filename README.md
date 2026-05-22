@@ -21,3 +21,6 @@ client request is immediately captured by the edge proxy -> low-latency read aga
 failover is a state mutation event like any other! when the "chaos" endpoint is invoked we read the current `active_region` from the distributed store -> determine the subsequent region in the sequence (looping back to the origin iff at the terminus) -> overwrite the `active_region` key in the distributed store with the newly computed region identifier!
 
 because the edge proxies dynamically query the kv store for every incoming request, mutating this single central variable instantaneously forces the entire global network to reroute all subsequent traffic to the newly designated origin cluster :)
+
+
+we added drag panels but then realized mobile was bad so we made them static blocks instead and also fixed the failover routing so all regions are synced up
