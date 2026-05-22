@@ -329,3 +329,34 @@
 .panic-shake {
   animation: panic 0.1s infinite;
 }
+
+/* --- Mobile Static Layout --- */
+@media (max-width: 768px) {
+  .panel {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: 90vw !important;
+    margin: 20px auto !important;
+  }
+  
+  .panel-header {
+    cursor: default !important;
+    touch-action: auto !important;
+  }
+
+  /* Specific mobile tweaks to prevent panels from stretching wildly */
+  .telemetry-panel {
+    max-width: 90vw;
+  }
+  
+  .stupid-grafana-panel {
+    top: auto !important;
+    transform: none !important;
+    margin-top: 50px !important;
+    margin-bottom: 150px !important;
+  }
+}
