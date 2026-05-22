@@ -59,6 +59,68 @@ export const ChaosPanel: React.FC = () => {
         <div className="mt-4 p-2 border-green-dashed text-small text-green">
           <div className="mb-1">!! EDGE ROUTING ACTIVE !!</div>
           <div>0% downtime failover via Cloudflare Worker. Pressing the GREEN BUTTON triggers an instantaneous global PoP migration via KV state swap.</div>
+          <details className="mt-2 text-small p-2" style={{ borderTop: '1px dashed #00ff00' }}>
+            <summary style={{ cursor: 'pointer', opacity: 0.8 }}>how_does_this_cloudflare_worker_work.ts</summary>
+            <pre style={{ overflowX: 'auto', fontSize: '0.8em', marginTop: '10px', color: '#00ff00', background: '#000', padding: '10px', whiteSpace: 'pre-wrap', textAlign: 'left' }}>
+{`export interface Region {
+  id: string;
+  url: string;
+}
+
+export interface Env {
+  CHAOS_STATE: KVNamespace;
+  REGIONS_JSON: string;
+}
+
+export default {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    const url = new URL(request.url);
+    const regions: Region[] = JSON.parse(env.REGIONS_JSON);
+
+    if (url.pathname === '/infra/failover' && request.method === 'POST') {
+      const currentId = await env.CHAOS_STATE.get('ACTIVE_REGION') || regions[0].id;
+      
+      const currentIndex = regions.findIndex(r => r.id === currentId);
+      const nextIndex = (currentIndex + 1) % regions.length;
+      const nextRegion = regions[nextIndex];
+      
+      await env.CHAOS_STATE.put('ACTIVE_REGION', nextRegion.id);
+      
+      return new Response(JSON.stringify({
+        message: \\\`Edge Failover Initiated (\${currentIndex + 1}/\${regions.length})\\\`,
+        target_region: nextRegion.id,
+        eta: '0 seconds (Instant Edge Swap)'
+      }), {
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
+    if (url.pathname === '/infra/region') {
+      const activeId = await env.CHAOS_STATE.get('ACTIVE_REGION') || regions[0].id;
+      return new Response(JSON.stringify({
+        region: activeId,
+        pop: request.cf?.colo || 'unknown',
+        status: 'Stable (Edge Proxied)'
+      }), {
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
+    const activeId = await env.CHAOS_STATE.get('ACTIVE_REGION') || regions[0].id;
+    const activeRegion = regions.find(r => r.id === activeId) || regions[0];
+    const origin = activeRegion.url;
+    
+    const proxyUrl = new URL(url.pathname + url.search, origin);
+    const proxyRequest = new Request(proxyUrl, request);
+    
+    proxyRequest.headers.set('Host', new URL(origin).host);
+    proxyRequest.headers.set('X-Forwarded-Host', url.host);
+
+    return fetch(proxyRequest);
+  },
+};`}
+            </pre>
+          </details>
         </div>
 
         <div className="text-muted text-right text-small mt-2">gcp_loadbalancer_mutator // v1.0</div>
