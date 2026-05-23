@@ -50,6 +50,7 @@ export const NerdHome: React.FC = () => {
   const [lifeTheme, setLifeTheme] = useState('gt.m');
   const [slopSpeed, setSlopSpeed] = useState(15); // Default 15s
   const [initialCmd, setInitialCmd] = useState<string | undefined>(undefined);
+  const [isStaticMode, setIsStaticMode] = useState(false);
 
   const [vmStatus, setVmStatus] = useState<'offline' | 'online'>('offline');
   const [systemName, setSystemName] = useState('system_core');
@@ -80,6 +81,11 @@ export const NerdHome: React.FC = () => {
       const params = new URLSearchParams(query);
       const theme = params.get('theme');
       const cmd = params.get('cmd');
+      const staticParam = params.get('static');
+
+      if (staticParam === 'true' || staticParam === '1') {
+        setIsStaticMode(true);
+      }
 
       if (theme && SLOP_THEMES[theme]) {
         setLifeTheme(theme);
@@ -116,6 +122,7 @@ export const NerdHome: React.FC = () => {
   };
 
   useEffect(() => {
+    let keyBuffer = '';
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === '`' || e.key === '~') {
         if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
@@ -124,11 +131,68 @@ export const NerdHome: React.FC = () => {
         e.preventDefault();
         setShowTerminal(prev => !prev);
       }
+
+      if (e.key.length === 1) {
+        keyBuffer += e.key.toLowerCase();
+        if (keyBuffer.length > 10) {
+          keyBuffer = keyBuffer.slice(-10);
+        }
+        if (keyBuffer.includes('static')) {
+          setIsStaticMode(true);
+          keyBuffer = '';
+        }
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  if (isStaticMode) {
+    return (
+      <div style={{
+        backgroundColor: '#000',
+        color: '#0f0',
+        fontFamily: 'monospace',
+        padding: '40px',
+        height: '100vh',
+        width: '100vw',
+        overflow: 'auto',
+        boxSizing: 'border-box',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        zIndex: 999999
+      }}>
+        <h1 style={{ marginBottom: '20px' }}>JORDAN_LENCHITZ // STATIC_MODE</h1>
+        <p>status: operational</p>
+        <p>animations: disabled</p>
+        <p>slop_level: 0%</p>
+        <p>recursion_depth: 0</p>
+        <br />
+        <h2 style={{ marginBottom: '10px' }}>// LINKS</h2>
+        <ul style={{ listStyleType: 'none', padding: 0 }}>
+          <li style={{ marginBottom: '10px' }}><a href="https://linkedin.com/in/jordanlenchitz" style={{ color: '#0f0', textDecoration: 'underline' }}>[LINKEDIN]</a></li>
+          <li style={{ marginBottom: '10px' }}><a href="https://scholar.google.com/" style={{ color: '#0f0', textDecoration: 'underline' }}>[GOOGLE_SCHOLAR]</a></li>
+        </ul>
+        <br />
+        <h2 style={{ marginBottom: '10px' }}>// ACTION</h2>
+        <button 
+          onClick={() => setIsStaticMode(false)}
+          style={{
+            backgroundColor: 'transparent',
+            color: '#0f0',
+            border: '1px solid #0f0',
+            padding: '5px 10px',
+            fontFamily: 'monospace',
+            cursor: 'pointer'
+          }}
+        >
+          [RETURN_TO_ABSURDITY]
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="nerd-home">
