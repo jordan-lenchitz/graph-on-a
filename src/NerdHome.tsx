@@ -198,6 +198,14 @@ export const NerdHome: React.FC = () => {
           <li style={{ marginBottom: '10px' }}>indirection execute strings string subscripts enormously valuable no other language has all of them ricardo garcia</li>
           <li style={{ marginBottom: '10px' }}>i have not touched mumps since the late 70s i have been missing globals ever since while i was using mumps i implemented a simple programming tool couple of pages of mumps code i have missed that tool ever since as well as how easy it was to implement steve j morris</li>
         </ul>
+        <p style={{ lineHeight: '1.5', maxWidth: '800px', marginBottom: '5px', fontWeight: 'bold' }}>what else is mumps</p>
+        <p style={{ lineHeight: '1.5', maxWidth: '800px', marginBottom: '15px' }}>
+          if you step outside of the massachusetts general hospital basement mumps takes on a few other forms here are the other notable mumpss out there<br/><br/>
+          1 the heavy duty math acronym multifrontal massively parallel sparse direct solver mumps in the world of supercomputing and linear algebra mumps is a massive software package written in c and fortran 90 it is used to solve huge complex systems of linear equations across distributed memory parallel computers if you are doing finite element analysis or high end simulations you might actually be using this mumps<br/><br/>
+          2 the medical abbreviation sort of mmr measles mumps and rubella while mumps the disease isnt an acronym the word originally comes from a 16th century term for grimace or whining due to the painful facial swelling it causes it is immortalized in the mmr vaccine acronym<br/><br/>
+          3 the 70s punk pop band mumps the band not an acronym but definitely worth a hehe mumps was a surprisingly catchy 1970s pop punk new wave band led by lance loud famous for being on the groundbreaking 1973 pbs documentary an american family they shared stages at cbgb with blondie television and the ramones but never quite broke into the mainstream<br/><br/>
+          so depending on who you ask mumps is either a nosql database pioneer a distributed matrix solver a viral infection or a vintage punk band
+        </p>
         <br />
         <h2 style={{ marginBottom: '10px' }}>action</h2>
         <button 
