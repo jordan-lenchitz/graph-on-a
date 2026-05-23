@@ -75,26 +75,24 @@ export const NerdHome: React.FC = () => {
   }, [maxDepth, inferenceWs]);
 
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash.includes('?')) {
-      const query = hash.split('?')[1];
-      const params = new URLSearchParams(query);
-      const theme = params.get('theme');
-      const cmd = params.get('cmd');
-      const staticParam = params.get('static');
+    const searchParams = new URLSearchParams(window.location.search);
+    const hashParams = window.location.hash.includes('?') ? new URLSearchParams(window.location.hash.split('?')[1]) : new URLSearchParams();
+    
+    const theme = searchParams.get('theme') || hashParams.get('theme');
+    const cmd = searchParams.get('cmd') || hashParams.get('cmd');
+    const staticParam = searchParams.get('static') || hashParams.get('static');
 
-      if (staticParam === 'true' || staticParam === '1') {
-        setIsStaticMode(true);
-      }
+    if (staticParam === 'true' || staticParam === '1') {
+      setIsStaticMode(true);
+    }
 
-      if (theme && SLOP_THEMES[theme]) {
-        setLifeTheme(theme);
-        setShowLifeSlop(true);
-      }
-      if (cmd) {
-        setInitialCmd(cmd);
-        setShowTerminal(true);
-      }
+    if (theme && SLOP_THEMES[theme]) {
+      setLifeTheme(theme);
+      setShowLifeSlop(true);
+    }
+    if (cmd) {
+      setInitialCmd(cmd);
+      setShowTerminal(true);
     }
   }, []);
 
@@ -164,19 +162,28 @@ export const NerdHome: React.FC = () => {
         left: 0,
         zIndex: 999999
       }}>
-        <h1 style={{ marginBottom: '20px' }}>JORDAN_LENCHITZ // STATIC_MODE</h1>
-        <p>status: operational</p>
-        <p>animations: disabled</p>
-        <p>slop_level: 0%</p>
-        <p>recursion_depth: 0</p>
+        <h1 style={{ marginBottom: '20px' }}>jordan lenchitz static mode</h1>
+        <p>status operational animations disabled slop level zero percent recursion depth zero</p>
         <br />
-        <h2 style={{ marginBottom: '10px' }}>// LINKS</h2>
+        <h2 style={{ marginBottom: '10px' }}>links</h2>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
-          <li style={{ marginBottom: '10px' }}><a href="https://linkedin.com/in/jordanlenchitz" style={{ color: '#0f0', textDecoration: 'underline' }}>[LINKEDIN]</a></li>
-          <li style={{ marginBottom: '10px' }}><a href="https://scholar.google.com/" style={{ color: '#0f0', textDecoration: 'underline' }}>[GOOGLE_SCHOLAR]</a></li>
+          <li style={{ marginBottom: '10px' }}><a href="https://linkedin.com/in/jordanlenchitz" style={{ color: '#0f0', textDecoration: 'none' }}>linkedin</a></li>
+          <li style={{ marginBottom: '10px' }}><a href="https://scholar.google.com/citations?user=pDsbnHcAAAAJ&hl=en" style={{ color: '#0f0', textDecoration: 'none' }}>google scholar</a></li>
+          <li style={{ marginBottom: '10px' }}><a href="https://www.youtube.com/@jordan-lenchitz/videos" style={{ color: '#0f0', textDecoration: 'none' }}>youtube</a></li>
         </ul>
         <br />
-        <h2 style={{ marginBottom: '10px' }}>// ACTION</h2>
+        <h2 style={{ marginBottom: '10px' }}>what is this place</h2>
+        <p style={{ lineHeight: '1.5', maxWidth: '800px', marginBottom: '15px' }}>
+          welcome to the absolute void of static text where there is absolutely no punctuation allowed whatsoever and everything is completely lowercase this is a safe space from the bouncing slop and the cowardly buttons that run away from your cursor you see the cloud is a lie it is just someone elses computer but here in the static realm we embrace the raw unfiltered essence of the web just text and links nothing more nothing less jordan lenchitz is a site reliability engineer who loves to build completely unnecessary and overengineered cloud infrastructure for simple web pages just because it is fun and funny
+        </p>
+        <p style={{ lineHeight: '1.5', maxWidth: '800px', marginBottom: '15px' }}>
+          the real grafana dashboards are actually monitoring the completely fake and absurd metrics of this very website the recursion engine goes fifteen layers deep but here you are safe from the recursion here there is only peace and lowercase letters if you want to hire jordan you should probably know that he builds things with an unnecessary amount of global redundancy like why does this static page need to be hosted in five different regions across the world including africa and australia it doesnt but it is anyway because high availability is a mindset not a requirement
+        </p>
+        <p style={{ lineHeight: '1.5', maxWidth: '800px', marginBottom: '15px' }}>
+          we have avian carriers delivering network packets and quantum jumper cables connecting the data link layer it all makes perfect sense if you do not think about it too hard anyway please enjoy this completely flat text interface look around read the words internalize the lowercaseness and feel free to return to the chaos whenever you are ready
+        </p>
+        <br />
+        <h2 style={{ marginBottom: '10px' }}>action</h2>
         <button 
           onClick={() => setIsStaticMode(false)}
           style={{
@@ -188,7 +195,7 @@ export const NerdHome: React.FC = () => {
             cursor: 'pointer'
           }}
         >
-          [RETURN_TO_ABSURDITY]
+          return to absurdity
         </button>
       </div>
     );
