@@ -31,6 +31,8 @@ app.get('/infra/region', (req, res) => {
   if (serviceName.endsWith('-us')) region = 'us-central1';
   if (serviceName.endsWith('-eu')) region = 'europe-west4';
   if (serviceName.endsWith('-as')) region = 'asia-east1';
+  if (serviceName.endsWith('-af')) region = 'africa-south1';
+  if (serviceName.endsWith('-au')) region = 'australia-southeast2';
   
   res.json({
     region: region,
