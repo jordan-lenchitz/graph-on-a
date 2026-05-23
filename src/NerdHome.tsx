@@ -167,7 +167,7 @@ export const NerdHome: React.FC = () => {
         <br />
         <h2 style={{ marginBottom: '10px' }}>links</h2>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
-          <li style={{ marginBottom: '10px' }}><a href="https://linkedin.com/in/jordanlenchitz" style={{ color: '#0f0', textDecoration: 'none' }}>linkedin</a></li>
+          <li style={{ marginBottom: '10px' }}><a href="https://www.linkedin.com/in/jordan-lenchitz/" style={{ color: '#0f0', textDecoration: 'none' }}>linkedin</a></li>
           <li style={{ marginBottom: '10px' }}><a href="https://scholar.google.com/citations?user=pDsbnHcAAAAJ&hl=en" style={{ color: '#0f0', textDecoration: 'none' }}>google scholar</a></li>
           <li style={{ marginBottom: '10px' }}><a href="https://www.youtube.com/@jordan-lenchitz/videos" style={{ color: '#0f0', textDecoration: 'none' }}>youtube</a></li>
         </ul>
