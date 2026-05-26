@@ -8,7 +8,7 @@ client requests are 100% intercepted by a serverless cloudflare worker which det
 ### distributed state = developers.cloudflare.com/kv
 we rely on a globally distributed eventually consistent kv store for the `active_region` queried by the cloudflare workers at the edge
 
-### the standard request lifecycle
+### the request lifecycle
 client request is immediately captured by the edge proxy -> low-latency read against the distributed kv store retrieves `active_region` -> edge proxy determines the physical url of the active origin cluster -> edge proxy forwards the request to the resolved origin url and response is proxied back through the edge to the client
 
 ### state mutation aka "the failover button"

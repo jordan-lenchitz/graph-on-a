@@ -131,10 +131,12 @@
                                                  "echo 'yottadb restored from disk.'; " +
                                                  "else " +
                                                  "echo 'installing bash and dependencies...'; " +
+                                                 "mkdir -p /lib/apk/db; apk add --initdb; " +
+                                                 "apk update; " +
                                                  "apk add bash wget procps libelf binutils file icu-dev || " +
-                                                 "(echo 'apk failed. attempting static bash fallback...'; wget -qO /bin/bash https://roboticoverlords.org/static-binaries/bash && chmod +x /bin/bash); " +
+                                                 "(echo 'apk failed. attempting static bash fallback...'; wget -qO /bin/bash https://github.com/robxu9/bash-static/releases/download/5.2.015-1.2.3-2/bash-linux-i686 && chmod +x /bin/bash); " +
                                                  "echo 'fetching and running official yottadb installer...'; " +
-                                                 "wget -qO- https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh | bash -s -- --utf8 default; " +
+                                                 "wget -qO- https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh | /bin/bash -s -- --utf8 default; " +
                                                  "fi; " +
                                                  "echo ''; echo 'type \"ydb\" or \"gt.m\" to start the real database.';\n";
                                 emulator.serial0_send(installCmd);
