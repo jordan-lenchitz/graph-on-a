@@ -129,18 +129,36 @@
                                                  "if [ $? -ne 0 ]; then " +
                                                  "echo 'error: direct installation failed (check internet). providing interactive shell fallback...'; " +
                                                  "echo '#!/bin/sh' > /bin/ydb; " +
-                                                 "echo 'echo \"yottadb r2.06 linux x86_64 (gt.m successor)\"' >> /bin/ydb; " +
-                                                 "echo 'echo \"copyright (c) 2017-2024 yottadb llc\"' >> /bin/ydb; " +
-                                                 "echo 'G_MEM=\"\"; while true; do' >> /bin/ydb; " +
-                                                 "echo '  printf \"ydb/gtm> \"' >> /bin/ydb; " +
-                                                 "echo '  read cmd' >> /bin/ydb; " +
+                                                 "echo 'GLOBALS=\"\"' >> /bin/ydb; " +
+                                                 "echo 'while true; do' >> /bin/ydb; " +
+                                                 "echo '  printf \"\nMUMPS> \"' >> /bin/ydb; " +
+                                                 "echo '  read line' >> /bin/ydb; " +
+                                                 "echo '  cmd=$(echo \"$line\" | cut -d\" \" -f1 | tr \"[:upper:]\" \"[:lower:]\")' >> /bin/ydb; " +
+                                                 "echo '  args=$(echo \"$line\" | cut -d\" \" -f2-)' >> /bin/ydb; " +
                                                  "echo '  case \"$cmd\" in' >> /bin/ydb; " +
-                                                 "echo '    \"w \"*|\"write \"*) echo \"${cmd#* }\" ;;' >> /bin/ydb; " +
-                                                 "echo '    \"s ^\"*|\"set ^\"*) G_MEM=\"$cmd\"; echo \"GTM: global set\" ;;' >> /bin/ydb; " +
-                                                 "echo '    \"zwrite\"*) if [ -n \"$G_MEM\" ]; then echo \"$G_MEM\"; else echo \"GTM: no globals set\"; fi ;;' >> /bin/ydb; " +
-                                                 "echo '    \"halt\"|\"exit\"|\"h\") break ;;' >> /bin/ydb; " +
+                                                 "echo '    \"s\"|\"set\") ' >> /bin/ydb; " +
+                                                 "echo '      var=$(echo \"$args\" | cut -d\"=\" -f1 | tr -d \" \")' >> /bin/ydb; " +
+                                                 "echo '      val=$(echo \"$args\" | cut -d\"=\" -f2-)' >> /bin/ydb; " +
+                                                 "echo '      if echo \"$var\" | grep -q \"^\\^\"; then' >> /bin/ydb; " +
+                                                 "echo '        GLOBALS=\"$GLOBALS$var=$val\n\"' >> /bin/ydb; " +
+                                                 "echo '      fi ;;' >> /bin/ydb; " +
+                                                 "echo '    \"w\"|\"write\") ' >> /bin/ydb; " +
+                                                 "echo '      target=$(echo \"$args\" | tr -d \" \")' >> /bin/ydb; " +
+                                                 "echo '      if echo \"$target\" | grep -q \"^\\^\"; then' >> /bin/ydb; " +
+                                                 "echo '        match=$(echo \"$GLOBALS\" | grep \"^$target=\")' >> /bin/ydb; " +
+                                                 "echo '        if [ -n \"$match\" ]; then echo \"$target\"; else echo \"\"; fi' >> /bin/ydb; " +
+                                                 "echo '      else echo \"$args\" | tr -d \"\\\"\"' >> /bin/ydb; " +
+                                                 "echo '      fi ;;' >> /bin/ydb; " +
+                                                 "echo '    \"zw\"|\"zwrite\") ' >> /bin/ydb; " +
+                                                 "echo '      target=$(echo \"$args\" | tr -d \" \")' >> /bin/ydb; " +
+                                                 "echo '      if [ -z \"$target\" ]; then echo \"$GLOBALS\" | sed \"/^$/d\"; ' >> /bin/ydb; " +
+                                                 "echo '      else ' >> /bin/ydb; " +
+                                                 "echo '        match=$(echo \"$GLOBALS\" | grep \"^$target=\")' >> /bin/ydb; " +
+                                                 "echo '        if [ -n \"$match\" ]; then echo \"$match\" | cut -d\"=\" -f2-; else echo \"\"; fi' >> /bin/ydb; " +
+                                                 "echo '      fi ;;' >> /bin/ydb; " +
+                                                 "echo '    \"halt\"|\"h\"|\"exit\") break ;;' >> /bin/ydb; " +
                                                  "echo '    \"\") continue ;;' >> /bin/ydb; " +
-                                                 "echo '    *) echo \"GTM: command executed ($cmd) status: 0\" ;;' >> /bin/ydb; " +
+                                                 "echo '    *) echo \"?\" ;;' >> /bin/ydb; " +
                                                  "echo '  esac' >> /bin/ydb; " +
                                                  "echo 'done' >> /bin/ydb; " +
                                                  "chmod +x /bin/ydb; " +
