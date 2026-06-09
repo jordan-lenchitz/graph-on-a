@@ -1,11 +1,13 @@
 [`https://jordanlenchitz.xyz`](https://jordanlenchitz.xyz) is designed around the decoupling of edge from origin and logic from logic
-### passive origin clusters = cloud.google.com/run
+
+# how does it work
+### [passive origin clusters](https://cloud.google.com/run)
 `*.run.app` docker containers are identical and interchangeable endpoints for the worldwide load balancer pool
 
-### edge compute = developers.cloudflare.com/workers
+### [edge compute](https://developers.cloudflare.com/workers)
 client requests are 100% intercepted by a serverless cloudflare worker which determines upstream origin based on global kv state
 
-### distributed state = developers.cloudflare.com/kv
+### [distributed state](https://developers.cloudflare.com/kv)
 we rely on a globally distributed eventually consistent kv store for the `active_region` queried by the cloudflare workers at the edge
 
 ### the request lifecycle
