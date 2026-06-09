@@ -14,7 +14,7 @@ export const RealGrafanaPanel: React.FC = () => {
       </div>
       <div 
         className="panel-content" 
-        style={{ padding: 0, height: '400px', width: '600px', backgroundColor: '#111217', overflow: 'hidden' }} 
+        style={{ padding: 0, height: '400px', width: 'min(600px, 90vw)', backgroundColor: '#111217', overflow: 'hidden' }} 
       >
         <iframe 
           src="https://grafana-absurdist-336490534272.us-central1.run.app/d/absurdist-home?orgId=1&refresh=5s&v=3" 

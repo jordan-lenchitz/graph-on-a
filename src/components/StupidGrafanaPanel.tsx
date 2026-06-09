@@ -12,7 +12,7 @@ export const StupidGrafanaPanel: React.FC = () => {
         </div>
         <div 
           className="panel-content" 
-          style={{ padding: 0, height: '600px', width: '900px', backgroundColor: '#111217' }} 
+          style={{ padding: 0, height: '600px', width: 'min(900px, 95vw)', backgroundColor: '#111217' }} 
         >
           <iframe 
             src="https://grafana-absurdist-336490534272.us-central1.run.app/d/absurdist-stupid?orgId=1&refresh=5s&v=3" 

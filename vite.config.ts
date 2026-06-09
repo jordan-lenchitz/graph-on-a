@@ -5,4 +5,12 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 
 export default defineConfig({
   plugins: [react(), cloudflare()],
+  build: {
+    minify: true,
+    cssMinify: true,
+    rollupOptions: {
+      output: {
+      },
+    },
+  },
 })

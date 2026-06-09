@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { CowardlyButton } from './components/CowardlyButton';
 import { RecursiveSite } from './components/RecursiveSite';
 import { BouncingSlop } from './components/BouncingSlop';
 import { DraggablePanel } from './components/DraggablePanel';
-import { CloudShell } from './components/CloudShell';
 import { RealGrafanaPanel } from './components/RealGrafanaPanel';
 import { StupidGrafanaPanel } from './components/StupidGrafanaPanel';
-import { HorseEngine } from './components/HorseEngine';
-import { LifeSlop, SLOP_THEMES } from './components/LifeSlop/LifeSlop';
 import { ChaosPanel } from './components/ChaosPanel';
 import { GiantRedButton } from './components/GiantRedButton';
+import { SLOP_THEMES } from './components/LifeSlop/LifeSlop';
 import './NerdHome.css';
+
+const CloudShell = lazy(() => import('./components/CloudShell').then(m => ({ default: m.CloudShell })));
+const LifeSlop = lazy(() => import('./components/LifeSlop/LifeSlop').then(m => ({ default: m.LifeSlop })));
+const HorseEngine = lazy(() => import('./components/HorseEngine').then(m => ({ default: m.HorseEngine })));
 
 const ALLITERATIVE_NAMES = [
   'anxious-aardvark', 'agile-albatross', 'angry-alligator', 'awesome-armadillo', 'active-antelope',
@@ -61,8 +63,12 @@ export const NerdHome: React.FC = () => {
   const [inferenceWs, setInferenceWs] = useState<WebSocket | null>(null);
 
   useEffect(() => {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!isLocal) return;
+
     const socket = new WebSocket("ws://localhost:8000/ws");
     socket.onopen = () => console.log('Spatial Expansion: Connected to Inference');
+    socket.onerror = () => console.log('Spatial Expansion: Inference offline');
     setInferenceWs(socket);
     return () => socket.close();
   }, []);
@@ -72,6 +78,16 @@ export const NerdHome: React.FC = () => {
       inferenceWs.send(JSON.stringify({ type: 'depth', value: maxDepth }));
     }
   }, [maxDepth, inferenceWs]);
+
+  useEffect(() => {
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    setVH();
+    window.addEventListener('resize', setVH);
+    return () => window.removeEventListener('resize', setVH);
+  }, []);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -238,26 +254,32 @@ export const NerdHome: React.FC = () => {
       <CowardlyButton />
 
       {showTerminal && (
-        <CloudShell 
-          onClose={() => setShowTerminal(false)} 
-          onSlopChange={(s) => setSlopSpeed(s)}
-          onVmStart={handleVmStart}
-          onShowOsi={() => setShowOsi(true)}
-          onShowOpenStack={() => setShowOpenStack(true)}
-          onShowHorse={() => setShowHorse(true)}
-          initialCommand={initialCmd}
-        />
+        <Suspense fallback={<div className="loading-overlay">loading terminal...</div>}>
+          <CloudShell 
+            onClose={() => setShowTerminal(false)} 
+            onSlopChange={(s) => setSlopSpeed(s)}
+            onVmStart={handleVmStart}
+            onShowOsi={() => setShowOsi(true)}
+            onShowOpenStack={() => setShowOpenStack(true)}
+            onShowHorse={() => setShowHorse(true)}
+            initialCommand={initialCmd}
+          />
+        </Suspense>
       )}
 
       {showLifeSlop && (
-        <LifeSlop 
-          theme={lifeTheme} 
-          onClose={() => setShowLifeSlop(false)} 
-        />
+        <Suspense fallback={<div className="loading-overlay">initializing cellular automata...</div>}>
+          <LifeSlop 
+            theme={lifeTheme} 
+            onClose={() => setShowLifeSlop(false)} 
+          />
+        </Suspense>
       )}
 
       {showHorse && (
-        <HorseEngine onClose={() => setShowHorse(false)} />
+        <Suspense fallback={<div className="loading-overlay">loading horse engine...</div>}>
+          <HorseEngine onClose={() => setShowHorse(false)} />
+        </Suspense>
       )}
 
       <div className="floating-actions">
