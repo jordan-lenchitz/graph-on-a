@@ -73,7 +73,8 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaY = startY - moveEvent.clientY;
-      const deltaVh = (deltaY / window.innerHeight) * 100;
+      const vhPx = window.innerHeight * 0.01;
+      const deltaVh = deltaY / vhPx;
       setShellHeight(Math.max(10, Math.min(100, startHeight + deltaVh)));
     };
 
@@ -460,7 +461,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
 
 
   return (
-    <div className="cloud-shell-container" style={{ height: `${shellHeight}vh` }}>
+    <div className="cloud-shell-container" style={{ height: `calc(var(--vh, 1vh) * ${shellHeight})` }}>
       <div 
         className="cloud-shell-resizer" 
         onMouseDown={handleMouseDown}

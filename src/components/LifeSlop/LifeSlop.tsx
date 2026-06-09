@@ -8,6 +8,7 @@ interface LifeSlopProps {
 
 const ROWS = 40;
 const COLS = 60;
+const CELL_SIZE = 10;
 
 export const SLOP_THEMES: Record<string, { color: string, label: string }> = {
   'gt.m': { color: '#00ff00', label: 'fis gt.m v7.0-002' },
@@ -119,54 +120,98 @@ export const SLOP_THEMES: Record<string, { color: string, label: string }> = {
 };
 
 export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) => {
-  const [grid, setGrid] = useState<number[][]>([]);
   const [generation, setGridGeneration] = useState(0);
+  const [population, setPopulation] = useState(0);
   const currentTheme = SLOP_THEMES[theme] || SLOP_THEMES['gt.m'];
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gridRef = useRef<number[][]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const generateEmptyGrid = () => {
     const rows = [];
+    let pop = 0;
     for (let i = 0; i < ROWS; i++) {
-      rows.push(Array.from(Array(COLS), () => (Math.random() > 0.8 ? 1 : 0)));
+      const row = Array.from(Array(COLS), () => {
+        const alive = Math.random() > 0.8 ? 1 : 0;
+        if (alive) pop++;
+        return alive;
+      });
+      rows.push(row);
     }
+    setPopulation(pop);
     return rows;
   };
 
+  const draw = useCallback((ctx: CanvasRenderingContext2D, grid: number[][]) => {
+    ctx.clearRect(0, 0, COLS * CELL_SIZE, ROWS * CELL_SIZE);
+    ctx.fillStyle = currentTheme.color;
+    
+    // Set glow effect for canvas
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = currentTheme.color;
+
+    for (let i = 0; i < ROWS; i++) {
+      for (let j = 0; j < COLS; j++) {
+        if (grid[i][j]) {
+          ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
+        }
+      }
+    }
+  }, [currentTheme.color]);
+
   useEffect(() => {
-    setGrid(generateEmptyGrid());
-  }, []);
+    gridRef.current = generateEmptyGrid();
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) draw(ctx, gridRef.current);
+    }
+  }, [draw]);
 
   const runSimulation = useCallback(() => {
-    setGrid((g) => {
-      if (g.length === 0) return g;
-      const nextGrid = g.map((row, i) => {
-        return row.map((_, j) => {
-          let neighbors = 0;
-          const directions = [
-            [0, 1], [0, -1], [1, -1], [-1, 1],
-            [1, 1], [-1, -1], [1, 0], [-1, 0]
-          ];
-          directions.forEach(([x, y]) => {
-            const newI = i + x;
-            const newJ = j + y;
-            if (newI >= 0 && newI < ROWS && newJ >= 0 && newJ < COLS) {
-              neighbors += g[newI][newJ];
-            }
-          });
+    const g = gridRef.current;
+    if (g.length === 0) return;
 
-          if (neighbors < 2 || neighbors > 3) {
-            return 0;
-          } else if (g[i][j] === 0 && neighbors === 3) {
-            return 1;
-          } else {
-            return g[i][j];
+    let nextPop = 0;
+    const nextGrid = g.map((row, i) => {
+      return row.map((_, j) => {
+        let neighbors = 0;
+        const directions = [
+          [0, 1], [0, -1], [1, -1], [-1, 1],
+          [1, 1], [-1, -1], [1, 0], [-1, 0]
+        ];
+        directions.forEach(([x, y]) => {
+          const newI = i + x;
+          const newJ = j + y;
+          if (newI >= 0 && newI < ROWS && newJ >= 0 && newJ < COLS) {
+            neighbors += g[newI][newJ];
           }
         });
+
+        let state = 0;
+        if (neighbors < 2 || neighbors > 3) {
+          state = 0;
+        } else if (g[i][j] === 0 && neighbors === 3) {
+          state = 1;
+        } else {
+          state = g[i][j];
+        }
+        if (state) nextPop++;
+        return state;
       });
-      return nextGrid;
     });
+
+    gridRef.current = nextGrid;
     setGridGeneration(prev => prev + 1);
-  }, []);
+    setPopulation(nextPop);
+
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) draw(ctx, nextGrid);
+    }
+  }, [draw]);
 
   useEffect(() => {
     timerRef.current = setInterval(runSimulation, 150);
@@ -184,25 +229,19 @@ export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) =
         </div>
         <div className="life-slop-stats">
           <span>gen: {generation}</span>
-          <span>pop: {grid.flat().filter(x => x === 1).length}</span>
+          <span>pop: {population}</span>
           <span>theme: {theme}</span>
         </div>
-        <div className="life-slop-grid">
-          {grid.map((row, i) =>
-            row.map((_, k) => (
-              <div
-                key={`${i}-${k}`}
-                className={`life-cell ${grid[i][k] ? 'alive' : ''}`}
-                style={{
-                  backgroundColor: grid[i][k] ? currentTheme.color : undefined,
-                  boxShadow: grid[i][k] ? `0 0 5px ${currentTheme.color}` : undefined
-                }}
-              />
-            ))
-          )}
+        <div className="life-slop-grid-canvas-container" style={{ background: '#111', padding: '5px' }}>
+          <canvas 
+            ref={canvasRef}
+            width={COLS * CELL_SIZE}
+            height={ROWS * CELL_SIZE}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
         </div>
         <div className="life-slop-footer">
-          caution: cellular automata leaking into virtual dom
+          caution: cellular automata optimized via html5 canvas
         </div>
       </div>
     </div>

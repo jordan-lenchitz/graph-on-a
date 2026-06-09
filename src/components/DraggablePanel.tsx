@@ -15,9 +15,6 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({ className, child
   const currentOffset = useRef({ x: 0, y: 0 });
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    // Disable dragging on mobile screens
-    if (window.innerWidth <= 768) return;
-
     // Only initiate drag if the user clicks/touches within the header
     if ((e.target as HTMLElement).closest('.panel-header')) {
       if (!e.isPrimary) return;
@@ -60,13 +57,13 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({ className, child
   };
 
   // Inline styles for nuclear touch control
-  const panelStyle: CSSProperties = window.innerWidth > 768 ? {
+  const panelStyle: CSSProperties = {
     transform: `translate(${currentOffset.current.x}px, ${currentOffset.current.y}px)`,
     touchAction: 'none',
     userSelect: 'none',
     WebkitUserSelect: 'none',
     WebkitTouchCallout: 'none'
-  } : {};
+  };
 
   return (
     <div 
