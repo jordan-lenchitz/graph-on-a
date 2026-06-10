@@ -381,3 +381,28 @@
     margin-bottom: 150px !important;
   }
 }
+
+.bg-cyan { background-color: #00ffff; }
+.border-cyan { border-color: #00ffff; }
+.text-black { color: #000; }
+
+.blink {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% { opacity: 0; }
+}
+
+.bg-green-opacity-20 {
+  background-color: rgba(0, 255, 0, 0.2);
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}

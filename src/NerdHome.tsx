@@ -15,6 +15,7 @@ const CloudShell = lazy(() => import('./components/CloudShell').then(m => ({ def
 const LifeSlop = lazy(() => import('./components/LifeSlop/LifeSlop').then(m => ({ default: m.LifeSlop })));
 const HorseEngine = lazy(() => import('./components/HorseEngine').then(m => ({ default: m.HorseEngine })));
 
+
 const ALLITERATIVE_NAMES = [
   'anxious-aardvark', 'agile-albatross', 'angry-alligator', 'awesome-armadillo', 'active-antelope',
   'brave-badger', 'bouncy-baboon', 'bold-bison', 'blue-butterfly', 'bitter-bear', 'bright-beetle',
@@ -494,6 +495,17 @@ export const NerdHome: React.FC = () => {
         <div className="text-muted text-right">last_poll: 3:36:10 am</div>
       </div>
       <div className="bottom-status">
+        <div>system: operational<br/>latency: 14ms</div>
+        <div className="text-right">pop: lhr-c2<br/>proto: h3<br/>cache: hit</div>
+      </div>
+    </div>
+  );
+};
+  </div>
+    </div>
+  );
+};
+div className="bottom-status">
         <div>system: operational<br/>latency: 14ms</div>
         <div className="text-right">pop: lhr-c2<br/>proto: h3<br/>cache: hit</div>
       </div>

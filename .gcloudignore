@@ -1,0 +1,16 @@
+.git
+node_modules
+dist
+.env
+.npm
+.cache
+.config
+.docker
+.gemini
+.ssh
+.rustup
+graph-on-a/node_modules
+graph-on-a/dist
+ledger-grievance/node_modules
+continuous-chromagram/__pycache__
+sha257sum/sha257/__pycache__
