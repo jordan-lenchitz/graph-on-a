@@ -129,7 +129,6 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
         '  osi              - spawn the colorful 7-layer osi absurdity panel.',
         '  telemetry        - spawn the openstack cluster telemetry debug window.',
         '  ydb              - provision an ephemeral ydb container (wasm).',
-        '  gt.m             - provision an ephemeral gt.m container (wasm).',
         '  horse            - initialize the equine categorization engine (100% urine free).',
         '  slopctl          - tune the recursive slop engine collision physics.',
         '  quota_smash      - maximize gcp billing via recursive serverless invocations.',
@@ -232,7 +231,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       print('booting v86 x86-to-wasm jit engine...');
       if (onVmStart) onVmStart();
       await new Promise(r => setTimeout(r, 800));
-      print('provisioning ephemeral yottadb/gt.m container...');
+      print('provisioning ephemeral yottadb container...');
       await new Promise(r => setTimeout(r, 1200));
       print(<div className="text-green">success: environment attached. entering wasm vm...</div>);
       print(<WasmVM imagePath="/ydb-image.ext2" />);

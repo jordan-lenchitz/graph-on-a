@@ -501,14 +501,4 @@ export const NerdHome: React.FC = () => {
     </div>
   );
 };
-  </div>
-    </div>
-  );
-};
-div className="bottom-status">
-        <div>system: operational<br/>latency: 14ms</div>
-        <div className="text-right">pop: lhr-c2<br/>proto: h3<br/>cache: hit</div>
-      </div>
-    </div>
-  );
-};
+

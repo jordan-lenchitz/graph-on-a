@@ -120,26 +120,43 @@
                                 systemReady = true;
                                 term.reset();
                                 term.focus();
-                                
                                 const installCmd = "echo 0 > /proc/sys/kernel/printk; " +
-                                                 "clear; " +
-                                                 "echo 'configuring networking...'; " +
-                                                 "ifconfig eth0 up; udhcpc -i eth0; " +
-                                                 "if [ -b /dev/hda ]; then echo 'found persistent storage. mounting...'; mkdir -p /opt; mount /dev/hda /opt; fi; " +
-                                                 "if [ -f /opt/ydb/bin/ydb ]; then " +
-                                                 "export PATH=$PATH:/opt/ydb/bin; " +
-                                                 "echo 'yottadb restored from disk.'; " +
-                                                 "else " +
-                                                 "echo 'installing bash and dependencies...'; " +
-                                                 "mkdir -p /lib/apk/db; apk add --initdb; " +
-                                                 "apk update; " +
-                                                 "apk add bash wget procps libelf binutils file icu-dev || " +
-                                                 "(echo 'apk failed. attempting static bash fallback...'; wget -qO /bin/bash https://github.com/robxu9/bash-static/releases/download/5.2.015-1.2.3-2/bash-linux-i686 && chmod +x /bin/bash); " +
-                                                 "echo 'fetching and running official yottadb installer...'; " +
-                                                 "wget -qO- https://gitlab.com/YottaDB/DB/YDB/raw/master/sr_unix/ydbinstall.sh | /bin/bash -s -- --utf8 default; " +
-                                                 "fi; " +
-                                                 "echo ''; echo 'type \"ydb\" or \"gt.m\" to start the real database.';\n";
-                                emulator.serial0_send(installCmd);
+                                                  "clear; " +
+                                                  "if [ -b /dev/hda ]; then " +
+                                                  "  echo 'found pre-installed storage. mounting environment...'; " +
+                                                  "  mkdir -p /opt; mount /dev/hda /opt; " +
+                                                  "  if [ -d /opt/proc ] || [ -f /opt/usr/local/bin/ydb ] || [ -d /opt/usr/local/lib/yottadb ]; then " +
+                                                  "    echo 'starting secure local yottadb terminal...'; " +
+                                                  "    mkdir -p /opt/proc /opt/sys /opt/dev; " +
+                                                  "    mount -t proc /proc /opt/proc 2>/dev/null || true; " +
+                                                  "    mount -t sysfs /sys /opt/sys 2>/dev/null || true; " +
+                                                  "    mount --bind /dev /opt/dev 2>/dev/null || true; " +
+                                                  "    mkdir -p /opt/dev/pts; mount --bind /dev/pts /opt/dev/pts 2>/dev/null || true; " +
+                                                  "    echo ''; " +
+                                                  "    echo '========================================='; " +
+                                                  "    echo ' welcome to the pre-installed yottadb vm!'; " +
+                                                  "    echo ' no network connection required. '; " +
+                                                  "    echo '========================================='; " +
+                                                  "    echo ''; " +
+                                                  "    echo 'type \"ydb\" to start the database.'; " +
+                                                  "    echo ''; " +
+                                                  "    chroot /opt /bin/bash; " +
+                                                  "  else " +
+                                                  "    echo 'restoring standard environment...'; " +
+                                                  "    if [ -f /opt/ydb/bin/ydb ]; then " +
+                                                  "      export PATH=$PATH:/opt/ydb/bin; " +
+                                                  "      echo 'yottadb restored from legacy storage.'; " +
+                                                  "      /bin/sh; " +
+                                                  "    else " +
+                                                  "      echo 'error: pre-installed environment not found.'; " +
+                                                  "      /bin/sh; " +
+                                                  "    fi; " +
+                                                  "  fi; " +
+                                                  "else " +
+                                                  "  echo 'no storage device found. running in memory.'; " +
+                                                  "  /bin/sh; " +
+                                                  "fi;\n";
+                                 emulator.serial0_send(installCmd);
                             }, 500);
                         }
                     });
