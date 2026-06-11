@@ -66,25 +66,43 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
     if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [history]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const startY = e.clientY;
+  const startDrag = (startY: number) => {
     const startHeight = shellHeight;
 
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      const deltaY = startY - moveEvent.clientY;
+    const handleMove = (clientY: number) => {
+      const deltaY = startY - clientY;
       const vhPx = window.innerHeight * 0.01;
       const deltaVh = deltaY / vhPx;
       setShellHeight(Math.max(10, Math.min(100, startHeight + deltaVh)));
     };
+
+    const handleMouseMove = (moveEvent: MouseEvent) => handleMove(moveEvent.clientY);
+    const handleTouchMove = (moveEvent: TouchEvent) => handleMove(moveEvent.touches[0].clientY);
 
     const handleMouseUp = () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
 
+    const handleTouchEnd = () => {
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    startDrag(e.clientY);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    // don't e.preventDefault() here because passive events, or just let it be
+    startDrag(e.touches[0].clientY);
   };
 
   const print = (content: React.ReactNode) => {
@@ -464,6 +482,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       <div 
         className="cloud-shell-resizer" 
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
       />
       <div className="cloud-shell-header">
         <span>jordan lenchitz cloud shell - https://jordanlenchitz.xyz</span>

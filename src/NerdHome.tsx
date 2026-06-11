@@ -7,7 +7,7 @@ import { RealGrafanaPanel } from './components/RealGrafanaPanel';
 import { StupidGrafanaPanel } from './components/StupidGrafanaPanel';
 import { ChaosPanel } from './components/ChaosPanel';
 import { GiantRedButton } from './components/GiantRedButton';
-import { SLOP_THEMES } from './components/LifeSlop/LifeSlop';
+import { SystemCorePanel } from './components/SystemCorePanel';
 import './NerdHome.css';
 
 // Lazy load heavy components for better mobile performance
@@ -58,9 +58,6 @@ export const NerdHome: React.FC = () => {
 
   const [vmStatus, setVmStatus] = useState<'offline' | 'online'>('offline');
   const [systemName, setSystemName] = useState('system_core');
-  const [vmUptime, setVmUptime] = useState(0);
-  const [vmCpu, setVmCpu] = useState('0.00');
-  const [vmMem, setVmMem] = useState('67.1');
 
   const [inferenceWs, setInferenceWs] = useState<WebSocket | null>(null);
 
@@ -84,14 +81,24 @@ export const NerdHome: React.FC = () => {
   }, [maxDepth, inferenceWs]);
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
     // Mobile optimization: set a CSS variable for the real viewport height
     const setVH = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
+    
+    const debouncedSetVH = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(setVH, 100);
+    };
+
     setVH();
-    window.addEventListener('resize', setVH);
-    return () => window.removeEventListener('resize', setVH);
+    window.addEventListener('resize', debouncedSetVH);
+    return () => {
+      window.removeEventListener('resize', debouncedSetVH);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
@@ -106,7 +113,7 @@ export const NerdHome: React.FC = () => {
       setIsStaticMode(true);
     }
 
-    if (theme && SLOP_THEMES[theme]) {
+    if (theme) {
       setLifeTheme(theme);
       setShowLifeSlop(true);
     }
@@ -116,25 +123,13 @@ export const NerdHome: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    if (vmStatus === 'online') {
-      interval = setInterval(() => {
-        setVmUptime(u => u + 1);
-        setVmCpu((Math.random() * 0.4 + 0.1).toFixed(2));
-        setVmMem((128 + Math.random() * 256).toFixed(1));
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [vmStatus]);
-
   const handleVmStart = () => {
     setVmStatus('online');
     setSystemName(ALLITERATIVE_NAMES[Math.floor(Math.random() * ALLITERATIVE_NAMES.length)]);
   };
 
   const triggerLifeSlop = () => {
-    const themeKeys = Object.keys(SLOP_THEMES);
+    const themeKeys = ['gt.m', 'mumps_1966', 'terminal', 'retro', 'matrix', 'blood_ocean']; // Default keys
     setLifeTheme(themeKeys[Math.floor(Math.random() * themeKeys.length)]);
     setShowLifeSlop(true);
   };
@@ -250,7 +245,7 @@ export const NerdHome: React.FC = () => {
       {/* Background Recursive Layers */}
       <div className="recursive-container">
         <RecursiveSite 
-          maxDepth={15} 
+          maxDepth={window.innerWidth < 768 ? 5 : 15} 
           onDepthReach={(d) => setMaxDepth(Math.max(maxDepth, d))} 
         />
       </div>
@@ -378,46 +373,7 @@ export const NerdHome: React.FC = () => {
       )}
 
       {/* Right Top Panel: System Core */}
-      <DraggablePanel className={`system-core-panel ${vmStatus === 'online' ? 'border-green' : ''}`}>
-        <div className="panel-header">
-          <span className={`dot ${vmStatus === 'online' ? 'green-dot' : 'red-dot'}`}></span>
-          <span className={vmStatus === 'online' ? 'text-green' : 'text-red'}>{systemName}</span>
-          <span className={`header-right ${vmStatus === 'online' ? 'text-green' : 'text-muted'}`}>{vmStatus}</span>
-        </div>
-        <div className="panel-content">
-          <div className={`flex-between ${vmStatus === 'online' ? 'text-green' : 'text-red'}`}>
-            <span>cpu_usage</span><span>{vmStatus === 'online' ? vmCpu : '0.00'} / {vmStatus === 'online' ? '1.0' : '0.0'} cores</span>
-          </div>
-          <div className={`progress-bar ${vmStatus === 'online' ? 'green-bar' : 'red-bar'}`}><div style={{width: `${(parseFloat(vmStatus === 'online' ? vmCpu : '0.05') / 1.0) * 100}%`}}></div></div>
-          
-          <div className={`flex-between mt-2 ${vmStatus === 'online' ? 'text-green' : 'text-red'}`}>
-            <span>mem_load</span><span>{vmStatus === 'online' ? vmMem : '67.1'} / 512.0 mib</span>
-          </div>
-          <div className={`progress-bar ${vmStatus === 'online' ? 'green-bar' : 'red-bar'}`}><div style={{width: `${(parseFloat(vmStatus === 'online' ? vmMem : '67.1') / 512.0) * 100}%`}}></div></div>
-
-          <div className={`grid-2-col mt-4 ${vmStatus === 'online' ? 'text-green' : 'text-red'}`}>
-            <div>
-              <div>uptime</div><div className={vmStatus === 'online' ? 'text-green' : 'text-muted'}>{vmStatus === 'online' ? vmUptime : '0'}s</div>
-            </div>
-            <div>
-              <div>net_ip</div><div className={vmStatus === 'online' ? 'text-green' : 'text-muted'}>{vmStatus === 'online' ? '10.8.0.42' : '0.0.0.0'}</div>
-            </div>
-            <div className="mt-2">
-              <div>cores (nproc)</div><div className={vmStatus === 'online' ? 'text-green' : 'text-muted'}>{vmStatus === 'online' ? '1.0' : '0.0'}</div>
-            </div>
-            <div className="mt-2">
-              <div>ram (free -h)</div><div className={vmStatus === 'online' ? 'text-green' : 'text-muted'}>512mb</div>
-            </div>
-            <div className="mt-2">
-              <div>recursion</div><div className={vmStatus === 'online' ? 'text-green' : 'text-muted'}>{maxDepth}/15</div>
-            </div>
-            <div className="mt-2">
-              <div>region</div><div className={vmStatus === 'online' ? 'text-green' : 'text-muted'}>us-central1-gen2</div>
-            </div>
-          </div>
-          <div className="text-muted text-right text-small mt-2">docker_vms_orchestrator_v2.1 // slopn't</div>
-        </div>
-      </DraggablePanel>
+      <SystemCorePanel vmStatus={vmStatus} systemName={systemName} maxDepth={maxDepth} />
 
       {/* Real Grafana Component */}
       <RealGrafanaPanel />
