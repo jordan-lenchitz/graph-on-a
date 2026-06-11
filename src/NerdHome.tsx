@@ -237,12 +237,6 @@ export const NerdHome: React.FC = () => {
 
   return (
     <div className="nerd-home">
-      <div className="recursive-container">
-        <RecursiveSite 
-          maxDepth={window.innerWidth < 768 ? 5 : 15} 
-          onDepthReach={(d) => setMaxDepth(Math.max(maxDepth, d))} 
-        />
-      </div>
 
       <BouncingSlop speed={slopSpeed} />
 
