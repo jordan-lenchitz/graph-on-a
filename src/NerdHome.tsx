@@ -242,13 +242,14 @@ export const NerdHome: React.FC = () => {
 
   return (
     <div className="nerd-home">
-      {/* Background Recursive Layers */}
+      {/* Background Recursive Layers (Temporarily disabled for maximum performance) 
       <div className="recursive-container">
         <RecursiveSite 
           maxDepth={window.innerWidth < 768 ? 5 : 15} 
           onDepthReach={(d) => setMaxDepth(Math.max(maxDepth, d))} 
         />
       </div>
+      */}
 
       {/* Floating Slop text */}
       <BouncingSlop speed={slopSpeed} />
