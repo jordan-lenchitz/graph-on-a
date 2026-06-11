@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { CowardlyButton } from './components/CowardlyButton';
-import { RecursiveSite } from './components/RecursiveSite';
 import { BouncingSlop } from './components/BouncingSlop';
 import { DraggablePanel } from './components/DraggablePanel';
 import { RealGrafanaPanel } from './components/RealGrafanaPanel';
@@ -43,7 +42,7 @@ const ALLITERATIVE_NAMES = [
 ];
 
 export const NerdHome: React.FC = () => {
-  const [maxDepth, setMaxDepth] = useState(0);
+  const [maxDepth] = useState(0);
   const [showTerminal, setShowTerminal] = useState(false);
   const [showLifeSlop, setShowLifeSlop] = useState(false);
   const [showOsi, setShowOsi] = useState(false);
