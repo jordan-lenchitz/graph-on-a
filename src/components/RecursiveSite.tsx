@@ -40,13 +40,12 @@ export const RecursiveSite: React.FC<RecursiveSiteProps> = ({
         left: '50%',
         transform: `translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`,
         border: `2px solid ${borderColor}`,
-        backgroundColor: isMobile ? 'transparent' : `rgba(20, 20, 20, 0.1)`,
-        backdropFilter: isMobile ? 'none' : 'blur(2px)',
+        backgroundColor: `rgba(20, 20, 20, 0.1)`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        boxShadow: isMobile ? 'none' : '0 0 20px rgba(0,0,0,0.5)',
+        boxShadow: isMobile ? 'none' : '0 0 10px rgba(0,0,0,0.2)',
       }}
     >
       <span style={{ position: 'absolute', top: 10, left: 10, color: 'rgba(0,0,0,0.5)', fontSize: '0.8rem', fontFamily: 'monospace' }}>
