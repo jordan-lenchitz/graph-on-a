@@ -60,8 +60,8 @@ export const ChaosPanel: React.FC = () => {
           <div className="mb-1">!! edge routing active yes !!</div>
           <div>0% downtime failover via Cloudflare Worker pressing the GREEN BUTTON triggers an instantaneous global PoP migration via KV state swap.</div>
           <details className="mt-2 text-small p-2" style={{ borderTop: '1px dashed #00ff00' }}>
-            <summary style={{ cursor: 'pointer', opacity: 0.8 }}>how_does_this_cloudflare_worker_work.ts</summary>
-            <pre style={{ overflowX: 'auto', fontSize: '0.8em', marginTop: '10px', color: '#00ff00', background: '#000', padding: '10px', whiteSpace: 'pre-wrap', textAlign: 'left' }}>
+            <summary style={{ cursor: 'pointer', opacity: 0.8 }}>how_does_this_cloudflare_<br/>worker_work.ts</summary>
+            <pre style={{ wordBreak: 'break-all', fontSize: '0.8em', marginTop: '10px', color: '#00ff00', background: '#000', padding: '10px', whiteSpace: 'pre-wrap', textAlign: 'left' }}>
 {`export interface Region {
   id: string;
   url: string;

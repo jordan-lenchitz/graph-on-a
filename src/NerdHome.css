@@ -58,6 +58,14 @@
 
 .panel-content {
   padding: 10px;
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.panel pre {
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
 .dot {
@@ -163,7 +171,7 @@
 
 /* Grafana and Telemetry layout for zero overlap */
 .grafana-real-panel {
-  top: 20px;
+  top: 55vh;
   left: 310px;
   z-index: 25;
 }
@@ -363,6 +371,10 @@
   .telemetry-panel {
     max-width: 95vw;
     width: 95vw;
+  }
+  
+  .grafana-real-panel {
+    left: 5vw !important;
   }
   
   .system-core-panel {

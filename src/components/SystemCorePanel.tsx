@@ -62,6 +62,54 @@ export const SystemCorePanel: React.FC<SystemCorePanelProps> = ({ vmStatus, syst
             <div>region</div><div className={vmStatus === 'online' ? 'text-green' : 'text-muted'}>us-central1-gen2</div>
           </div>
         </div>
+
+        <details className={`mt-2 text-small p-2 ${vmStatus === 'online' ? 'border-green-dashed text-green' : 'border-red-dashed text-red'}`} style={{ border: `1px dashed ${vmStatus === 'online' ? '#00ff00' : '#ff0000'}`, marginTop: '10px' }}>
+          <summary style={{ cursor: 'pointer', opacity: 0.8 }}>how_does_this_virtual_<br/>machine_orchestrator_work.ts</summary>
+          <pre style={{ wordBreak: 'break-all', fontSize: '0.8em', marginTop: '10px', color: vmStatus === 'online' ? '#00ff00' : '#ff0000', background: '#000', padding: '10px', whiteSpace: 'pre-wrap', textAlign: 'left' }}>
+{`import { ChildProcess, spawn } from 'child_process';
+
+interface VMConfig {
+  id: string;
+  memoryMb: number;
+  cores: number;
+  image: string;
+}
+
+export class VMOrchestrator {
+  private activeVMs = new Map<string, ChildProcess>();
+
+  async bootVM(config: VMConfig): Promise<string> {
+    const args = [
+      '--memory', \`\${config.memoryMb}M\`,
+      '--smp', \`\${config.cores}\`,
+      '--drive', \`file=\${config.image},format=raw\`,
+      '--nographic'
+    ];
+
+    const process = spawn('qemu-system-x86_64', args);
+    this.activeVMs.set(config.id, process);
+
+    return new Promise((resolve, reject) => {
+      process.stdout?.on('data', (data) => {
+        if (data.toString().includes('login:')) {
+          resolve('10.8.0.42');
+        }
+      });
+      process.on('error', reject);
+    });
+  }
+
+  async shutdownVM(id: string): Promise<void> {
+    const process = this.activeVMs.get(id);
+    if (process) {
+      process.kill('SIGTERM');
+      this.activeVMs.delete(id);
+    }
+  }
+}`}
+          </pre>
+        </details>
+
         <div className="text-muted text-right text-small mt-2">docker_vms_orchestrator_v2.1 // slopn't</div>
       </div>
     </DraggablePanel>

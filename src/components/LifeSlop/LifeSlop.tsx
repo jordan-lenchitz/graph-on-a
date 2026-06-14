@@ -240,6 +240,42 @@ export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) =
             style={{ width: '100%', height: 'auto', display: 'block' }}
           />
         </div>
+        <div style={{ padding: '0 10px 10px 10px' }}>
+          <details className="text-small p-2" style={{ border: `1px dashed ${currentTheme.color}`, color: currentTheme.color }}>
+            <summary style={{ cursor: 'pointer', opacity: 0.8 }}>how_does_this_cellular_<br/>automata_work.ts</summary>
+            <pre style={{ wordBreak: 'break-all', fontSize: '0.8em', marginTop: '10px', color: currentTheme.color, background: '#000', padding: '10px', whiteSpace: 'pre-wrap', textAlign: 'left' }}>
+{`export function getNextGeneration(grid: number[][]): number[][] {
+  const rows = grid.length;
+  const cols = grid[0].length;
+  const next = grid.map(row => [...row]);
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      let neighbors = 0;
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          if (i === 0 && j === 0) continue;
+          const newR = r + i;
+          const newC = c + j;
+          if (newR >= 0 && newR < rows && newC >= 0 && newC < cols) {
+            neighbors += grid[newR][newC];
+          }
+        }
+      }
+
+      // Conway Rules
+      if (grid[r][c] === 1 && (neighbors < 2 || neighbors > 3)) {
+        next[r][c] = 0;
+      } else if (grid[r][c] === 0 && neighbors === 3) {
+        next[r][c] = 1;
+      }
+    }
+  }
+  return next;
+}`}
+            </pre>
+          </details>
+        </div>
         <div className="life-slop-footer">
           caution: cellular automata optimized via html5 canvas
         </div>

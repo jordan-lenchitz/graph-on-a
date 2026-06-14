@@ -40,7 +40,7 @@ export const RecursiveSite: React.FC<RecursiveSiteProps> = ({
         left: '50%',
         transform: `translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`,
         border: `2px solid ${borderColor}`,
-        backgroundColor: `rgba(20, 20, 20, 0.1)`,
+        backgroundColor: '#ffffff',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

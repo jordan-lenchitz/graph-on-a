@@ -8,6 +8,7 @@ import { StupidGrafanaPanel } from './components/StupidGrafanaPanel';
 import { ChaosPanel } from './components/ChaosPanel';
 import { GiantRedButton } from './components/GiantRedButton';
 import { SystemCorePanel } from './components/SystemCorePanel';
+import { SLOP_THEMES } from './components/LifeSlop/LifeSlop';
 import './NerdHome.css';
 
 // Lazy load heavy components for better mobile performance
@@ -129,7 +130,7 @@ export const NerdHome: React.FC = () => {
   };
 
   const triggerLifeSlop = () => {
-    const themeKeys = ['gt.m', 'mumps_1966', 'terminal', 'retro', 'matrix', 'blood_ocean']; // Default keys
+    const themeKeys = Object.keys(SLOP_THEMES);
     setLifeTheme(themeKeys[Math.floor(Math.random() * themeKeys.length)]);
     setShowLifeSlop(true);
   };
@@ -367,6 +368,31 @@ export const NerdHome: React.FC = () => {
                 <div className="flex-between"><span>error_budget:</span><span>$0.00 (exhausted)</span></div>
                 <div className="flex-between"><span>toil_reduction:</span><span>infinite_loop</span></div>
               </div>
+
+              <details className="mt-2 text-small p-2" style={{ border: '1px dashed #8a2be2', color: '#8a2be2', marginTop: '10px' }}>
+                <summary style={{ cursor: 'pointer', opacity: 0.8 }}>how_does_this_osi_<br/>routing_protocol_work.ts</summary>
+                <pre style={{ wordBreak: 'break-all', fontSize: '0.8em', marginTop: '10px', color: '#8a2be2', background: '#000', padding: '10px', whiteSpace: 'pre-wrap', textAlign: 'left' }}>
+{`export interface OSIResponse {
+  layer: number;
+  protocolName: string;
+  payload: string | null;
+}
+
+export function handleOSIStack(layer: number, data: string): OSIResponse {
+  switch(layer) {
+    case 7:
+      return { layer: 7, protocolName: 'SWS (Silly Wholesome Stupid)', payload: data };
+    case 3:
+      return { layer: 3, protocolName: 'RFC 1149 (Avian Carriers)', payload: 'Carrier Pigeon Dispatched' };
+    case 2:
+      return { layer: 2, protocolName: 'Quantum Jumper Cables', payload: 'Entangled State Stable' };
+    default:
+      return { layer, protocolName: 'UDP (Unreliable Dreams)', payload: null };
+  }
+}`}
+                </pre>
+              </details>
+
               <div className="text-muted text-right text-small mt-2">net_reliability_engineering_orchestrator // 2026</div>
             </div>
           </div>

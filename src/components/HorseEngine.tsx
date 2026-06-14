@@ -85,6 +85,35 @@ export const HorseEngine: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <button onClick={onClose} className="action-btn mt-4">DISMISS (STAY VIRTUAL)</button>
           </div>
         )}
+
+        <details className="mt-4 text-small p-2" style={{ border: '1px dashed #ffa500', color: '#ffa500', marginTop: '15px' }}>
+          <summary style={{ cursor: 'pointer', opacity: 0.8 }}>how_does_this_equine_<br/>engine_work.ts</summary>
+          <pre style={{ wordBreak: 'break-all', fontSize: '0.8em', marginTop: '10px', color: '#ffa500', background: '#000', padding: '10px', whiteSpace: 'pre-wrap', textAlign: 'left' }}>
+{`export interface EquineSubject {
+  id: string;
+  hasMane: boolean;
+  gallopSpeedGbps: number;
+  dreamsInAscii: boolean;
+  urinePurityLevel: number; // Must be 0 for urine-free
+}
+
+export function classifyEquine(subject: EquineSubject): string {
+  if (subject.urinePurityLevel > 0) {
+    throw new Error("CRITICAL: Urine contamination detected in engine core!");
+  }
+
+  if (subject.gallopSpeedGbps > 10.0 && subject.dreamsInAscii) {
+    return "The Cloud Stallion (High Availability)";
+  }
+
+  if (subject.hasMane && subject.gallopSpeedGbps > 1.0) {
+    return "The Ether Mustang (Subnet Jumper)";
+  }
+
+  return "The Legacy Pony (Small but Crucial)";
+}`}
+          </pre>
+        </details>
       </div>
     </div>
   );
