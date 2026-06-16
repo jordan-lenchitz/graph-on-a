@@ -8,7 +8,7 @@ import { StupidGrafanaPanel } from './components/StupidGrafanaPanel';
 import { ChaosPanel } from './components/ChaosPanel';
 import { GiantRedButton } from './components/GiantRedButton';
 import { SystemCorePanel } from './components/SystemCorePanel';
-import { SLOP_THEMES } from './components/LifeSlop/LifeSlop';
+import { SLOP_THEMES } from './components/LifeSlop/themes';
 import './NerdHome.css';
 
 // Lazy load heavy components for better mobile performance

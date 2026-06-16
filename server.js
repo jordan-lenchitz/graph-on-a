@@ -42,6 +42,41 @@ app.get('/infra/region', (req, res) => {
   });
 });
 
+app.get('/infra/debug', (req, res) => {
+  const serviceName = process.env.K_SERVICE || 'local';
+  let region = 'local';
+  if (serviceName.endsWith('-us')) region = 'us-central1';
+  if (serviceName.endsWith('-eu')) region = 'europe-west4';
+  if (serviceName.endsWith('-as')) region = 'asia-east1';
+  if (serviceName.endsWith('-af')) region = 'africa-south1';
+  if (serviceName.endsWith('-au')) region = 'australia-southeast2';
+
+  res.json({
+    service_name: serviceName,
+    revision: process.env.K_REVISION || 'local-revision',
+    region: region,
+    status: currentStatus,
+    target: targetRegion,
+    uptime: process.uptime(),
+    memory_usage: process.memoryUsage(),
+    timestamp: new Date().toISOString(),
+    headers: req.headers,
+    obscure_telemetry: {
+      pid: process.pid,
+      ppid: process.ppid,
+      node_version: process.version,
+      v8_pointer_compression: process.config.variables.v8_enable_pointer_compression,
+      architecture: process.arch,
+      platform: process.platform,
+      cpu_usage_us: process.cpuUsage(),
+      resource_usage: process.resourceUsage ? process.resourceUsage() : 'unsupported',
+      crypto_fips: process.config.variables.node_use_openssl ? 'true' : 'false',
+      sandbox_id: process.env.SANDBOX_ID || 'unknown',
+      k_configuration: process.env.K_CONFIGURATION || 'unknown'
+    }
+  });
+});
+
 app.post('/infra/failover', async (req, res) => {
   try {
     console.log('FAILOVER INITIATED: Mutating Global Infrastructure...');

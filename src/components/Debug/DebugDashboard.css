@@ -1,0 +1,232 @@
+.debug-dashboard {
+  background-color: #0d1117;
+  color: #c9d1d9;
+  font-family: 'courier new', courier, monospace;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scroll on entire page */
+  padding: 2rem;
+  box-sizing: border-box;
+  text-transform: lowercase;
+  width: 100vw;
+}
+
+.debug-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #0d1117;
+  color: #00ff41;
+  font-size: 1.5rem;
+  font-family: 'courier new', courier, monospace;
+  animation: pulse 1.5s infinite;
+  text-transform: lowercase;
+}
+
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #30363d;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.debug-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #58a6ff;
+  letter-spacing: 2px;
+  text-transform: lowercase;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap; /* allow wrapping on super narrow screens */
+}
+
+.epoch-display {
+  color: #8b949e;
+  font-size: 0.9rem;
+  margin-right: 15px;
+  border-right: 1px solid #30363d;
+  padding-right: 15px;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-text {
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-transform: lowercase;
+}
+
+.debug-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+}
+
+.debug-card {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  min-width: 0; /* Crucial for preventing flex/grid blowouts */
+  max-width: 100%;
+}
+
+.debug-card.full-width {
+  grid-column: span 2;
+}
+
+.debug-card h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  color: #8b949e;
+  border-bottom: 1px solid #21262d;
+  padding-bottom: 0.5rem;
+  text-transform: lowercase;
+  word-break: break-word;
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  gap: 1rem;
+}
+
+.metric .label {
+  color: #8b949e;
+  flex-shrink: 0;
+}
+
+.metric .value {
+  color: #c9d1d9;
+  font-weight: bold;
+  word-break: break-all;
+  text-align: right;
+}
+
+.metric .value.highlight {
+  color: #00ff41;
+  text-shadow: 0 0 5px rgba(0, 255, 65, 0.4);
+}
+
+.headers-log {
+  background-color: #010409;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  color: #a5d6ff;
+  font-size: 0.8rem; /* slightly smaller for mobile friendliness */
+  margin: 0;
+  text-transform: lowercase;
+  white-space: pre-wrap; /* ensure text wraps rather than extending infinitely horizontally if needed, though JSON usually breaks well */
+  word-break: break-all;
+}
+
+.debug-error {
+  margin-top: 2rem;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid #ff3333;
+  color: #ff3333;
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+  text-transform: lowercase;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* MAJOR MOBILE UPGRADES */
+@media (max-width: 768px) {
+  .debug-dashboard {
+    padding: 0.8rem; /* drastically reduce padding on mobile */
+  }
+
+  .debug-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .debug-header h1 {
+    font-size: 1.4rem; /* smaller header */
+  }
+
+  .status-indicator {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .epoch-display {
+    border-right: none;
+    margin-right: 0;
+    padding-right: 0;
+    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+    width: 100%;
+    display: block; /* force epoch onto its own line on mobile */
+  }
+
+  .status-text {
+    font-size: 1rem;
+  }
+
+  .debug-grid {
+    grid-template-columns: 1fr; /* stack everything */
+    gap: 1rem;
+  }
+
+  .debug-card.full-width {
+    grid-column: span 1;
+  }
+
+  .debug-card {
+    padding: 1rem; /* reduce inner card padding */
+  }
+
+  .metric {
+    font-size: 0.95rem; /* smaller text to fit data */
+    flex-direction: column; /* Stack label and value vertically on very small screens */
+    align-items: flex-start;
+    gap: 0.2rem;
+    border-bottom: 1px dashed #30363d;
+    padding-bottom: 0.5rem;
+  }
+  
+  .metric:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .metric .value {
+    text-align: left;
+    word-break: break-all; /* handle very long values gracefully */
+  }
+
+  .headers-log {
+    font-size: 0.75rem; /* very small monospace for code blocks */
+    padding: 0.5rem;
+  }
+}
