@@ -1,5 +1,29 @@
 FROM grafana/grafana:latest
 
+USER root
+
+# Install nodejs, npm, prometheus, supervisor
+RUN if [ -x "$(command -v apk)" ]; then \
+        apk add --no-cache nodejs npm prometheus supervisor; \
+    else \
+        apt-get update && apt-get install -y nodejs npm prometheus supervisor; \
+    fi
+
+# Create prometheus data directory and log directories, and fix permissions
+RUN mkdir -p /tmp/prometheus && chown -R 472:0 /tmp/prometheus && \
+    mkdir -p /var/log && chown -R 472:0 /var/log && \
+    mkdir -p /etc/prometheus && chown -R 472:0 /etc/prometheus
+
+# Copy supervisor config
+COPY supervisord.conf /etc/supervisord.conf
+
+# Copy prometheus config
+COPY prometheus.yml /etc/prometheus/prometheus.yml
+
+# Copy and set up metrics server
+WORKDIR /app
+COPY metrics-server.js /app/metrics-server.js
+
 # Disable authentication for demo purposes and allow embedding in iframes
 ENV GF_AUTH_ANONYMOUS_ENABLED=true
 ENV GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
@@ -19,5 +43,9 @@ COPY provisioning/datasources/datasource.yml /etc/grafana/provisioning/datasourc
 RUN mkdir -p /etc/grafana/provisioning/dashboards/json
 COPY dashboards/*.json /etc/grafana/provisioning/dashboards/json/
 
-# Expose the default Grafana port
-EXPOSE 3000
+# Expose ports (Grafana, Prometheus, Metrics)
+EXPOSE 3000 9090 8081
+
+# Command to run supervisor
+ENTRYPOINT []
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]

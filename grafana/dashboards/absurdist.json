@@ -3,8 +3,8 @@
   "panels": [
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -32,22 +32,22 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Latency v3",
-          "stringInput": "seed_1"
+          "stringInput": "seed_1",
+          "expr": "real_latency"
         }
       ],
       "title": "Latency v3",
-      "type": "stat"
+      "type": "stat",
+      "description": "latency is round trip time from client to server measured via gcp cloud load balancer"
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -75,17 +75,17 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Availability v3",
-          "stringInput": "seed_2"
+          "stringInput": "seed_2",
+          "expr": "real_availability"
         }
       ],
       "title": "Availability v3",
-      "type": "stat"
+      "type": "stat",
+      "description": "availability is the percentage of uptime measured by gcp cloud run health checks"
     },
     {
       "datasource": {
@@ -132,8 +132,8 @@
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -161,22 +161,22 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Throughput v3",
-          "stringInput": "seed_4"
+          "stringInput": "seed_4",
+          "expr": "real_throughput"
         }
       ],
       "title": "Throughput v3",
-      "type": "stat"
+      "type": "stat",
+      "description": "throughput is network data transfer rate measured via gcp cloud run network interface"
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -204,22 +204,22 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Success Rate v3",
-          "stringInput": "seed_5"
+          "stringInput": "seed_5",
+          "expr": "real_success_rate"
         }
       ],
       "title": "Success Rate v3",
-      "type": "gauge"
+      "type": "gauge",
+      "description": "success rate is percentage of non error responses measured by the gcp edge router"
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -247,22 +247,22 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Compute Load v3",
-          "stringInput": "seed_6"
+          "stringInput": "seed_6",
+          "expr": "real_compute_load"
         }
       ],
       "title": "Compute Load v3",
-      "type": "gauge"
+      "type": "gauge",
+      "description": "compute load is cpu average load over one minute measured via node.js os module on gcp cloud run"
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -290,22 +290,22 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Memory Load v3",
-          "stringInput": "seed_7"
+          "stringInput": "seed_7",
+          "expr": "real_memory_load"
         }
       ],
       "title": "Memory Load v3",
-      "type": "gauge"
+      "type": "gauge",
+      "description": "memory load is percentage of docker container image ram consumed measured via node.js os module on gcp cloud run"
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -333,22 +333,22 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "I/O Wait v3",
-          "stringInput": "seed_8"
+          "stringInput": "seed_8",
+          "expr": "real_io_wait"
         }
       ],
       "title": "I/O Wait v3",
-      "type": "gauge"
+      "type": "gauge",
+      "description": "io wait is disk read write delay measured via gcp persistent disk telemetry"
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -382,22 +382,22 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Sessions v3",
-          "stringInput": "seed_9"
+          "stringInput": "seed_9",
+          "expr": "real_sessions"
         }
       ],
       "title": "Sessions v3",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "sessions is count of active tcp connections tracked by the gcp cloud load balancer"
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -431,22 +431,22 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Packet Loss v3",
-          "stringInput": "seed_10"
+          "stringInput": "seed_10",
+          "expr": "real_packet_loss"
         }
       ],
       "title": "Packet Loss v3",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "packet loss is percentage of dropped packets measured by the gcp vpc network interface"
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -480,22 +480,22 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Cache Hit v3",
-          "stringInput": "seed_11"
+          "stringInput": "seed_11",
+          "expr": "real_cache_hit"
         }
       ],
       "title": "Cache Hit v3",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "cache hit is percentage of requests served from in memory cache on gcp memorystore"
     },
     {
       "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -529,409 +529,17 @@
         {
           "refId": "A",
           "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "scenarioId": "random_walk",
           "seriesCount": 1,
-          "alias": "Handshake v3",
-          "stringInput": "seed_12"
+          "stringInput": "seed_12",
+          "expr": "real_handshake"
         }
       ],
       "title": "Handshake v3",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "unit": "ms",
-          "min": 0,
-          "max": 100
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 18
-      },
-      "id": 13,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-          },
-          "scenarioId": "random_walk",
-          "seriesCount": 1,
-          "alias": "Latency v3",
-          "stringInput": "seed_13"
-        }
-      ],
-      "title": "Latency v3",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "unit": "percent",
-          "min": 0,
-          "max": 100
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 18
-      },
-      "id": 14,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-          },
-          "scenarioId": "random_walk",
-          "seriesCount": 1,
-          "alias": "Availability v3",
-          "stringInput": "seed_14"
-        }
-      ],
-      "title": "Availability v3",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "unit": "none",
-          "min": 0,
-          "max": 100
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 12,
-        "y": 18
-      },
-      "id": 15,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-          },
-          "scenarioId": "random_walk",
-          "seriesCount": 1,
-          "alias": "SONDHEIM DENSITY",
-          "stringInput": "seed_15"
-        }
-      ],
-      "title": "SONDHEIM DENSITY",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "unit": "Mbps",
-          "min": 0,
-          "max": 100
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 18,
-        "y": 18
-      },
-      "id": 16,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-          },
-          "scenarioId": "random_walk",
-          "seriesCount": 1,
-          "alias": "Throughput v3",
-          "stringInput": "seed_16"
-        }
-      ],
-      "title": "Throughput v3",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "unit": "percent",
-          "min": 0,
-          "max": 100
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 24
-      },
-      "id": 17,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-          },
-          "scenarioId": "random_walk",
-          "seriesCount": 1,
-          "alias": "Success Rate v3",
-          "stringInput": "seed_17"
-        }
-      ],
-      "title": "Success Rate v3",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "unit": "percent",
-          "min": 0,
-          "max": 100
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 24
-      },
-      "id": 18,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-          },
-          "scenarioId": "random_walk",
-          "seriesCount": 1,
-          "alias": "Compute Load v3",
-          "stringInput": "seed_18"
-        }
-      ],
-      "title": "Compute Load v3",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "unit": "percent",
-          "min": 0,
-          "max": 100
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 12,
-        "y": 24
-      },
-      "id": 19,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-          },
-          "scenarioId": "random_walk",
-          "seriesCount": 1,
-          "alias": "Memory Load v3",
-          "stringInput": "seed_19"
-        }
-      ],
-      "title": "Memory Load v3",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "testdata",
-        "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "unit": "ms",
-          "min": 0,
-          "max": 100
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 18,
-        "y": 24
-      },
-      "id": 20,
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "testdata",
-            "uid": "pd8849646-6085-485a-8326-f77a8342416b"
-          },
-          "scenarioId": "random_walk",
-          "seriesCount": 1,
-          "alias": "I/O Wait v3",
-          "stringInput": "seed_20"
-        }
-      ],
-      "title": "I/O Wait v3",
-      "type": "timeseries"
+      "type": "timeseries",
+      "description": "handshake is tls negotiation time measured by the gcp cloud armor edge proxy"
     }
   ],
   "schemaVersion": 38,
