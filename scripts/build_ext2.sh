@@ -32,8 +32,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "Bootstrapping minimal Debian environment (this takes a few minutes)..."
-sudo debootstrap --variant=minbase stable $MOUNT_DIR http://deb.debian.org/debian/
+echo "Bootstrapping minimal Ubuntu environment (this takes a few minutes)..."
+sudo debootstrap --variant=minbase noble $MOUNT_DIR http://archive.ubuntu.com/ubuntu/
 
 echo "Mounting virtual filesystems..."
 sudo mount -t proc /proc "$MOUNT_DIR/proc"
