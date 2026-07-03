@@ -37,6 +37,7 @@
                 cursorBlink: true,
                 fontFamily: 'monospace',
                 fontSize: 14,
+                scrollback: 100000,
                 theme: {
                     background: '#000000',
                     foreground: '#cccccc',
@@ -75,7 +76,7 @@
                 try {
                     const emulator = new StarterClass({
                         wasm_path: "v86.wasm",
-                        memory_size: 512 * 1024 * 1024,
+                        memory_size: 1024 * 1024 * 1024,
                         vga_enabled: false,
                         cmdline: "rw init=/bin/sh console=ttyS0 noapic nolapic acpi=off nomodeset loglevel=0",
                         bios: { url: "seabios.bin" },
@@ -153,6 +154,10 @@
                                                   "  fi; " +
                                                   "else " +
                                                   "  echo 'no storage device found. running in memory.'; " +
+                                                  "  echo 'bringing up network interface eth0...'; " +
+                                                  "  ip link set lo up; " +
+                                                  "  ip link set eth0 up; " +
+                                                  "  udhcpc -i eth0; " +
                                                   "  /bin/sh; " +
                                                   "fi;\n";
                                  emulator.serial0_send(installCmd);
@@ -181,12 +186,10 @@
                 }
             }
 
-            if (!imagePath) {
-                log("error: no image provided.", "error");
-            } else {
+            if (imagePath) {
                 log(`image path: ${imagePath}`);
-                setTimeout(startVM, 100);
             }
+            setTimeout(startVM, 100);
         })();
     </script>
 </body>
