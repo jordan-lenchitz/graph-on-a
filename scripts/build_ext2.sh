@@ -5,7 +5,7 @@
 
 set -e # Exit on error
 
-IMAGE_NAME="ydb-image.ext2"
+IMAGE_NAME="ydb-image-256m.ext2"
 MOUNT_DIR="./mnt_ydb"
 
 # Pre-flight check
@@ -15,8 +15,8 @@ if ! command -v debootstrap &> /dev/null; then
     exit 1
 fi
 
-echo "Creating 1GB sparse file..."
-truncate -s 1G $IMAGE_NAME
+echo "Creating 256MB sparse file..."
+truncate -s 256M $IMAGE_NAME
 
 echo "Formatting as ext2..."
 mkfs.ext2 $IMAGE_NAME
@@ -56,7 +56,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 echo "Updating and installing dependencies..."
 apt-get update
-apt-get install -y wget procps libelf1 binutils file libicu-dev locales
+apt-get install -y wget procps libelf1 binutils libc-bin file libicu-dev locales
 
 echo "Generating locales..."
 sed -i '/en_US.UTF-8/s/^# //' /etc/locale.gen

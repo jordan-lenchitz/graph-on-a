@@ -19,7 +19,7 @@ export const WasmVM: React.FC<WasmVMProps> = ({ imagePath }) => {
       */}
       <iframe 
         src={`/vm/index.html?image=${encodeURIComponent(imagePath)}`}
-        style={{ width: '100%', height: '400px', border: 'none' }}
+        style={{ width: '100%', height: '600px', minHeight: '400px', resize: 'vertical', overflow: 'auto', border: 'none' }}
         title="WASM VM"
       />
     </div>

@@ -269,7 +269,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       print('provisioning ephemeral yottadb container...');
       await new Promise(r => setTimeout(r, 1200));
       print(<div className="text-green">success: environment attached. entering wasm vm...</div>);
-      print(<WasmVM imagePath="/ydb-image.ext2" />);
+      print(<WasmVM imagePath="" />);
       finish();
     },
 
