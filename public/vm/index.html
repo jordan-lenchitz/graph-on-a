@@ -115,7 +115,7 @@
 
                         if (!bootCompleted && serialBuffer.includes("~ # ")) {
                             bootCompleted = true;
-                            log("root shell reached. initiating real yottadb deployment...", "success");
+                            log("root shell reached. initiating real deployment...", "success");
                             
                             setTimeout(() => {
                                 systemReady = true;
@@ -126,8 +126,8 @@
                                                   "if [ -b /dev/hda ]; then " +
                                                   "  echo 'found pre-installed storage. mounting environment...'; " +
                                                   "  mkdir -p /opt; mount /dev/hda /opt; " +
-                                                  "  if [ -d /opt/proc ] || [ -f /opt/usr/local/bin/ydb ] || [ -d /opt/usr/local/lib/yottadb ]; then " +
-                                                  "    echo 'starting secure local yottadb terminal...'; " +
+                                                  "  if [ -d /opt/proc ] || [ -d /opt/usr/local/bin ] || [ -d /opt/usr/local/lib ]; then " +
+                                                  "    echo 'starting secure local terminal...'; " +
                                                   "    mkdir -p /opt/proc /opt/sys /opt/dev; " +
                                                   "    mount -t proc /proc /opt/proc 2>/dev/null || true; " +
                                                   "    mount -t sysfs /sys /opt/sys 2>/dev/null || true; " +
@@ -135,18 +135,18 @@
                                                   "    mkdir -p /opt/dev/pts; mount --bind /dev/pts /opt/dev/pts 2>/dev/null || true; " +
                                                   "    echo ''; " +
                                                   "    echo '========================================='; " +
-                                                  "    echo ' welcome to the pre-installed yottadb vm!'; " +
+                                                  "    echo ' welcome to the pre-installed vm!'; " +
                                                   "    echo ' no network connection required. '; " +
                                                   "    echo '========================================='; " +
                                                   "    echo ''; " +
-                                                  "    echo 'type \"ydb\" to start the database.'; " +
+                                                  "    echo 'type \"help\" to see available commands.'; " +
                                                   "    echo ''; " +
                                                   "    chroot /opt /bin/bash; " +
                                                   "  else " +
                                                   "    echo 'restoring standard environment...'; " +
-                                                  "    if [ -f /opt/ydb/bin/ydb ]; then " +
-                                                  "      export PATH=$PATH:/opt/ydb/bin; " +
-                                                  "      echo 'yottadb restored from legacy storage.'; " +
+                                                  "    if [ -d /opt/bin ]; then " +
+                                                  "      export PATH=$PATH:/opt/bin; " +
+                                                  "      echo 'environment restored from legacy storage.'; " +
                                                   "      /bin/sh; " +
                                                   "    else " +
                                                   "      echo 'error: pre-installed environment not found.'; " +
@@ -159,7 +159,16 @@
                                                   "  ip link set lo up; " +
                                                   "  ip link set eth0 up; " +
                                                   "  udhcpc -i eth0; " +
-                                                  "  /bin/sh; " +
+                                                  "  echo 'initializing package manager...'; " +
+                                                  "  mkdir -p /etc/apk /lib/apk/db; " +
+                                                  "  apk add --initdb; " +
+                                                  "  echo 'http://dl-cdn.alpinelinux.org/alpine/v3.18/main' > /etc/apk/repositories; " +
+                                                  "  echo 'http://dl-cdn.alpinelinux.org/alpine/v3.18/community' >> /etc/apk/repositories; " +
+                                                  "  apk --allow-untrusted update; " +
+                                                  "  export TERM=xterm; " +
+                                                  "  echo 'export PS1=\"~ # \"' > /root/.profile; " +
+                                                  "  export ENV=/root/.profile; " +
+                                                  "  exec setsid sh -c 'exec sh </dev/ttyS0 >/dev/ttyS0 2>&1' || exec /bin/sh; " +
                                                   "fi;\n";
                                  emulator.serial0_send(installCmd);
                             }, 500);

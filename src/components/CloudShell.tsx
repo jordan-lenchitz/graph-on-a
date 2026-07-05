@@ -163,7 +163,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
         '  battle_pass      - check your current season progress (greg approved).',
         '  osi              - spawn the colorful 7-layer osi absurdity panel.',
         '  telemetry        - spawn the openstack cluster telemetry debug window.',
-        '  ydb              - provision an ephemeral ydb container (wasm).',
+        '  vm               - provision an ephemeral webassembly vm.',
         '  horse            - initialize the equine categorization engine (100% urine free).',
         '  slopctl          - tune the recursive slop engine collision physics.',
         '  quota_smash      - maximize gcp billing via recursive serverless invocations.',
@@ -262,16 +262,17 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       }
       finish();
     },
-    ydb: async (_args, print, finish) => {
+    vm: async (_args, print, finish) => {
       print('booting v86 x86-to-wasm jit engine...');
       if (onVmStart) onVmStart();
       await new Promise(r => setTimeout(r, 800));
-      print('provisioning ephemeral yottadb container...');
+      print('provisioning ephemeral webassembly vm...');
       await new Promise(r => setTimeout(r, 1200));
       print(<div className="text-green">success: environment attached. entering wasm vm...</div>);
       print(<WasmVM imagePath="" />);
       finish();
     },
+    ydb: async (args, print, finish) => commands.vm(args, print, finish),
 
     quota_smash: async (_args, print, finish) => {
       print('[quota smash] initializing architecture expansion...');
