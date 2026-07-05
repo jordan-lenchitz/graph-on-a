@@ -1,0 +1,246 @@
+.zt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  backdrop-filter: blur(5px);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.zt-modal {
+  background-color: #ffffff;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  color: #333;
+}
+
+.zt-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+}
+
+.zt-close:hover {
+  color: #000;
+}
+
+.zt-header {
+  text-align: center;
+  padding: 30px 20px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.zt-logo {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.zt-header h2 {
+  margin: 0 0 5px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.zt-header p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.zt-body {
+  padding: 30px;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.zt-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.zt-form label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.zt-form input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.zt-form input:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 0 2px rgba(0,86,179,0.2);
+}
+
+.zt-btn-primary {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.zt-btn-primary:hover {
+  background-color: #004494;
+}
+
+.zt-step-2 {
+  text-align: center;
+}
+
+.zt-step-2 h3 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.zt-step-2 p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.zt-hardware-key {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid #eee;
+  margin: 0 auto 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.1s;
+}
+
+.zt-hardware-key:active, .zt-hardware-key.active {
+  transform: scale(0.95);
+  border-color: #0056b3;
+}
+
+.zt-fingerprint {
+  font-size: 48px;
+  z-index: 2;
+}
+
+.zt-hardware-key span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  z-index: 2;
+  margin-top: 10px;
+}
+
+.zt-progress-bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background-color: transparent;
+  z-index: 1;
+}
+
+.zt-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 128, 0, 0.2);
+  transition: height 0.05s linear;
+  height: 100%;
+  transform-origin: bottom;
+}
+
+.zt-hint {
+  font-size: 12px !important;
+  color: #999 !important;
+  margin-bottom: 0 !important;
+}
+
+.zt-step-3 h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.zt-terminal {
+  background-color: #000;
+  color: #0f0;
+  font-family: monospace;
+  padding: 15px;
+  border-radius: 4px;
+  height: 200px;
+  overflow-y: auto;
+  font-size: 12px;
+  text-align: left;
+}
+
+.zt-log {
+  margin-bottom: 5px;
+  word-break: break-all;
+}
+
+.zt-log.warning {
+  color: #ffaa00;
+}
+
+.zt-cursor {
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.zt-step-4 {
+  text-align: center;
+}
+
+.zt-success-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.zt-step-4 h3 {
+  margin-top: 0;
+  color: #008000;
+}
+
+.zt-step-4 p {
+  margin-bottom: 30px;
+  color: #555;
+}
