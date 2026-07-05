@@ -8,6 +8,7 @@ import { ChaosPanel } from './components/ChaosPanel';
 import { GiantRedButton } from './components/GiantRedButton';
 import { SystemCorePanel } from './components/SystemCorePanel';
 import { SLOP_THEMES } from './components/LifeSlop/themes';
+import { ZeroTrustAuth } from './components/ZeroTrustAuth';
 import './NerdHome.css';
 
 const CloudShell = lazy(() => import('./components/CloudShell').then(m => ({ default: m.CloudShell })));
@@ -58,6 +59,9 @@ export const NerdHome: React.FC = () => {
   const [systemName, setSystemName] = useState('system_core');
 
   const [inferenceWs, setInferenceWs] = useState<WebSocket | null>(null);
+
+  const [showZeroTrust, setShowZeroTrust] = useState(false);
+  const [isZeroTrustVerified, setIsZeroTrustVerified] = useState(false);
 
   useEffect(() => {
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -272,6 +276,10 @@ export const NerdHome: React.FC = () => {
       )}
 
       <div className="floating-actions">
+        <button className="action-btn" style={{ backgroundColor: '#0056b3', color: 'white', borderColor: '#004494' }} onClick={() => setShowZeroTrust(true)}>
+          [🔒 SSO Login]
+        </button>
+
         <GiantRedButton />
 
         <button className="action-btn slop-btn" onClick={triggerLifeSlop}>
@@ -443,6 +451,35 @@ export function handleOSIStack(layer: number, data: string): OSIResponse {
         <div>system: operational<br/>latency: 14ms</div>
         <div className="text-right">pop: lhr-c2<br/>proto: h3<br/>cache: hit</div>
       </div>
+
+      {showZeroTrust && (
+        <ZeroTrustAuth 
+          onSuccess={() => {
+            setIsZeroTrustVerified(true);
+            setShowZeroTrust(false);
+          }}
+          onClose={() => setShowZeroTrust(false)}
+        />
+      )}
+      
+      {isZeroTrustVerified && (
+        <div className="zt-verified-badge" style={{
+          position: 'fixed',
+          bottom: '100px',
+          right: '20px',
+          backgroundColor: '#000',
+          color: '#0f0',
+          border: '1px solid #0f0',
+          padding: '10px',
+          borderRadius: '4px',
+          zIndex: 9999,
+          fontFamily: 'monospace',
+          boxShadow: '0 0 10px rgba(0, 255, 0, 0.5)',
+          animation: 'pulse 2s infinite'
+        }}>
+          ✅ ZERO-TRUST: VERIFIED
+        </div>
+      )}
     </div>
   );
 };
