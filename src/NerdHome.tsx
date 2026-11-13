@@ -5,10 +5,13 @@ import { DraggablePanel } from './components/DraggablePanel';
 import { RealGrafanaPanel } from './components/RealGrafanaPanel';
 import { StupidGrafanaPanel } from './components/StupidGrafanaPanel';
 import { ChaosPanel } from './components/ChaosPanel';
+import type { RegionData } from './components/ChaosPanel';
 import { GiantRedButton } from './components/GiantRedButton';
 import { SystemCorePanel } from './components/SystemCorePanel';
 import { SLOP_THEMES } from './components/LifeSlop/themes';
 import { ZeroTrustAuth } from './components/ZeroTrustAuth';
+import { QuineCodeBlock } from './components/QuineCodeBlock';
+import NerdHomeRaw from './NerdHome.tsx?raw';
 import './NerdHome.css';
 
 const CloudShell = lazy(() => import('./components/CloudShell').then(m => ({ default: m.CloudShell })));
@@ -50,18 +53,51 @@ export const NerdHome: React.FC = () => {
   const [showOsi, setShowOsi] = useState(false);
   const [showOpenStack, setShowOpenStack] = useState(false);
   const [showHorse, setShowHorse] = useState(false);
+  const [showSondheim, setShowSondheim] = useState(false);
   const [lifeTheme, setLifeTheme] = useState('gt.m');
   const [slopSpeed, setSlopSpeed] = useState(15);
   const [initialCmd, setInitialCmd] = useState<string | undefined>(undefined);
   const [isStaticMode, setIsStaticMode] = useState(false);
 
   const [vmStatus, setVmStatus] = useState<'offline' | 'online'>('offline');
+  const [vmIp, setVmIp] = useState('0.0.0.0');
+  const [vmGateway, setVmGateway] = useState<string | null>(null);
+  const [vmStage, setVmStage] = useState('offline');
   const [systemName, setSystemName] = useState('system_core');
+  const [regionInfo, setRegionInfo] = useState<RegionData>({
+    region: 'us-central1-gen2',
+    pop: 'lhr-c2',
+    status: 'Stable',
+  });
+  const [lastPollTime, setLastPollTime] = useState(() =>
+    new Date().toLocaleTimeString().toLowerCase()
+  );
 
   const [inferenceWs, setInferenceWs] = useState<WebSocket | null>(null);
 
   const [showZeroTrust, setShowZeroTrust] = useState(false);
   const [isZeroTrustVerified, setIsZeroTrustVerified] = useState(false);
+
+  useEffect(() => {
+    const handleVmMessage = (event: MessageEvent) => {
+      const payload = event.data;
+      if (!payload || payload.type !== 'wasm-vm-telemetry') return;
+
+      setVmStatus('online');
+      if (typeof payload.stage === 'string') {
+        setVmStage(payload.stage);
+      }
+      if (typeof payload.ip === 'string' && payload.ip.length > 0) {
+        setVmIp(payload.ip);
+      }
+      if (payload.gateway !== undefined) {
+        setVmGateway(payload.gateway);
+      }
+    };
+
+    window.addEventListener('message', handleVmMessage);
+    return () => window.removeEventListener('message', handleVmMessage);
+  }, []);
 
   useEffect(() => {
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -124,7 +160,15 @@ export const NerdHome: React.FC = () => {
 
   const handleVmStart = () => {
     setVmStatus('online');
+    setVmStage('provisioning');
+    setVmIp('dhcp...');
+    setVmGateway(null);
     setSystemName(ALLITERATIVE_NAMES[Math.floor(Math.random() * ALLITERATIVE_NAMES.length)]);
+  };
+
+  const handleRegionUpdate = (data: RegionData) => {
+    setRegionInfo(data);
+    setLastPollTime(new Date().toLocaleTimeString().toLowerCase());
   };
 
   const triggerLifeSlop = () => {
@@ -255,6 +299,7 @@ export const NerdHome: React.FC = () => {
             onShowOsi={() => setShowOsi(true)}
             onShowOpenStack={() => setShowOpenStack(true)}
             onShowHorse={() => setShowHorse(true)}
+            onShowSondheim={() => setShowSondheim(true)}
             initialCommand={initialCmd}
           />
         </Suspense>
@@ -280,22 +325,27 @@ export const NerdHome: React.FC = () => {
           [🔒 SSO Login]
         </button>
 
-        <GiantRedButton />
-
         <button className="action-btn slop-btn" onClick={triggerLifeSlop}>
           spawn_slop
         </button>
 
-        <button className="tilde-key" onClick={() => setShowTerminal(prev => !prev)}>
-          <div className="tilde-top">~</div>
-          <div className="tilde-bottom">`</div>
+        <button className="action-btn sondheim-btn" onClick={() => setShowSondheim(prev => !prev)}>
+          {showSondheim ? 'hide_sondheim' : 'sondheim_hub'}
         </button>
+
+        <div className="floating-actions-bottom-row">
+          <button className="tilde-key" onClick={() => setShowTerminal(prev => !prev)}>
+            <div className="tilde-top">~</div>
+            <div className="tilde-bottom">`</div>
+          </button>
+          <GiantRedButton />
+        </div>
       </div>
 
-      <ChaosPanel />
+      <ChaosPanel onRegionUpdate={handleRegionUpdate} />
 
       {showOsi && (
-        <DraggablePanel className="osi-panel">
+        <DraggablePanel className="osi-panel" onClose={() => setShowOsi(false)}>
           <div className="panel-header">
             <span className="dot purple-dot"></span>
             <span>osi_absurdity_v7</span>
@@ -345,10 +395,9 @@ export const NerdHome: React.FC = () => {
                 <div className="flex-between"><span>toil_reduction:</span><span>infinite_loop</span></div>
               </div>
 
-              <details className="mt-2 text-small p-2" style={{ border: '1px dashed #8a2be2', color: '#8a2be2', marginTop: '10px' }}>
-                <summary style={{ cursor: 'pointer', opacity: 0.8 }}>how_does_this_osi_<br/>routing_protocol_work.ts</summary>
-                <pre style={{ wordBreak: 'break-all', fontSize: '0.8em', marginTop: '10px', color: '#8a2be2', background: '#000', padding: '10px', whiteSpace: 'pre-wrap', textAlign: 'left' }}>
-{`export interface OSIResponse {
+              <QuineCodeBlock
+                summary={<>how_does_this_osi_<br/>routing_protocol_work.ts</>}
+                snippet={`export interface OSIResponse {
   layer: number;
   protocolName: string;
   payload: string | null;
@@ -366,8 +415,10 @@ export function handleOSIStack(layer: number, data: string): OSIResponse {
       return { layer, protocolName: 'UDP (Unreliable Dreams)', payload: null };
   }
 }`}
-                </pre>
-              </details>
+                rawSource={NerdHomeRaw}
+                rawFilename="src/NerdHome.tsx"
+                color="#8a2be2"
+              />
 
               <div className="text-muted text-right text-small mt-2">net_reliability_engineering_orchestrator // 2026</div>
             </div>
@@ -375,14 +426,24 @@ export function handleOSIStack(layer: number, data: string): OSIResponse {
         </DraggablePanel>
       )}
 
-      <SystemCorePanel vmStatus={vmStatus} systemName={systemName} maxDepth={maxDepth} />
+      <SystemCorePanel
+        vmStatus={vmStatus}
+        systemName={systemName}
+        maxDepth={maxDepth}
+        vmIp={vmIp}
+        vmGateway={vmGateway}
+        vmStage={vmStage}
+        region={regionInfo.region}
+      />
 
       <RealGrafanaPanel />
 
-      <StupidGrafanaPanel />
+      {showSondheim && (
+        <StupidGrafanaPanel onClose={() => setShowSondheim(false)} />
+      )}
 
       {showOpenStack && (
-        <DraggablePanel className="telemetry-panel">
+        <DraggablePanel className="telemetry-panel" onClose={() => setShowOpenStack(false)}>
           <div className="panel-header bg-darker">
             <span className="text-orange">g</span>
             <span>openstack cluster / node-01 / telemetry</span>
@@ -445,11 +506,11 @@ export function handleOSIStack(layer: number, data: string): OSIResponse {
 
       <div className="bottom-bar">
         <div className="text-red">real_gcp_infrastructure_visualizer (sql_theme)</div>
-        <div className="text-muted text-right">last_poll: 3:36:10 am</div>
+        <div className="text-muted text-right">last_poll: {lastPollTime}</div>
       </div>
       <div className="bottom-status">
-        <div>system: operational<br/>latency: 14ms</div>
-        <div className="text-right">pop: lhr-c2<br/>proto: h3<br/>cache: hit</div>
+        <div>system: {regionInfo.status?.toLowerCase() || 'operational'}<br/>latency: 14ms</div>
+        <div className="text-right">pop: {regionInfo.pop !== '...' ? regionInfo.pop : 'lhr-c2'}<br/>proto: h3<br/>cache: hit</div>
       </div>
 
       {showZeroTrust && (

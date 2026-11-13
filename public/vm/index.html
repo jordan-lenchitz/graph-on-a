@@ -60,6 +60,70 @@
                 logsContainer.scrollTop = logsContainer.scrollHeight;
             }
 
+            function emitTelemetry(payload) {
+                try {
+                    if (window.parent && window.parent !== window) {
+                        window.parent.postMessage(Object.assign({
+                            type: 'wasm-vm-telemetry',
+                            timestamp: Date.now()
+                        }, payload), '*');
+                    }
+                } catch (err) {
+                    console.error('telemetry postMessage error:', err);
+                }
+            }
+
+            let telemetryLineBuffer = "";
+            function inspectSerialLine(rawLine) {
+                const line = rawLine.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, '').trim();
+                if (!line) return;
+
+                if (
+                    line.includes("bringing up network interface") ||
+                    line.includes("udhcpc: started") ||
+                    line.includes("udhcpc: broadcasting discover")
+                ) {
+                    emitTelemetry({ stage: "dhcp_discover", ip: "dhcp..." });
+                }
+
+                const selectMatch = line.match(/udhcpc:\s*broadcasting select for\s+(\d+\.\d+\.\d+\.\d+)(?:,\s*server\s+(\d+\.\d+\.\d+\.\d+))?/i);
+                if (selectMatch) {
+                    emitTelemetry({
+                        stage: "dhcp_select",
+                        ip: selectMatch[1],
+                        gateway: selectMatch[2] || null
+                    });
+                }
+
+                const leaseMatch = line.match(/udhcpc:\s*lease of\s+(\d+\.\d+\.\d+\.\d+)\s+obtained(?: from\s+(\d+\.\d+\.\d+\.\d+))?(?:,\s*lease time\s+(\d+))?/i);
+                if (leaseMatch) {
+                    status.innerText = `vm online (net_ip: ${leaseMatch[1]})`;
+                    log(`dhcp lease obtained: ${leaseMatch[1]} (gw: ${leaseMatch[2] || 'n/a'})`, "success");
+                    emitTelemetry({
+                        stage: "online",
+                        ip: leaseMatch[1],
+                        gateway: leaseMatch[2] || null,
+                        leaseTime: leaseMatch[3] ? parseInt(leaseMatch[3], 10) : null
+                    });
+                }
+
+                const inetMatch = line.match(/inet\s+(?:addr:)?(\d+\.\d+\.\d+\.\d+)/i);
+                if (inetMatch && inetMatch[1] !== "127.0.0.1") {
+                    emitTelemetry({
+                        stage: "online",
+                        ip: inetMatch[1]
+                    });
+                }
+
+                if (line.includes("initializing package manager")) {
+                    emitTelemetry({ stage: "apk_init" });
+                }
+
+                if (line.startsWith("OK:") || line.includes("distinct packages available") || line.includes("welcome to the pre-installed vm")) {
+                    emitTelemetry({ stage: "online" });
+                }
+            }
+
             function startVM() {
                 log("checking for v86 class...");
                 let StarterClass = window.V86Starter || (window.V86 && window.V86.V86Starter) || (typeof window.V86 === 'function' ? window.V86 : null);
@@ -97,6 +161,19 @@
 
                     emulator.add_listener("serial0-output-byte", (byte) => {
                         const char = String.fromCharCode(byte);
+
+                        if (char === '\n' || char === '\r') {
+                            if (telemetryLineBuffer.length > 0) {
+                                inspectSerialLine(telemetryLineBuffer);
+                                telemetryLineBuffer = "";
+                            }
+                        } else {
+                            telemetryLineBuffer += char;
+                            if (telemetryLineBuffer.length > 512) {
+                                inspectSerialLine(telemetryLineBuffer);
+                                telemetryLineBuffer = telemetryLineBuffer.slice(-128);
+                            }
+                        }
                         
                         if (systemReady) {
                             term.write(char);
@@ -110,6 +187,7 @@
                             status.innerText = "vm booting";
                             status.style.color = "#0f0";
                             log("first serial output received. booting linux kernel in background...");
+                            emitTelemetry({ stage: "kernel_boot", ip: "booting..." });
                         }
 
                         if (!bootCompleted && serialBuffer.includes("~ # ")) {

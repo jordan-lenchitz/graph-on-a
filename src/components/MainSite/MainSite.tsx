@@ -55,7 +55,7 @@ export const MainSite = () => {
 
       <p><strong>indiana university bloomington (2018)</strong></p>
       <blockquote style={{ borderLeft: '3px solid #ccc', margin: '10px 0 10px 15px', paddingLeft: '15px', color: '#555' }}>bachelor of arts in french with highest distinction</blockquote>
-      <blockquote style={{ borderLeft: '3px solid #ccc', margin: '10px 0 10px 15px', paddingLeft: '15px', color: '#555' }}>bachelor of arts in mathematics with highest distinction and honors in mathemitics</blockquote>
+      <blockquote style={{ borderLeft: '3px solid #ccc', margin: '10px 0 10px 15px', paddingLeft: '15px', color: '#555' }}>bachelor of arts in mathematics with highest distinction and honors in mathematics</blockquote>
       <blockquote style={{ borderLeft: '3px solid #ccc', margin: '10px 0 10px 15px', paddingLeft: '15px', color: '#555' }}>bachelor of music in music composition and piano performance with high distinction and honors in music</blockquote>
 
       <h2>references and esoteric trivia available upon request</h2>

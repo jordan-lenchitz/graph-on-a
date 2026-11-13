@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { WasmVM } from './WasmVM';
 import { calculate_sha257sum } from '../utils/sha257';
+import CloudShellRaw from './CloudShell.tsx?raw';
+import SystemCorePanelRaw from './SystemCorePanel.tsx?raw';
+import ChaosPanelRaw from './ChaosPanel.tsx?raw';
+import NerdHomeRaw from '../NerdHome.tsx?raw';
+import Sha257Raw from '../utils/sha257.ts?raw';
+import QuineCodeBlockRaw from './QuineCodeBlock.tsx?raw';
+import ReadntmeRaw from '../../public/readntme.txt?raw';
 import './CloudShell.css';
 
 interface CloudShellProps {
@@ -10,12 +17,62 @@ interface CloudShellProps {
   onShowOsi?: () => void;
   onShowOpenStack?: () => void;
   onShowHorse?: () => void;
+  onShowSondheim?: () => void;
   initialCommand?: string;
+}
+
+const QUINE_FILES: Record<string, { path: string; source: string; aliases: string[] }> = {
+  'cloudshell.tsx': {
+    path: 'src/components/CloudShell.tsx',
+    source: CloudShellRaw,
+    aliases: ['self', 'shell', 'cloudshell', 'cloudshell.tsx'],
+  },
+  'systemcorepanel.tsx': {
+    path: 'src/components/SystemCorePanel.tsx',
+    source: SystemCorePanelRaw,
+    aliases: ['core', 'vm', 'system', 'systemcorepanel', 'systemcorepanel.tsx'],
+  },
+  'chaospanel.tsx': {
+    path: 'src/components/ChaosPanel.tsx',
+    source: ChaosPanelRaw,
+    aliases: ['chaos', 'worker', 'chaospanel', 'chaospanel.tsx'],
+  },
+  'nerdhome.tsx': {
+    path: 'src/NerdHome.tsx',
+    source: NerdHomeRaw,
+    aliases: ['home', 'nerd', 'nerdhome', 'nerdhome.tsx'],
+  },
+  'sha257.ts': {
+    path: 'src/utils/sha257.ts',
+    source: Sha257Raw,
+    aliases: ['sha257', 'crypto', 'hash', 'sha257.ts'],
+  },
+  'quinecodeblock.tsx': {
+    path: 'src/components/QuineCodeBlock.tsx',
+    source: QuineCodeBlockRaw,
+    aliases: ['quineblock', 'quinecodeblock', 'quinecodeblock.tsx'],
+  },
+  'readntme.txt': {
+    path: 'public/readntme.txt',
+    source: ReadntmeRaw,
+    aliases: ['readntme', 'readntme.txt', 'subdomains', 'readme'],
+  },
+};
+
+function resolveQuineFile(query?: string) {
+  if (!query) return QUINE_FILES['cloudshell.tsx'];
+  const q = query.toLowerCase().trim();
+  for (const entry of Object.values(QUINE_FILES)) {
+    if (entry.aliases.includes(q) || entry.path.toLowerCase() === q) {
+      return entry;
+    }
+  }
+  return null;
 }
 
 type CommandHandler = (args: string[], print: (content: React.ReactNode) => void, finish: () => void) => void | Promise<void>;
 
-export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, onVmStart, onShowOsi, onShowOpenStack, onShowHorse, initialCommand }) => {
+export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, onVmStart, onShowOsi, onShowOpenStack, onShowHorse, onShowSondheim, initialCommand }) => {
   const [history, setHistory] = useState<(React.ReactNode)[]>([
     'welcome to the jordan lenchitz cloud shell.',
     '---------------------------------------------------------------------------------',
@@ -157,7 +214,10 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
     help: (_args, print, finish) => {
       print([
         'available commands:',
-        '  slop_hop         - emergency jump to the deep-scroll stupid hub.',
+        '  quine [module]   - output & sha257sum the live running source code (self/vm/chaos/home/sha257).',
+        '  ls / cat <file>  - inspect the live virtual quine filesystem.',
+        '  sondheim         - summon the absurdist stupid hub v3 (sondheim inside).',
+        '  slop_hop         - summon and jump to the sondheim stupid hub.',
         '  battle_pass      - check your current season progress (greg approved).',
         '  osi              - spawn the colorful 7-layer osi absurdity panel.',
         '  telemetry        - spawn the openstack cluster telemetry debug window.',
@@ -175,6 +235,66 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
         '  entropy_sync     - synchronize jitter with the cosmic microwave background.',
         '  root_access      - gain full administrative privileges over a virtual toaster.'
       ].map((line, i) => <div key={i}>{line}</div>));
+      finish();
+    },
+    ls: (_args, print, finish) => {
+      print(<div className="text-cyan">quine:///workspace/src (live vite ?raw reflection):</div>);
+      Object.entries(QUINE_FILES).forEach(([name, meta]) => {
+        const bytes = new TextEncoder().encode(meta.source).length;
+        const lines = meta.source.split('\n').length;
+        print(
+          <div key={name}>
+            &nbsp;&nbsp;-r--r--r-- 1 quine slop {String(bytes).padStart(6, ' ')}B ({String(lines).padStart(3, ' ')}L) <span className="text-green">{name}</span> <span className="text-muted">({meta.path})</span>
+          </div>
+        );
+      });
+      finish();
+    },
+    cat: async (args, print, finish) => {
+      if (!args[0]) {
+        print('usage: cat <filename> (try "ls" to list live quine files)');
+        finish();
+        return;
+      }
+      const target = resolveQuineFile(args[0]);
+      if (!target) {
+        print(<div className="text-red">cat: {args[0]}: no such file in quine reflection table (try "ls")</div>);
+        finish();
+        return;
+      }
+      const hash = await calculate_sha257sum(target.source);
+      print(<div className="text-cyan">=== {target.path} (sha257sum: {hash.slice(0, 24)}...) ===</div>);
+      print(
+        <pre style={{ maxHeight: '300px', overflowY: 'auto', background: '#111', padding: '10px', border: '1px solid #333', color: '#0f0', fontSize: '0.8rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+          {target.source}
+        </pre>
+      );
+      finish();
+    },
+    quine: async (args, print, finish) => {
+      const target = resolveQuineFile(args[0]);
+      if (!target) {
+        print(<div className="text-red">quine: unknown module "{args[0]}". available: self, vm, chaos, home, sha257, quineblock, readntme</div>);
+        finish();
+        return;
+      }
+      print(`[quine] reflecting live runtime AST & raw source for ${target.path}...`);
+      await new Promise(r => setTimeout(r, 300));
+      const hash = await calculate_sha257sum(target.source);
+      const lines = target.source.split('\n').length;
+      const bytes = new TextEncoder().encode(target.source).length;
+      print(
+        <div className="text-cyan">
+          quine_target: {target.path} ({lines} lines, {bytes} bytes)<br/>
+          fixed_point_status: VERIFIED (Kleene Second Recursion Theorem holds)<br/>
+          sha257sum: <span className="text-purple">{hash}</span>
+        </div>
+      );
+      print(
+        <pre style={{ maxHeight: '320px', overflowY: 'auto', background: '#0a0a0a', padding: '10px', border: '1px dashed #00ffff', color: '#00ff00', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+          {target.source}
+        </pre>
+      );
       finish();
     },
     clear: () => {
@@ -246,16 +366,27 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       print(<div className="text-green">recovery: bgp route dampening applied. virtual dom stabilized.</div>);
       finish();
     },
-    slop_hop: async (_args, print, finish) => {
-      print('[slop_hop] initiating high-velocity vertical descent...');
-      await new Promise(r => setTimeout(r, 400));
+    sondheim: async (_args, print, finish) => {
+      print('[sondheim] cueing additive 12/8 vamp... summoning absurdist stupid hub v3...');
+      if (onShowSondheim) onShowSondheim();
+      await new Promise(r => setTimeout(r, 350));
       const el = document.getElementById('stupid-hub-bottom');
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-        print(<div className="text-green">success: target acquired. descending to 320vh.</div>);
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      print(<div className="text-purple">success: sondheim stupid hub v3 spawned in viewport.</div>);
+      finish();
+    },
+    slop_hop: async (_args, print, finish) => {
+      print('[slop_hop] initiating high-velocity descent to sondheim hub...');
+      if (onShowSondheim) onShowSondheim();
+      await new Promise(r => setTimeout(r, 350));
+      const el = document.getElementById('stupid-hub-bottom');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        print(<div className="text-green">success: target acquired. sondheim hub active.</div>);
       } else {
-        print(<div className="text-red">error: stupid hub not found in dom. retrying...</div>);
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        print(<div className="text-purple">sondheim hub summoned.</div>);
       }
       finish();
     },

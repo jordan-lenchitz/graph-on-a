@@ -35,14 +35,17 @@
   font-size: 0.9rem;
   box-shadow: 0 0 15px rgba(0,0,0,0.5);
   text-transform: lowercase;
+  overflow: hidden;
 }
 
 .panel-header {
-  padding: 5px 10px;
+  padding: 5px 8px;
   border-bottom: 1px solid #333;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  width: 100%;
+  overflow: hidden;
   cursor: grab;
   touch-action: none;
 }
@@ -51,8 +54,60 @@
   cursor: grabbing;
 }
 
+.panel-header > span:not(.dot):not(.panel-controls) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .header-right {
   margin-left: auto;
+  font-size: 0.78em;
+  opacity: 0.9;
+}
+
+.panel-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+.panel-ctrl-btn {
+  background: rgba(0, 0, 0, 0.65);
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  line-height: 1;
+  font-family: monospace;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.panel-ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.bg-green .panel-ctrl-btn {
+  background: #000;
+  color: #00ff00;
+  border-color: #000;
+}
+
+.bg-green .panel-ctrl-btn:hover {
+  background: #222;
+}
+
+.panel.panel-minimized .panel-content {
+  display: none !important;
 }
 
 .panel-content {
@@ -72,14 +127,23 @@
   height: 10px;
   border-radius: 50%;
   display: inline-block;
+  flex-shrink: 0;
+}
+
+.chaos-panel {
+  top: 20px;
+  left: 20px;
+  width: 370px;
+  z-index: 30;
 }
 
 .osi-panel {
   top: 150px;
   left: 20px;
-  width: 280px;
+  width: 330px;
   border-color: #8a2be2;
   font-size: 0.8rem;
+  z-index: 40;
 }
 
 .purple-dot { background-color: #8a2be2; }
@@ -129,9 +193,9 @@
 .border-right { border-right: 1px solid #333; }
 .text-right { text-align: right; }
 .text-center { text-align: center; }
-.flex-between { display: flex; justify-content: space-between; }
-.grid-2-col { display: grid; grid-template-columns: 1fr 1fr; }
-.grid-4-col { display: grid; grid-template-columns: repeat(4, 1fr); }
+.flex-between { display: flex; justify-content: space-between; gap: 8px; }
+.grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+.grid-4-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
 
 .metrics-box {
   border: 1px dashed #00ff00;
@@ -168,17 +232,18 @@
 }
 
 .grafana-real-panel {
-  top: 55vh;
-  left: 310px;
+  top: 20px;
+  left: 410px;
   z-index: 25;
 }
 
 .stupid-grafana-panel {
-  position: absolute;
-  top: 320vh;
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  z-index: 25;
+  transform: translate(-50%, -50%);
+  border-color: #8a2be2;
+  z-index: 70;
 }
 
 .telemetry-panel {
@@ -251,8 +316,16 @@
   left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  align-items: stretch;
+  gap: 12px;
   z-index: 60;
+}
+
+.floating-actions-bottom-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
 }
 
 .action-btn {
@@ -282,6 +355,16 @@
 
 .slop-btn:active {
   box-shadow: 1px 1px 0px #ff9830;
+}
+
+.sondheim-btn {
+  border-color: #b366ff;
+  color: #b366ff;
+  box-shadow: 3px 3px 0px #8a2be2;
+}
+
+.sondheim-btn:active {
+  box-shadow: 1px 1px 0px #8a2be2;
 }
 
 .tilde-key {
@@ -351,8 +434,8 @@
   .panel {
     width: 90vw;
     max-width: 90vw;
-    margin: 10px auto;
-    z-index: 100;
+    margin: 0;
+    z-index: 35;
   }
   
   .panel-header {
@@ -360,29 +443,62 @@
     touch-action: none !important;
   }
 
+  .chaos-panel {
+    top: 12px;
+    left: 5vw;
+    width: 90vw;
+  }
+
+  .osi-panel {
+    top: 70px;
+    left: 5vw;
+    width: 90vw;
+    z-index: 65;
+  }
+
   .telemetry-panel {
+    top: 110px;
+    left: 2.5vw;
     max-width: 95vw;
     width: 95vw;
+    z-index: 65;
   }
   
   .grafana-real-panel {
+    top: 390px !important;
     left: 5vw !important;
+    width: 90vw !important;
   }
   
   .system-core-panel {
     position: fixed !important;
-    bottom: 120px !important;
-    right: 10px !important;
-    width: 250px !important;
+    bottom: 75px !important;
+    right: 8px !important;
+    width: min(255px, 60vw) !important;
     margin: 0 !important;
-    z-index: 101 !important;
+    z-index: 55 !important;
   }
   
   .stupid-grafana-panel {
-    top: auto !important;
-    transform: none;
-    margin-top: 50px !important;
-    margin-bottom: 150px !important;
+    position: fixed !important;
+    top: 48% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 94vw !important;
+    max-width: 94vw !important;
+    margin: 0 !important;
+    z-index: 80 !important;
+  }
+
+  .floating-actions {
+    bottom: 75px;
+    left: 8px;
+    gap: 10px;
+  }
+
+  .action-btn {
+    padding: 6px 10px;
+    font-size: 0.72rem;
   }
 }
 

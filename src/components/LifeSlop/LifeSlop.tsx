@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './LifeSlop.css';
+import { SLOP_THEMES } from './themes';
+import { QuineCodeBlock } from '../QuineCodeBlock';
+import LifeSlopRaw from './LifeSlop.tsx?raw';
 
 interface LifeSlopProps {
   onClose: () => void;
@@ -10,13 +13,11 @@ const ROWS = 40;
 const COLS = 60;
 const CELL_SIZE = 10;
 
-import { SLOP_THEMES } from './themes';
-
 export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) => {
   const [generation, setGridGeneration] = useState(0);
   const [population, setPopulation] = useState(0);
   const currentTheme = SLOP_THEMES[theme] || SLOP_THEMES['gt.m'];
-  
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gridRef = useRef<number[][]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -36,21 +37,24 @@ export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) =
     return rows;
   };
 
-  const draw = useCallback((ctx: CanvasRenderingContext2D, grid: number[][]) => {
-    ctx.clearRect(0, 0, COLS * CELL_SIZE, ROWS * CELL_SIZE);
-    ctx.fillStyle = currentTheme.color;
-    
-    ctx.shadowBlur = 5;
-    ctx.shadowColor = currentTheme.color;
+  const draw = useCallback(
+    (ctx: CanvasRenderingContext2D, grid: number[][]) => {
+      ctx.clearRect(0, 0, COLS * CELL_SIZE, ROWS * CELL_SIZE);
+      ctx.fillStyle = currentTheme.color;
 
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        if (grid[i][j]) {
-          ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
+      ctx.shadowBlur = 5;
+      ctx.shadowColor = currentTheme.color;
+
+      for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+          if (grid[i][j]) {
+            ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
+          }
         }
       }
-    }
-  }, [currentTheme.color]);
+    },
+    [currentTheme.color]
+  );
 
   useEffect(() => {
     gridRef.current = generateEmptyGrid();
@@ -70,8 +74,14 @@ export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) =
       return row.map((_, j) => {
         let neighbors = 0;
         const directions = [
-          [0, 1], [0, -1], [1, -1], [-1, 1],
-          [1, 1], [-1, -1], [1, 0], [-1, 0]
+          [0, 1],
+          [0, -1],
+          [1, -1],
+          [-1, 1],
+          [1, 1],
+          [-1, -1],
+          [1, 0],
+          [-1, 0],
         ];
         directions.forEach(([x, y]) => {
           const newI = i + x;
@@ -95,7 +105,7 @@ export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) =
     });
 
     gridRef.current = nextGrid;
-    setGridGeneration(prev => prev + 1);
+    setGridGeneration((prev) => prev + 1);
     setPopulation(nextPop);
 
     const canvas = canvasRef.current;
@@ -112,34 +122,11 @@ export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) =
     };
   }, [runSimulation]);
 
-  return (
-    <div className="life-slop-overlay">
-      <div className="life-slop-window" style={{ borderColor: currentTheme.color }}>
-        <div className="life-slop-header" style={{ backgroundColor: currentTheme.color }}>
-          <span>simulated_slop_environment: {currentTheme.label}</span>
-          <button onClick={onClose}>×</button>
-        </div>
-        <div className="life-slop-stats">
-          <span>gen: {generation}</span>
-          <span>pop: {population}</span>
-          <span>theme: {theme}</span>
-        </div>
-        <div className="life-slop-grid-canvas-container" style={{ background: '#111', padding: '5px' }}>
-          <canvas 
-            ref={canvasRef}
-            width={COLS * CELL_SIZE}
-            height={ROWS * CELL_SIZE}
-            style={{ width: '100%', height: 'auto', display: 'block' }}
-          />
-        </div>
-        <div style={{ padding: '0 10px 10px 10px' }}>
-          <details className="text-small p-2" style={{ border: `1px dashed ${currentTheme.color}`, color: currentTheme.color }}>
-            <summary style={{ cursor: 'pointer', opacity: 0.8 }}>how_does_this_cellular_<br/>automata_work.ts</summary>
-            <pre style={{ wordBreak: 'break-all', fontSize: '0.8em', marginTop: '10px', color: currentTheme.color, background: '#000', padding: '10px', whiteSpace: 'pre-wrap', textAlign: 'left' }}>
-{`export function getNextGeneration(grid: number[][]): number[][] {
+  const automataSnippet = `// live_automata: theme="${theme}" (${currentTheme.label}) | gen=${generation} | pop=${population}
+export function getNextGeneration(grid: number[][]): number[][] {
   const rows = grid.length;
   const cols = grid[0].length;
-  const next = grid.map(row => [...row]);
+  const next = grid.map((row) => [...row]);
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -163,9 +150,42 @@ export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) =
     }
   }
   return next;
-}`}
-            </pre>
-          </details>
+}`;
+
+  return (
+    <div className="life-slop-overlay">
+      <div className="life-slop-window" style={{ borderColor: currentTheme.color }}>
+        <div className="life-slop-header" style={{ backgroundColor: currentTheme.color }}>
+          <span>simulated_slop_environment: {currentTheme.label}</span>
+          <button onClick={onClose}>×</button>
+        </div>
+        <div className="life-slop-stats">
+          <span>gen: {generation}</span>
+          <span>pop: {population}</span>
+          <span>theme: {theme}</span>
+        </div>
+        <div className="life-slop-grid-canvas-container" style={{ background: '#111', padding: '5px' }}>
+          <canvas
+            ref={canvasRef}
+            width={COLS * CELL_SIZE}
+            height={ROWS * CELL_SIZE}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+          />
+        </div>
+        <div style={{ padding: '0 10px 10px 10px' }}>
+          <QuineCodeBlock
+            summary={
+              <>
+                how_does_this_cellular_
+                <br />
+                automata_work.ts
+              </>
+            }
+            snippet={automataSnippet}
+            rawSource={LifeSlopRaw}
+            rawFilename="src/components/LifeSlop/LifeSlop.tsx"
+            color={currentTheme.color}
+          />
         </div>
         <div className="life-slop-footer">
           caution: cellular automata optimized via html5 canvas
