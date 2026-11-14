@@ -74,9 +74,30 @@
             }
 
             let telemetryLineBuffer = "";
+            let pendingCores = null;
             function inspectSerialLine(rawLine) {
                 const line = rawLine.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, '').trim();
                 if (!line) return;
+
+                if (/^\d+$/.test(line)) {
+                    pendingCores = parseInt(line, 10);
+                } else if (/^Mem:\s+(\S+)/i.test(line)) {
+                    const memMatch = line.match(/^Mem:\s+(\S+)/i);
+                    if (memMatch) {
+                        let ramValue = memMatch[1];
+                        if (/^\d+$/.test(ramValue)) {
+                            ramValue = `${Math.round(parseInt(ramValue, 10) / 1024)}M`;
+                        }
+                        const telemetry = { ram: ramValue };
+                        if (pendingCores !== null) {
+                            telemetry.cores = pendingCores;
+                            pendingCores = null;
+                        }
+                        emitTelemetry(telemetry);
+                    }
+                } else if (!/^total\s+used\s+free/i.test(line)) {
+                    pendingCores = null;
+                }
 
                 if (
                     line.includes("bringing up network interface") ||
@@ -138,9 +159,13 @@
                 status.innerText = "initializing vm...";
                 
                 try {
+                    const ramOptionsMb = [512, 768, 1024];
+                    const ramMb = ramOptionsMb[Math.floor(Math.random() * ramOptionsMb.length)];
+                    log(`allocating ${ramMb}mb guest ram...`);
+
                     const emulator = new StarterClass({
                         wasm_path: "v86.wasm",
-                        memory_size: 1024 * 1024 * 1024,
+                        memory_size: ramMb * 1024 * 1024,
                         vga_enabled: false,
                         cmdline: "rw init=/bin/sh console=ttyS0 noapic nolapic acpi=off nomodeset loglevel=0",
                         bios: { url: "seabios.bin" },
@@ -200,6 +225,7 @@
                                 term.focus();
                                 const installCmd = "echo 0 > /proc/sys/kernel/printk; " +
                                                   "clear; " +
+                                                  "nproc && free -h; " +
                                                   "if [ -b /dev/hda ]; then " +
                                                   "  echo 'found pre-installed storage. mounting environment...'; " +
                                                   "  mkdir -p /opt; mount /dev/hda /opt; " +
@@ -247,7 +273,16 @@
                                                   "  export ENV=/root/.profile; " +
                                                   "  exec setsid sh -c 'exec sh </dev/ttyS0 >/dev/ttyS0 2>&1' || exec /bin/sh; " +
                                                   "fi;\n";
-                                 emulator.serial0_send(installCmd);
+                                 let offset = 0;
+                                 const sendNextChunk = () => {
+                                     if (offset >= installCmd.length) return;
+                                     emulator.serial0_send(installCmd.slice(offset, offset + 128));
+                                     offset += 128;
+                                     if (offset < installCmd.length) {
+                                         setTimeout(sendNextChunk, 20);
+                                     }
+                                 };
+                                 sendNextChunk();
                             }, 500);
                         }
                     });

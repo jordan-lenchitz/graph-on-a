@@ -63,6 +63,8 @@ export const NerdHome: React.FC = () => {
   const [vmIp, setVmIp] = useState('0.0.0.0');
   const [vmGateway, setVmGateway] = useState<string | null>(null);
   const [vmStage, setVmStage] = useState('offline');
+  const [vmCores, setVmCores] = useState<string | null>(null);
+  const [vmRam, setVmRam] = useState<string | null>(null);
   const [systemName, setSystemName] = useState('system_core');
   const [regionInfo, setRegionInfo] = useState<RegionData>({
     region: 'us-central1-gen2',
@@ -92,6 +94,12 @@ export const NerdHome: React.FC = () => {
       }
       if (payload.gateway !== undefined) {
         setVmGateway(payload.gateway);
+      }
+      if (typeof payload.cores === 'number' || typeof payload.cores === 'string') {
+        setVmCores(String(payload.cores));
+      }
+      if (typeof payload.ram === 'string' && payload.ram.length > 0) {
+        setVmRam(payload.ram);
       }
     };
 
@@ -163,6 +171,8 @@ export const NerdHome: React.FC = () => {
     setVmStage('provisioning');
     setVmIp('dhcp...');
     setVmGateway(null);
+    setVmCores(null);
+    setVmRam(null);
     setSystemName(ALLITERATIVE_NAMES[Math.floor(Math.random() * ALLITERATIVE_NAMES.length)]);
   };
 
@@ -433,6 +443,8 @@ export function handleOSIStack(layer: number, data: string): OSIResponse {
         vmIp={vmIp}
         vmGateway={vmGateway}
         vmStage={vmStage}
+        vmCores={vmCores}
+        vmRam={vmRam}
         region={regionInfo.region}
       />
 

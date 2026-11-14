@@ -10,6 +10,8 @@ export interface SystemCorePanelProps {
   vmIp?: string;
   vmGateway?: string | null;
   vmStage?: string;
+  vmCores?: string | null;
+  vmRam?: string | null;
   region?: string;
 }
 
@@ -20,6 +22,8 @@ export const SystemCorePanel: React.FC<SystemCorePanelProps> = ({
   vmIp = '0.0.0.0',
   vmGateway = null,
   vmStage = 'offline',
+  vmCores = null,
+  vmRam = null,
   region = 'us-central1-gen2',
 }) => {
   const [vmUptime, setVmUptime] = useState(0);
@@ -37,20 +41,24 @@ export const SystemCorePanel: React.FC<SystemCorePanelProps> = ({
   }, [vmStatus]);
 
   const displayedIp = vmStatus === 'online' ? vmIp : '0.0.0.0';
+  const displayedCores = vmStatus === 'online' ? (vmCores ?? '...') : '0';
+  const displayedRam = vmStatus === 'online' ? (vmRam ?? '...') : '0mb';
   const normalizedRegion =
     region && region !== 'loading...' && region !== 'local'
       ? region
       : 'us-central1-gen2';
 
   const orchestratorSnippet = `// live_state: host="${systemName}" | status="${vmStatus}" | stage="${vmStage}"
-// net_ip="${displayedIp}"${vmGateway ? ` (gw: ${vmGateway})` : ''} | region="${normalizedRegion}"
+// net_ip="${displayedIp}"${vmGateway ? ` (gw: ${vmGateway})` : ''} | cores="${displayedCores}" | ram="${displayedRam}" | region="${normalizedRegion}"
 
 export interface WasmVmTelemetry {
   type: 'wasm-vm-telemetry';
-  stage: 'kernel_boot' | 'dhcp_discover' | 'dhcp_select' | 'online' | 'apk_init';
+  stage?: 'kernel_boot' | 'dhcp_discover' | 'dhcp_select' | 'online' | 'apk_init';
   ip?: string;
   gateway?: string | null;
   leaseTime?: number | null;
+  cores?: number;
+  ram?: string;
 }
 
 export function attachV86SerialDhcpBridge(emulator: any): void {
@@ -105,12 +113,17 @@ export function attachV86SerialDhcpBridge(emulator: any): void {
           <div className="mt-2">
             <div>cores (nproc)</div>
             <div className={vmStatus === 'online' ? 'text-green' : 'text-muted'}>
-              {vmStatus === 'online' ? '1.0' : '0.0'}
+              {displayedCores}
             </div>
           </div>
           <div className="mt-2">
             <div>ram (free -h)</div>
-            <div className={vmStatus === 'online' ? 'text-green' : 'text-muted'}>512mb</div>
+            <div
+              className={vmStatus === 'online' ? 'text-green' : 'text-muted'}
+              style={{ textTransform: 'none' }}
+            >
+              {displayedRam}
+            </div>
           </div>
           <div className="mt-2">
             <div>recursion</div>
