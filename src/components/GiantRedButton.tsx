@@ -23,8 +23,8 @@ export const GiantRedButton: React.FC = () => {
       
       const data = await res.json();
       alert(`FAILOVER INITIATED: Routing to ${data.target_region}. Goodbye.`);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
       setIsFailingOver(false);
     }
   };

@@ -93,11 +93,40 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [shellHeight, setShellHeight] = useState(67);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [bpLevel, setBpLevel] = useState(0);
   const [isWaitingForPassword, setIsWaitingForPassword] = useState(false);
   const [onPasswordSubmit, setOnPasswordSubmit] = useState<((val: string) => void) | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const emitVmOffline = () => {
+    window.postMessage({
+      type: 'wasm-vm-telemetry',
+      stage: 'offline',
+      ip: '0.0.0.0',
+      gateway: null,
+      cores: 0,
+      ram: '0mb',
+    }, '*');
+  };
+
+  const handleClose = () => {
+    emitVmOffline();
+    onClose();
+  };
+
+  useEffect(() => {
+    return () => {
+      emitVmOffline();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isMinimized && !isExecuting) {
+      inputRef.current?.focus();
+    }
+  }, [isMinimized, isExecuting]);
 
   const _BP = [
     "WyI9PT0gXHUyNmExIFNNQVNILU1PTiBCQVRUTEUgUEFTUzogU0VBU09OIDEgKE5JTlRFTkRPIFNMT1ApIFx1MjZhMSA9PT0iLCAidGllciAxICBbXHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XSAxMDAlIC0gVU5MT0NLRUQ6IFwicGlrYWNodV9tYWluXCIgdGl0bGUiLCAidGllciAyICBbXHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XSAxMDAlIC0gVU5MT0NLRUQ6IGhvbG9ncmFwaGljIG1ldy10d28gc3RvY2sgb3B0aW9uIiwgInRpZXIgMyAgW1x1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OF0gMTAwJSAtIFVOTE9DS0VEOiBtYXN0ZXIgYmFsbCAoY29udGFpbnMgYSBndXkgbmFtZWQgZGF2ZSkiLCAidGllciA0ICBbXHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XHUyNTg4XSAxMDAlIC0gVU5MT0NLRUQ6IGtpcmJ5LWZsYXZvcmVkIHJlY3Vyc2l2ZSBzbG9wIiwgInRpZXIgNSAgW1x1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OFx1MjU4OFx1MjU5MVx1MjU5MVx1MjU5MVx1MjU5MV0gNjAlICAtIElOIFBST0dSRVNTOiBtYXJpbydzIGJyb3dzZXIgaGlzdG9yeSAocmVkYWN0ZWQpIiwgInRpZXIgNiAgW1x1MjU5MVx1MjU5MVx1MjU5MVx1MjU5MVx1MjU5MVx1MjU5MVx1MjU5MVx1MjU5MVx1MjU5MVx1MjU5MV0gMCUgICAtIExPQ0tFRDogXCJtaXNzaW5nX25vXCIgZ29sZGVuIHNraW4iLCAiLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIiwgImNhdGNoICdlbSBhbGwgb3Igc21hc2ggJ2VtIGFsbCBmb3IgJDAuMDAuIEtFRVAgR1JJTkRJTkchIl0=",
@@ -180,35 +209,6 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
   const print = (content: React.ReactNode) => {
     setHistory(prev => [...prev, content]);
   };
-
-  const runCommand = async (fullCmd: string) => {
-    const trimmed = fullCmd.trim().toLowerCase();
-    if (!trimmed) return;
-
-    const [cmdName, ...args] = trimmed.split(' ');
-    setHistory(prev => [...prev, <div key={Date.now()}><span className="prompt">website_visitor@cloudshell:~$ </span>{trimmed}</div>]);
-
-    const handler = commands[cmdName];
-    if (handler) {
-      if (cmdName !== 'clear') {
-        setIsExecuting(true);
-        await handler(args, print, () => setIsExecuting(false));
-      } else {
-        handler(args, print, () => {});
-      }
-    } else {
-      print(`bash: ${cmdName}: command not found`);
-    }
-  };
-
-  useEffect(() => {
-    if (initialCommand) {
-      const timer = setTimeout(() => {
-        runCommand(initialCommand);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   const commands: Record<string, CommandHandler> = {
     help: (_args, print, finish) => {
@@ -301,7 +301,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       setHistory([]);
     },
     exit: () => {
-      onClose();
+      handleClose();
     },
     battle_pass: async (_args, print, finish) => {
       const idx = Math.min(bpLevel, _BP.length - 1);
@@ -312,7 +312,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
           print(line);
         }
         setBpLevel(prev => prev + 1);
-      } catch (e) {
+      } catch {
         print("error: battle pass module corrupted. please buy more slop.");
       }
       finish();
@@ -549,7 +549,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       
       await new Promise<void>(resolve => {
         setIsWaitingForPassword(true);
-        setOnPasswordSubmit(() => (_password: string) => {
+        setOnPasswordSubmit(() => () => {
           resolve();
         });
         setIsExecuting(false);
@@ -576,6 +576,41 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       finish();
     }
   };
+
+  const runCommand = async (fullCmd: string) => {
+    const trimmed = fullCmd.trim().toLowerCase();
+    if (!trimmed) return;
+
+    const [cmdName, ...args] = trimmed.split(' ');
+    setHistory(prev => [...prev, <div key={Date.now()}><span className="prompt">website_visitor@cloudshell:~$ </span>{trimmed}</div>]);
+
+    const handler = commands[cmdName];
+    if (handler) {
+      if (cmdName !== 'clear') {
+        setIsExecuting(true);
+        await handler(args, print, () => setIsExecuting(false));
+      } else {
+        handler(args, print, () => {});
+      }
+    } else {
+      print(`bash: ${cmdName}: command not found`);
+    }
+  };
+
+  const hasRunInitialRef = useRef(false);
+  const runCommandRef = useRef(runCommand);
+  useEffect(() => {
+    runCommandRef.current = runCommand;
+  });
+
+  useEffect(() => {
+    if (!initialCommand || hasRunInitialRef.current) return;
+    const timer = setTimeout(() => {
+      hasRunInitialRef.current = true;
+      runCommandRef.current(initialCommand);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [initialCommand]);
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (isExecuting) return;
@@ -621,7 +656,10 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
   };
 
   return (
-    <div className="cloud-shell-container" style={{ height: `calc(var(--vh, 1vh) * ${shellHeight})` }}>
+    <div
+      className={`cloud-shell-container ${isMinimized ? 'cloud-shell-minimized' : ''}`}
+      style={isMinimized ? undefined : { height: `calc(var(--vh, 1vh) * ${shellHeight})` }}
+    >
       <div 
         className="cloud-shell-resizer" 
         onMouseDown={handleMouseDown}
@@ -629,7 +667,26 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       />
       <div className="cloud-shell-header">
         <span>jordan lenchitz cloud shell - https://jordanlenchitz.xyz</span>
-        <button onClick={onClose} className="close-btn">×</button>
+        <div className="cloud-shell-controls">
+          <button
+            type="button"
+            onClick={() => setIsMinimized(prev => !prev)}
+            className="cloud-shell-ctrl-btn"
+            title={isMinimized ? 'expand cloud shell' : 'minimize cloud shell'}
+            aria-label={isMinimized ? 'expand cloud shell' : 'minimize cloud shell'}
+          >
+            {isMinimized ? '+' : '−'}
+          </button>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="cloud-shell-ctrl-btn close-btn"
+            title="close cloud shell"
+            aria-label="close cloud shell"
+          >
+            ×
+          </button>
+        </div>
       </div>
       <div className="cloud-shell-body" onClick={() => !isExecuting && inputRef.current?.focus()}>
         {history.map((line, i) => (

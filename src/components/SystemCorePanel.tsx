@@ -29,15 +29,14 @@ export const SystemCorePanel: React.FC<SystemCorePanelProps> = ({
   const [vmUptime, setVmUptime] = useState(0);
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    if (vmStatus === 'online') {
-      interval = setInterval(() => {
-        setVmUptime((u) => u + 1);
-      }, 1000);
-    } else {
+    if (vmStatus !== 'online') return;
+    const interval = setInterval(() => {
+      setVmUptime((u) => u + 1);
+    }, 1000);
+    return () => {
+      clearInterval(interval);
       setVmUptime(0);
-    }
-    return () => clearInterval(interval);
+    };
   }, [vmStatus]);
 
   const displayedIp = vmStatus === 'online' ? vmIp : '0.0.0.0';

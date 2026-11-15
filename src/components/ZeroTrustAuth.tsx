@@ -35,6 +35,7 @@ export const ZeroTrustAuth: React.FC<ZeroTrustAuthProps> = ({ onSuccess, onClose
       if (progress >= 100) {
         if (holdIntervalRef.current) clearInterval(holdIntervalRef.current);
         holdIntervalRef.current = null;
+        setLogs([]);
         setStep(3);
       }
     }, 50);
@@ -64,8 +65,6 @@ export const ZeroTrustAuth: React.FC<ZeroTrustAuthProps> = ({ onSuccess, onClose
       ];
 
       let currentLog = 0;
-      setLogs([]);
-      
       const logInterval = setInterval(() => {
         if (currentLog < fakeLogs.length) {
           const nextLog = fakeLogs[currentLog];

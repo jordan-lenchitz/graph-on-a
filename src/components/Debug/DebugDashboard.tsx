@@ -16,14 +16,25 @@ interface DebugData {
   };
   timestamp: string;
   headers: Record<string, string>;
-  obscure_telemetry: any;
+  obscure_telemetry: unknown;
+}
+
+interface NavigatorExtended extends Navigator {
+  getBattery?: () => Promise<{ level: number; charging: boolean }>;
+  deviceMemory?: number;
+  connection?: {
+    effectiveType?: string;
+    downlink?: number;
+    rtt?: number;
+    saveData?: boolean;
+  };
 }
 
 export function DebugDashboard() {
   const [data, setData] = useState<DebugData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [browserData, setBrowserData] = useState<any>({});
-  const [epoch, setEpoch] = useState(Math.floor(Date.now() / 1000));
+  const [browserData, setBrowserData] = useState<Record<string, unknown>>({});
+  const [epoch, setEpoch] = useState(() => Math.floor(Date.now() / 1000));
   
   const lastIdentity = useRef('');
 
@@ -41,8 +52,8 @@ export function DebugDashboard() {
           setData(json);
         }
         setError(null);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
       }
     };
 
@@ -53,14 +64,16 @@ export function DebugDashboard() {
 
   useEffect(() => {
     const updateBrowserData = async () => {
-      const nav = navigator as any;
+      const nav = navigator as NavigatorExtended;
       
       let battery = null;
       if (nav.getBattery) {
         try {
           const b = await nav.getBattery();
           battery = { level: b.level, charging: b.charging };
-        } catch (e) {}
+        } catch {
+          // Ignore if Battery API is unavailable or blocked
+        }
       }
 
       setBrowserData({

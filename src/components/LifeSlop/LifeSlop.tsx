@@ -13,29 +13,29 @@ const ROWS = 40;
 const COLS = 60;
 const CELL_SIZE = 10;
 
+function createRandomGrid(): { grid: number[][]; population: number } {
+  const rows: number[][] = [];
+  let pop = 0;
+  for (let i = 0; i < ROWS; i++) {
+    const row = Array.from(Array(COLS), () => {
+      const alive = Math.random() > 0.8 ? 1 : 0;
+      if (alive) pop++;
+      return alive;
+    });
+    rows.push(row);
+  }
+  return { grid: rows, population: pop };
+}
+
 export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) => {
+  const [initialGrid] = useState(createRandomGrid);
   const [generation, setGridGeneration] = useState(0);
-  const [population, setPopulation] = useState(0);
+  const [population, setPopulation] = useState(initialGrid.population);
   const currentTheme = SLOP_THEMES[theme] || SLOP_THEMES['gt.m'];
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const gridRef = useRef<number[][]>([]);
+  const gridRef = useRef<number[][]>(initialGrid.grid);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const generateEmptyGrid = () => {
-    const rows = [];
-    let pop = 0;
-    for (let i = 0; i < ROWS; i++) {
-      const row = Array.from(Array(COLS), () => {
-        const alive = Math.random() > 0.8 ? 1 : 0;
-        if (alive) pop++;
-        return alive;
-      });
-      rows.push(row);
-    }
-    setPopulation(pop);
-    return rows;
-  };
 
   const draw = useCallback(
     (ctx: CanvasRenderingContext2D, grid: number[][]) => {
@@ -57,7 +57,6 @@ export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) =
   );
 
   useEffect(() => {
-    gridRef.current = generateEmptyGrid();
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext('2d');
@@ -91,7 +90,7 @@ export const LifeSlop: React.FC<LifeSlopProps> = ({ onClose, theme = 'gt.m' }) =
           }
         });
 
-        let state = 0;
+        let state: number;
         if (neighbors < 2 || neighbors > 3) {
           state = 0;
         } else if (g[i][j] === 0 && neighbors === 3) {

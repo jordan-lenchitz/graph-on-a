@@ -35,15 +35,33 @@
   border-bottom: 1px solid #000;
 }
 
+.cloud-shell-container.cloud-shell-minimized {
+  height: auto;
+}
+
+.cloud-shell-container.cloud-shell-minimized .cloud-shell-resizer,
+.cloud-shell-container.cloud-shell-minimized .cloud-shell-body {
+  display: none;
+}
+
+.cloud-shell-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cloud-shell-ctrl-btn,
 .close-btn {
   background: none;
   border: none;
   color: #e8eaed;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   cursor: pointer;
   line-height: 1;
+  padding: 0 4px;
 }
 
+.cloud-shell-ctrl-btn:hover,
 .close-btn:hover {
   color: #fff;
 }

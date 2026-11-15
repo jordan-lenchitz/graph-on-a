@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import { CowardlyButton } from './components/CowardlyButton';
 import { BouncingSlop } from './components/BouncingSlop';
 import { DraggablePanel } from './components/DraggablePanel';
@@ -46,18 +46,36 @@ const ALLITERATIVE_NAMES = [
   'zany-zebra', 'zealous-zebu', 'zesty-zorse'
 ];
 
+function getInitialUrlParams() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const hashParams = window.location.hash.includes('?')
+    ? new URLSearchParams(window.location.hash.split('?')[1])
+    : new URLSearchParams();
+
+  const theme = searchParams.get('theme') || hashParams.get('theme');
+  const cmd = searchParams.get('cmd') || hashParams.get('cmd');
+  const staticParam = searchParams.get('static') || hashParams.get('static');
+
+  return {
+    theme,
+    cmd,
+    isStatic: staticParam === 'true' || staticParam === '1',
+  };
+}
+
 export const NerdHome: React.FC = () => {
+  const [initialUrlParams] = useState(getInitialUrlParams);
   const [maxDepth] = useState(0);
-  const [showTerminal, setShowTerminal] = useState(false);
-  const [showLifeSlop, setShowLifeSlop] = useState(false);
+  const [showTerminal, setShowTerminal] = useState(() => Boolean(initialUrlParams.cmd));
+  const [showLifeSlop, setShowLifeSlop] = useState(() => Boolean(initialUrlParams.theme));
   const [showOsi, setShowOsi] = useState(false);
   const [showOpenStack, setShowOpenStack] = useState(false);
   const [showHorse, setShowHorse] = useState(false);
   const [showSondheim, setShowSondheim] = useState(false);
-  const [lifeTheme, setLifeTheme] = useState('gt.m');
+  const [lifeTheme, setLifeTheme] = useState(() => initialUrlParams.theme || 'gt.m');
   const [slopSpeed, setSlopSpeed] = useState(15);
-  const [initialCmd, setInitialCmd] = useState<string | undefined>(undefined);
-  const [isStaticMode, setIsStaticMode] = useState(false);
+  const [initialCmd] = useState<string | undefined>(() => initialUrlParams.cmd || undefined);
+  const [isStaticMode, setIsStaticMode] = useState(() => initialUrlParams.isStatic);
 
   const [vmStatus, setVmStatus] = useState<'offline' | 'online'>('offline');
   const [vmIp, setVmIp] = useState('0.0.0.0');
@@ -75,15 +93,45 @@ export const NerdHome: React.FC = () => {
     new Date().toLocaleTimeString().toLowerCase()
   );
 
-  const [inferenceWs, setInferenceWs] = useState<WebSocket | null>(null);
+  const inferenceWsRef = useRef<WebSocket | null>(null);
 
   const [showZeroTrust, setShowZeroTrust] = useState(false);
   const [isZeroTrustVerified, setIsZeroTrustVerified] = useState(false);
+
+  const resetVmState = useCallback(() => {
+    setVmStatus('offline');
+    setVmStage('offline');
+    setVmIp('0.0.0.0');
+    setVmGateway(null);
+    setVmCores(null);
+    setVmRam(null);
+    setSystemName('system_core');
+  }, []);
+
+  const handleTerminalClose = useCallback(() => {
+    setShowTerminal(false);
+    resetVmState();
+  }, [resetVmState]);
+
+  const toggleTerminal = useCallback(() => {
+    setShowTerminal(prev => {
+      if (prev) {
+        resetVmState();
+        return false;
+      }
+      return true;
+    });
+  }, [resetVmState]);
 
   useEffect(() => {
     const handleVmMessage = (event: MessageEvent) => {
       const payload = event.data;
       if (!payload || payload.type !== 'wasm-vm-telemetry') return;
+
+      if (payload.stage === 'offline') {
+        resetVmState();
+        return;
+      }
 
       setVmStatus('online');
       if (typeof payload.stage === 'string') {
@@ -105,7 +153,7 @@ export const NerdHome: React.FC = () => {
 
     window.addEventListener('message', handleVmMessage);
     return () => window.removeEventListener('message', handleVmMessage);
-  }, []);
+  }, [resetVmState]);
 
   useEffect(() => {
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -114,15 +162,19 @@ export const NerdHome: React.FC = () => {
     const socket = new WebSocket("ws://localhost:8000/ws");
     socket.onopen = () => console.log('Spatial Expansion: Connected to Inference');
     socket.onerror = () => console.log('Spatial Expansion: Inference offline');
-    setInferenceWs(socket);
-    return () => socket.close();
+    inferenceWsRef.current = socket;
+    return () => {
+      socket.close();
+      inferenceWsRef.current = null;
+    };
   }, []);
 
   useEffect(() => {
-    if (inferenceWs && inferenceWs.readyState === WebSocket.OPEN) {
-      inferenceWs.send(JSON.stringify({ type: 'depth', value: maxDepth }));
+    const socket = inferenceWsRef.current;
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ type: 'depth', value: maxDepth }));
     }
-  }, [maxDepth, inferenceWs]);
+  }, [maxDepth]);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -142,28 +194,6 @@ export const NerdHome: React.FC = () => {
       window.removeEventListener('resize', debouncedSetVH);
       clearTimeout(timeoutId);
     };
-  }, []);
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const hashParams = window.location.hash.includes('?') ? new URLSearchParams(window.location.hash.split('?')[1]) : new URLSearchParams();
-    
-    const theme = searchParams.get('theme') || hashParams.get('theme');
-    const cmd = searchParams.get('cmd') || hashParams.get('cmd');
-    const staticParam = searchParams.get('static') || hashParams.get('static');
-
-    if (staticParam === 'true' || staticParam === '1') {
-      setIsStaticMode(true);
-    }
-
-    if (theme) {
-      setLifeTheme(theme);
-      setShowLifeSlop(true);
-    }
-    if (cmd) {
-      setInitialCmd(cmd);
-      setShowTerminal(true);
-    }
   }, []);
 
   const handleVmStart = () => {
@@ -195,7 +225,7 @@ export const NerdHome: React.FC = () => {
           return;
         }
         e.preventDefault();
-        setShowTerminal(prev => !prev);
+        toggleTerminal();
       }
 
       if (e.key.length === 1) {
@@ -212,7 +242,7 @@ export const NerdHome: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [toggleTerminal]);
 
   if (isStaticMode) {
     return (
@@ -303,7 +333,7 @@ export const NerdHome: React.FC = () => {
       {showTerminal && (
         <Suspense fallback={<div className="loading-overlay">loading terminal...</div>}>
           <CloudShell 
-            onClose={() => setShowTerminal(false)} 
+            onClose={handleTerminalClose} 
             onSlopChange={(s) => setSlopSpeed(s)}
             onVmStart={handleVmStart}
             onShowOsi={() => setShowOsi(true)}
@@ -344,7 +374,7 @@ export const NerdHome: React.FC = () => {
         </button>
 
         <div className="floating-actions-bottom-row">
-          <button className="tilde-key" onClick={() => setShowTerminal(prev => !prev)}>
+          <button className="tilde-key" onClick={toggleTerminal}>
             <div className="tilde-top">~</div>
             <div className="tilde-bottom">`</div>
           </button>
