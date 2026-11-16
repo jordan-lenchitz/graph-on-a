@@ -136,12 +136,55 @@
                     });
                 }
 
+                if (line === "__WASM_VM_EXIT__" || line.includes("reboot: Power down") || line.includes("reboot: System halted")) {
+                    handleVmExit("vm shell exited.");
+                    return;
+                }
+
                 if (line.includes("initializing package manager")) {
                     emitTelemetry({ stage: "apk_init" });
                 }
 
                 if (line.startsWith("OK:") || line.includes("distinct packages available") || line.includes("welcome to the pre-installed vm")) {
                     emitTelemetry({ stage: "online" });
+                }
+            }
+
+            let emulator = null;
+            let systemReady = false;
+            let vmExited = false;
+            let statusEl = status;
+            let termInstance = term;
+
+            function handleVmExit(reason = "vm shell exited.") {
+                if (vmExited) return;
+                vmExited = true;
+                systemReady = false;
+                try {
+                    termInstance.write('\r\x1b[2K\x1b[33m[wasm vm] session exited. returned to cloud shell.\x1b[0m\r\n');
+                } catch {}
+                statusEl.innerText = "vm offline (exited)";
+                statusEl.style.color = "#888";
+                log(reason);
+                emitTelemetry({
+                    stage: "offline",
+                    ip: "0.0.0.0",
+                    gateway: null,
+                    cores: 0,
+                    ram: "0mb"
+                });
+                try {
+                    if (window.parent && window.parent !== window) {
+                        window.parent.postMessage({
+                            type: 'wasm-vm-exit',
+                            timestamp: Date.now()
+                        }, '*');
+                    }
+                } catch (err) {
+                    console.error('exit postMessage error:', err);
+                }
+                if (emulator && typeof emulator.stop === 'function') {
+                    Promise.resolve(emulator.stop()).catch(() => {});
                 }
             }
 
@@ -163,7 +206,7 @@
                     const ramMb = ramOptionsMb[Math.floor(Math.random() * ramOptionsMb.length)];
                     log(`allocating ${ramMb}mb guest ram...`);
 
-                    const emulator = new StarterClass({
+                    emulator = new StarterClass({
                         wasm_path: "v86.wasm",
                         memory_size: ramMb * 1024 * 1024,
                         vga_enabled: false,
@@ -181,10 +224,10 @@
                     log("emulator instance created. waiting for boot signals...");
 
                     let bootCompleted = false;
-                    let systemReady = false;
                     let serialBuffer = "";
 
                     emulator.add_listener("serial0-output-byte", (byte) => {
+                        if (vmExited) return;
                         const char = String.fromCharCode(byte);
 
                         if (char === '\n' || char === '\r') {
@@ -199,7 +242,9 @@
                                 telemetryLineBuffer = telemetryLineBuffer.slice(-128);
                             }
                         }
-                        
+
+                        if (vmExited) return;
+
                         if (systemReady) {
                             term.write(char);
                             return;
@@ -263,7 +308,7 @@
                                                   "  ip link set eth0 up; " +
                                                   "  udhcpc -i eth0; " +
                                                   "  echo 'initializing package manager...'; " +
-                                                  "  mkdir -p /etc/apk /lib/apk/db; " +
+                                                  "  mkdir -p /etc/apk /lib/apk/db /root; " +
                                                   "  apk add --initdb; " +
                                                   "  echo 'http://dl-cdn.alpinelinux.org/alpine/v3.18/main' > /etc/apk/repositories; " +
                                                   "  echo 'http://dl-cdn.alpinelinux.org/alpine/v3.18/community' >> /etc/apk/repositories; " +
@@ -271,8 +316,10 @@
                                                   "  export TERM=xterm; " +
                                                   "  echo 'export PS1=\"~ # \"' > /root/.profile; " +
                                                   "  export ENV=/root/.profile; " +
-                                                  "  exec setsid sh -c 'exec sh </dev/ttyS0 >/dev/ttyS0 2>&1' || exec /bin/sh; " +
-                                                  "fi;\n";
+                                                  "  exec setsid sh -c 'sh </dev/ttyS0 >/dev/ttyS0 2>&1; printf \"\\r\\n__WASM_%s__\\r\\n\" \"VM_EXIT\"; while :; do sleep 60; done' || sh; " +
+                                                  "fi; " +
+                                                  "printf \"\\r\\n__WASM_%s__\\r\\n\" \"VM_EXIT\"; " +
+                                                  "while :; do sleep 60; done\n";
                                  let offset = 0;
                                  const sendNextChunk = () => {
                                      if (offset >= installCmd.length) return;
@@ -288,7 +335,7 @@
                     });
 
                     term.onData(data => {
-                        if (systemReady) {
+                        if (systemReady && !vmExited) {
                             emulator.serial0_send(data);
                         }
                     });
@@ -300,6 +347,10 @@
 
                     emulator.add_listener("emulator-ready", () => {
                         log("emulator ready event fired.", "success");
+                    });
+
+                    emulator.add_listener("emulator-stopped", () => {
+                        handleVmExit("emulator stopped.");
                     });
 
                 } catch (e) {

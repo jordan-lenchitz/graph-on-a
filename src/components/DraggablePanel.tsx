@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 
 interface DraggablePanelProps {
@@ -25,6 +25,62 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({
   const startPos = useRef({ x: 0, y: 0 });
   const currentOffset = useRef({ x: 0, y: 0 });
   const [isMinimized, setIsMinimized] = useState(defaultMinimized);
+
+  const clampToViewport = useCallback(() => {
+    const el = panelRef.current;
+    if (!el) return;
+    if (window.getComputedStyle(el).position !== 'fixed') return;
+
+    const rect = el.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const margin = 8;
+    const minVisibleWidth = Math.min(80, rect.width);
+
+    let adjustX = 0;
+    let adjustY = 0;
+
+    if (rect.top < margin) {
+      adjustY = margin - rect.top;
+    } else if (rect.top > vh - 40) {
+      adjustY = (vh - 40) - rect.top;
+    }
+
+    if (rect.right < minVisibleWidth) {
+      adjustX = minVisibleWidth - rect.right;
+    } else if (rect.left > vw - minVisibleWidth) {
+      adjustX = (vw - minVisibleWidth) - rect.left;
+    }
+
+    if (Math.abs(adjustX) > 0.5 || Math.abs(adjustY) > 0.5) {
+      currentOffset.current.x += adjustX;
+      currentOffset.current.y += adjustY;
+      el.style.translate = `${currentOffset.current.x}px ${currentOffset.current.y}px`;
+    }
+  }, []);
+
+  useEffect(() => {
+    const el = panelRef.current;
+    if (!el) return;
+
+    clampToViewport();
+
+    const observer = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(() => {
+          clampToViewport();
+        })
+      : null;
+
+    observer?.observe(el);
+    window.addEventListener('resize', clampToViewport);
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', clampToViewport);
+    };
+  }, [clampToViewport]);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
@@ -56,6 +112,7 @@ export const DraggablePanel: React.FC<DraggablePanelProps> = ({
 
     if (panelRef.current) {
       panelRef.current.style.translate = `${currentOffset.current.x}px ${currentOffset.current.y}px`;
+      clampToViewport();
     }
 
     startPos.current = { x: e.clientX, y: e.clientY };

@@ -397,7 +397,15 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       print('provisioning ephemeral webassembly vm...');
       await new Promise(r => setTimeout(r, 1200));
       print(<div className="text-green">success: environment attached. entering wasm vm...</div>);
-      print(<WasmVM imagePath="" />);
+      print(
+        <WasmVM
+          imagePath=""
+          onExit={() => {
+            print(<div className="text-muted">[vm] exited wasm vm session. returned to cloud shell.</div>);
+            setTimeout(() => inputRef.current?.focus(), 0);
+          }}
+        />
+      );
       finish();
     },
     ydb: async (args, print, finish) => commands.vm(args, print, finish),
