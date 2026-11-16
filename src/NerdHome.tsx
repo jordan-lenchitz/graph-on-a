@@ -206,10 +206,10 @@ export const NerdHome: React.FC = () => {
     setSystemName(ALLITERATIVE_NAMES[Math.floor(Math.random() * ALLITERATIVE_NAMES.length)]);
   };
 
-  const handleRegionUpdate = (data: RegionData) => {
+  const handleRegionUpdate = useCallback((data: RegionData) => {
     setRegionInfo(data);
     setLastPollTime(new Date().toLocaleTimeString().toLowerCase());
-  };
+  }, []);
 
   const triggerLifeSlop = () => {
     const themeKeys = Object.keys(SLOP_THEMES);

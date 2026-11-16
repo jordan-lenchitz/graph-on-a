@@ -22,6 +22,7 @@ export const GiantRedButton: React.FC = () => {
       if (!res.ok) throw new Error('Failover rejected by infrastructure.');
       
       const data = await res.json();
+      window.dispatchEvent(new Event('infra-failover-triggered'));
       alert(`FAILOVER INITIATED: Routing to ${data.target_region}. Goodbye.`);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

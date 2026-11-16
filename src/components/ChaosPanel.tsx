@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DraggablePanel } from './DraggablePanel';
 import { QuineCodeBlock } from './QuineCodeBlock';
 import ChaosPanelRaw from './ChaosPanel.tsx?raw';
@@ -14,31 +14,79 @@ interface ChaosPanelProps {
   onRegionUpdate?: (data: RegionData) => void;
 }
 
+const REGION_POLL_INTERVAL_MS = 30_000;
+const MIN_VISIBILITY_REFETCH_MS = 5_000;
+
 export const ChaosPanel: React.FC<ChaosPanelProps> = ({ onRegionUpdate }) => {
   const [data, setData] = useState<RegionData>({
     region: 'loading...',
     pop: '...',
     status: 'UNKNOWN',
   });
+  const onRegionUpdateRef = useRef(onRegionUpdate);
 
   useEffect(() => {
-    const fetchRegion = async () => {
+    onRegionUpdateRef.current = onRegionUpdate;
+  }, [onRegionUpdate]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let inFlight = false;
+    let lastFetchAt = 0;
+
+    const fetchRegion = async (force = false) => {
+      if (inFlight) return;
+      if (!force && document.visibilityState === 'hidden') return;
+
+      const now = Date.now();
+      if (!force && now - lastFetchAt < MIN_VISIBILITY_REFETCH_MS) return;
+
+      inFlight = true;
+      lastFetchAt = now;
       try {
-        const res = await fetch(`/infra/region?t=${Date.now()}`);
+        const res = await fetch('/infra/region', {
+          cache: 'no-store',
+          signal: controller.signal,
+        });
         if (res.ok) {
           const json: RegionData = await res.json();
           setData(json);
-          if (onRegionUpdate) onRegionUpdate(json);
+          onRegionUpdateRef.current?.(json);
         }
       } catch (err) {
-        console.error('Failed to fetch region:', err);
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Failed to fetch region:', err);
+        }
+      } finally {
+        inFlight = false;
       }
     };
 
-    fetchRegion();
-    const interval = setInterval(fetchRegion, 5000);
-    return () => clearInterval(interval);
-  }, [onRegionUpdate]);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void fetchRegion(false);
+      }
+    };
+
+    const handleFailoverTriggered = () => {
+      void fetchRegion(true);
+    };
+
+    void fetchRegion(true);
+    const interval = setInterval(() => {
+      void fetchRegion(false);
+    }, REGION_POLL_INTERVAL_MS);
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('infra-failover-triggered', handleFailoverTriggered);
+
+    return () => {
+      controller.abort();
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('infra-failover-triggered', handleFailoverTriggered);
+    };
+  }, []);
 
   const workerSnippet = `// live_edge_state: region="${data.region}" | pop="${data.pop}" | status="${data.status}"
 export interface Region {
