@@ -3,7 +3,6 @@ import net from 'net';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
-import { BackendServicesClient } from '@google-cloud/compute';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,13 +15,23 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-const computeClient = new BackendServicesClient();
+function getServiceRegion() {
+  const serviceName = process.env.K_SERVICE || 'local';
+  if (serviceName.endsWith('-us')) return 'us-central1';
+  if (serviceName.endsWith('-eu')) return 'europe-west4';
+  if (serviceName.endsWith('-as')) return 'asia-east1';
+  if (serviceName.endsWith('-af')) return 'africa-south1';
+  if (serviceName.endsWith('-au')) return 'australia-southeast2';
+  return 'local';
+}
 
-const PROJECT_ID = process.env.PROJECT_ID || 'project-117f1e92-119b-47be-a05';
-const BACKEND_SERVICE_NAME = process.env.BACKEND_SERVICE_NAME || 'jordan-xyz-run-backend';
-
-let currentStatus = 'Stable';
-let targetRegion = 'n/a';
+function getEdgePop(req) {
+  const cfRay = req.headers['cf-ray'];
+  if (typeof cfRay === 'string' && cfRay.includes('-')) {
+    return cfRay.split('-').pop().toLowerCase();
+  }
+  return 'direct-origin';
+}
 
 const WHOAMI_CACHE_TTL_MS = 10 * 60 * 1000;
 const WHOAMI_CACHE_MAX = 500;
@@ -139,37 +148,23 @@ app.get('/infra/whoami', async (req, res) => {
 });
 
 app.get('/infra/region', (req, res) => {
-  const serviceName = process.env.K_SERVICE || 'local';
-  let region = 'local';
-  if (serviceName.endsWith('-us')) region = 'us-central1';
-  if (serviceName.endsWith('-eu')) region = 'europe-west4';
-  if (serviceName.endsWith('-as')) region = 'asia-east1';
-  if (serviceName.endsWith('-af')) region = 'africa-south1';
-  if (serviceName.endsWith('-au')) region = 'australia-southeast2';
-  
   res.json({
-    region: region,
-    pop: 'lhr-c2',
-    status: currentStatus,
-    target: targetRegion
+    region: getServiceRegion(),
+    pop: getEdgePop(req),
+    status: 'Stable',
+    target: 'n/a'
   });
 });
 
 app.get('/infra/debug', (req, res) => {
   const serviceName = process.env.K_SERVICE || 'local';
-  let region = 'local';
-  if (serviceName.endsWith('-us')) region = 'us-central1';
-  if (serviceName.endsWith('-eu')) region = 'europe-west4';
-  if (serviceName.endsWith('-as')) region = 'asia-east1';
-  if (serviceName.endsWith('-af')) region = 'africa-south1';
-  if (serviceName.endsWith('-au')) region = 'australia-southeast2';
 
   res.json({
     service_name: serviceName,
     revision: process.env.K_REVISION || 'local-revision',
-    region: region,
-    status: currentStatus,
-    target: targetRegion,
+    region: getServiceRegion(),
+    status: 'Stable',
+    target: 'n/a',
     uptime: process.uptime(),
     memory_usage: process.memoryUsage(),
     timestamp: new Date().toISOString(),
@@ -190,68 +185,10 @@ app.get('/infra/debug', (req, res) => {
   });
 });
 
-app.post('/infra/failover', async (req, res) => {
-  try {
-    console.log('FAILOVER INITIATED: Mutating Global Infrastructure...');
-    currentStatus = 'EVACUATING';
-    
-    const [backendService] = await computeClient.get({
-      project: PROJECT_ID,
-      backendService: BACKEND_SERVICE_NAME
-    });
-
-    console.log('Current backends:', JSON.stringify(backendService.backends));
-
-    const negUS = `https://www.googleapis.com/compute/v1/projects/${PROJECT_ID}/regions/us-central1/networkEndpointGroups/failover-neg-us`;
-    const negEU = `https://www.googleapis.com/compute/v1/projects/${PROJECT_ID}/regions/europe-west4/networkEndpointGroups/failover-neg-eu`;
-
-    let newBackends = [];
-    const hasUS = backendService.backends.some(b => b.group === negUS);
-    
-    if (hasUS) {
-      console.log('Switching to EU...');
-      targetRegion = 'europe-west4';
-      newBackends = [{
-        group: negEU,
-        balancingMode: 'UTILIZATION',
-        capacityScaler: 1.0
-      }];
-    } else {
-      console.log('Switching to US...');
-      targetRegion = 'us-central1';
-      newBackends = [{
-        group: negUS,
-        balancingMode: 'UTILIZATION',
-        capacityScaler: 1.0
-      }];
-    }
-
-    backendService.backends = newBackends;
-
-    const [operation] = await computeClient.patch({
-      project: PROJECT_ID,
-      backendService: BACKEND_SERVICE_NAME,
-      backendServiceResource: backendService
-    });
-
-    console.log('Patch operation initiated:', operation.name);
-    currentStatus = 'PROPAGATING';
-
-    res.json({
-      message: 'Failover successful. Infrastructure mutation in progress.',
-      target_region: targetRegion,
-      eta: '2-5 minutes (CDN propagation)'
-    });
-
-    setTimeout(() => {
-      currentStatus = 'Stable';
-    }, 120000);
-
-  } catch (error) {
-    console.error('Failover failed:', error);
-    currentStatus = 'ERROR';
-    res.status(500).json({ error: 'Catastrophic failure during failover. Check IAM permissions.' });
-  }
+app.post('/infra/failover', (req, res) => {
+  res.status(501).json({
+    error: 'Edge failover is managed by chaos-edge-worker (Cloudflare Worker + KV) on jordanlenchitz.xyz.'
+  });
 });
 
 app.get('*', (req, res) => {
