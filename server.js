@@ -1,4 +1,5 @@
 import express from 'express';
+import net from 'net';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
@@ -22,6 +23,120 @@ const BACKEND_SERVICE_NAME = process.env.BACKEND_SERVICE_NAME || 'jordan-xyz-run
 
 let currentStatus = 'Stable';
 let targetRegion = 'n/a';
+
+const WHOAMI_CACHE_TTL_MS = 10 * 60 * 1000;
+const WHOAMI_CACHE_MAX = 500;
+const whoamiCache = new Map();
+
+function normalizeIp(raw) {
+  if (!raw || typeof raw !== 'string') return '';
+  let ip = raw.trim();
+  if (ip.startsWith('[') && ip.includes(']')) {
+    ip = ip.slice(1, ip.indexOf(']'));
+  } else if (ip.includes('.') && ip.includes(':') && net.isIP(ip) === 0) {
+    ip = ip.split(':')[0];
+  }
+  if (ip.startsWith('::ffff:')) {
+    ip = ip.slice(7);
+  }
+  return net.isIP(ip) ? ip : '';
+}
+
+function isPrivateOrLocalIp(ip) {
+  if (!ip) return true;
+  if (ip === '::1' || ip === '127.0.0.1') return true;
+  if (ip.startsWith('10.') || ip.startsWith('192.168.') || ip.startsWith('169.254.')) return true;
+  if (/^172\.(1[6-9]|2\d|3[0-1])\./.test(ip)) return true;
+  const lower = ip.toLowerCase();
+  return lower.startsWith('fc') || lower.startsWith('fd') || lower.startsWith('fe80:');
+}
+
+function extractClientIp(req) {
+  const candidates = [];
+  for (const header of ['cf-connecting-ip', 'true-client-ip', 'x-real-ip']) {
+    const val = req.headers[header];
+    if (typeof val === 'string') candidates.push(val);
+  }
+  const xff = req.headers['x-forwarded-for'];
+  if (typeof xff === 'string') {
+    for (const part of xff.split(',')) {
+      candidates.push(part);
+    }
+  }
+  if (req.socket?.remoteAddress) {
+    candidates.push(req.socket.remoteAddress);
+  }
+
+  const normalized = candidates.map(normalizeIp).filter(Boolean);
+  return normalized.find(ip => !isPrivateOrLocalIp(ip)) || normalized[0] || '';
+}
+
+async function lookupIpMeta(ip) {
+  if (!ip || isPrivateOrLocalIp(ip)) return {};
+
+  const cached = whoamiCache.get(ip);
+  if (cached && Date.now() - cached.ts < WHOAMI_CACHE_TTL_MS) {
+    return cached.data;
+  }
+
+  try {
+    const response = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, {
+      signal: AbortSignal.timeout(1800),
+    });
+    if (!response.ok) return {};
+    const json = await response.json();
+    if (!json || json.success === false) return {};
+
+    const rawAsn = json.connection?.asn;
+    const asn = rawAsn
+      ? String(rawAsn).toUpperCase().startsWith('AS')
+        ? String(rawAsn)
+        : `AS${rawAsn}`
+      : null;
+
+    const data = {
+      isp: json.connection?.isp || null,
+      org: json.connection?.org || null,
+      asn,
+      city: json.city || null,
+      region: json.region || null,
+      country: json.country || null,
+      postal: json.postal || null,
+      timezone: json.timezone?.id || null,
+    };
+
+    if (whoamiCache.size >= WHOAMI_CACHE_MAX) {
+      const oldestKey = whoamiCache.keys().next().value;
+      if (oldestKey) whoamiCache.delete(oldestKey);
+    }
+    whoamiCache.set(ip, { ts: Date.now(), data });
+    return data;
+  } catch {
+    return {};
+  }
+}
+
+app.get('/infra/whoami', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  const ip = extractClientIp(req);
+  const ipFamily = net.isIPv4(ip) ? 'IPv4' : net.isIPv6(ip) ? 'IPv6' : 'unknown';
+  const meta = await lookupIpMeta(ip);
+
+  res.json({
+    ip: ip || null,
+    ip_version: ipFamily,
+    isp: meta.isp || null,
+    org: meta.org || null,
+    asn: meta.asn || null,
+    city: meta.city || null,
+    region: meta.region || null,
+    country: meta.country || null,
+    postal: meta.postal || null,
+    timezone: meta.timezone || null,
+    cf_country: typeof req.headers['cf-ipcountry'] === 'string' ? req.headers['cf-ipcountry'] : null,
+    cf_ray: typeof req.headers['cf-ray'] === 'string' ? req.headers['cf-ray'] : null,
+  });
+});
 
 app.get('/infra/region', (req, res) => {
   const serviceName = process.env.K_SERVICE || 'local';

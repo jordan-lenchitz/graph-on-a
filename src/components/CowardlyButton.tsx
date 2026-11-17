@@ -1,14 +1,40 @@
 import React, { useRef, useEffect } from 'react';
 
-export const CowardlyButton: React.FC = () => {
+interface CowardlyButtonProps {
+  inViewport?: boolean;
+}
+
+export const CowardlyButton: React.FC<CowardlyButtonProps> = ({ inViewport = false }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const pos = useRef({ x: window.innerWidth / 2, y: window.innerHeight * 3.2 });
-  const vel = useRef({ x: 3, y: 2 }); 
+  const pos = useRef({ x: 0, y: 0 });
+  const vel = useRef({ x: 3, y: 2 });
   const mousePos = useRef({ x: -1000, y: -1000 });
 
   useEffect(() => {
+    if (inViewport) {
+      const maxInitialX = Math.max(40, window.innerWidth - 360);
+      const maxInitialY = Math.max(80, window.innerHeight * 0.35);
+      pos.current = {
+        x: 20 + Math.random() * maxInitialX,
+        y: 20 + Math.random() * maxInitialY,
+      };
+      const dirX = Math.random() < 0.5 ? -1 : 1;
+      const dirY = Math.random() < 0.5 ? -1 : 1;
+      vel.current = {
+        x: dirX * (2.5 + Math.random() * 2),
+        y: dirY * (2 + Math.random() * 2),
+      };
+    } else {
+      pos.current = { x: window.innerWidth / 2, y: window.innerHeight * 3.2 };
+      vel.current = { x: 3, y: 2 };
+    }
+  }, [inViewport]);
+
+  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      mousePos.current = { x: e.pageX, y: e.pageY };
+      mousePos.current = inViewport
+        ? { x: e.clientX, y: e.clientY }
+        : { x: e.pageX, y: e.pageY };
     };
     window.addEventListener('mousemove', handleMouseMove);
 
@@ -30,7 +56,7 @@ export const CowardlyButton: React.FC = () => {
       const dy = center.y - mousePos.current.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      if (dist < 250) {
+      if (dist > 0 && dist < 250) {
         const force = Math.max(0, 250 - dist) / 10;
         vel.current.x += (dx / dist) * force;
         vel.current.y += (dy / dist) * force;
@@ -49,23 +75,25 @@ export const CowardlyButton: React.FC = () => {
       pos.current.x += vel.current.x;
       pos.current.y += vel.current.y;
 
-      const minPageY = window.innerHeight * 3;
-      const maxPageY = window.innerHeight * 4;
+      const minPageY = inViewport ? 0 : window.innerHeight * 3;
+      const maxPageY = inViewport ? window.innerHeight : window.innerHeight * 4;
+      const maxAllowedX = Math.max(0, window.innerWidth - rect.width);
+      const maxAllowedY = Math.max(minPageY, maxPageY - rect.height);
 
       if (pos.current.x <= 0) {
         pos.current.x = 0;
-        vel.current.x *= -1;
-      } else if (pos.current.x + rect.width >= window.innerWidth) {
-        pos.current.x = window.innerWidth - rect.width;
-        vel.current.x *= -1;
+        vel.current.x = Math.abs(vel.current.x);
+      } else if (pos.current.x >= maxAllowedX) {
+        pos.current.x = maxAllowedX;
+        vel.current.x = -Math.abs(vel.current.x);
       }
 
       if (pos.current.y <= minPageY) {
         pos.current.y = minPageY;
-        vel.current.y *= -1;
-      } else if (pos.current.y + rect.height >= maxPageY) {
-        pos.current.y = maxPageY - rect.height;
-        vel.current.y *= -1;
+        vel.current.y = Math.abs(vel.current.y);
+      } else if (pos.current.y >= maxAllowedY) {
+        pos.current.y = maxAllowedY;
+        vel.current.y = -Math.abs(vel.current.y);
       }
 
       buttonRef.current.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px)`;
@@ -79,17 +107,18 @@ export const CowardlyButton: React.FC = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [inViewport]);
 
   return (
     <button
       ref={buttonRef}
       style={{
-        position: 'absolute',
+        position: inViewport ? 'fixed' : 'absolute',
         top: 0,
         left: 0,
         padding: '1rem 2rem',
-        fontSize: '1.5rem',
+        fontSize: 'clamp(0.85rem, 2.5vw, 1.5rem)',
+        maxWidth: 'calc(100vw - 16px)',
         fontWeight: 'bold',
         color: 'black',
         backgroundColor: 'red',

@@ -1,11 +1,23 @@
 .nerd-home {
   font-family: monospace;
   width: 100vw;
-  min-height: 400vh;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   background-color: white;
+  transition: background-color 0.3s ease;
+}
+
+.nerd-home.nerd-home-panic {
+  background-color: #fff2f2;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 0, 0, 0.04) 0px,
+    rgba(255, 0, 0, 0.04) 2px,
+    transparent 2px,
+    transparent 6px
+  );
 }
 
 .recursive-container {

@@ -74,6 +74,9 @@ export const NerdHome: React.FC = () => {
   const [showSondheim, setShowSondheim] = useState(false);
   const [lifeTheme, setLifeTheme] = useState(() => initialUrlParams.theme || 'gt.m');
   const [slopSpeed, setSlopSpeed] = useState(15);
+  const [isPanicked, setIsPanicked] = useState(false);
+  const [cowardlyIds, setCowardlyIds] = useState<number[]>([]);
+  const nextCowardlyIdRef = useRef(1);
   const [initialCmd] = useState<string | undefined>(() => initialUrlParams.cmd || undefined);
   const [isStaticMode, setIsStaticMode] = useState(() => initialUrlParams.isStatic);
 
@@ -112,6 +115,28 @@ export const NerdHome: React.FC = () => {
     setShowTerminal(false);
     resetVmState();
   }, [resetVmState]);
+
+  const handleSpawnCowardly = useCallback(() => {
+    const nextId = nextCowardlyIdRef.current++;
+    setCowardlyIds(prev => (prev.length >= 8 ? prev : [...prev, nextId]));
+  }, []);
+
+  const handleContainCowardly = useCallback(() => {
+    setCowardlyIds([]);
+  }, []);
+
+  const handleOsiPanic = useCallback(() => {
+    setIsPanicked(true);
+    setCowardlyIds(prev => {
+      if (prev.length > 0) return prev;
+      return [nextCowardlyIdRef.current++];
+    });
+  }, []);
+
+  const handleRestoreAfterPanic = useCallback(() => {
+    setIsPanicked(false);
+    setCowardlyIds([]);
+  }, []);
 
   const toggleTerminal = useCallback(() => {
     setShowTerminal(prev => {
@@ -324,11 +349,13 @@ export const NerdHome: React.FC = () => {
   }
 
   return (
-    <div className="nerd-home">
+    <div className={`nerd-home ${isPanicked ? 'nerd-home-panic' : ''}`}>
 
-      <BouncingSlop speed={slopSpeed} />
+      <BouncingSlop speed={slopSpeed} isPanic={isPanicked} />
 
-      <CowardlyButton />
+      {cowardlyIds.map(id => (
+        <CowardlyButton key={id} inViewport />
+      ))}
 
       {showTerminal && (
         <Suspense fallback={<div className="loading-overlay">loading terminal...</div>}>
@@ -340,6 +367,10 @@ export const NerdHome: React.FC = () => {
             onShowOpenStack={() => setShowOpenStack(true)}
             onShowHorse={() => setShowHorse(true)}
             onShowSondheim={() => setShowSondheim(true)}
+            onOsiPanic={handleOsiPanic}
+            onRestoreAfterPanic={handleRestoreAfterPanic}
+            onSpawnCowardly={handleSpawnCowardly}
+            onContainCowardly={handleContainCowardly}
             initialCommand={initialCmd}
           />
         </Suspense>

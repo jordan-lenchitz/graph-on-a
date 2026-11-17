@@ -18,6 +18,10 @@ interface CloudShellProps {
   onShowOpenStack?: () => void;
   onShowHorse?: () => void;
   onShowSondheim?: () => void;
+  onOsiPanic?: () => void;
+  onRestoreAfterPanic?: () => void;
+  onSpawnCowardly?: () => void;
+  onContainCowardly?: () => void;
   initialCommand?: string;
 }
 
@@ -72,7 +76,98 @@ function resolveQuineFile(query?: string) {
 
 type CommandHandler = (args: string[], print: (content: React.ReactNode) => void, finish: () => void) => void | Promise<void>;
 
-export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, onVmStart, onShowOsi, onShowOpenStack, onShowHorse, onShowSondheim, initialCommand }) => {
+interface WhoamiServerResponse {
+  ip: string | null;
+  ip_version: 'IPv4' | 'IPv6' | 'unknown';
+  isp: string | null;
+  org: string | null;
+  asn: string | null;
+  city: string | null;
+  region: string | null;
+  country: string | null;
+  postal: string | null;
+  timezone: string | null;
+  cf_country: string | null;
+  cf_ray: string | null;
+}
+
+interface NavigatorUADataLike {
+  brands?: Array<{ brand: string; version: string }>;
+  mobile?: boolean;
+  platform?: string;
+}
+
+async function fetchJsonWithTimeout<T>(url: string, timeoutMs: number): Promise<T | null> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function detectClientEnvironment() {
+  const ua = navigator.userAgent || 'unknown';
+  const uaData = (navigator as Navigator & { userAgentData?: NavigatorUADataLike }).userAgentData;
+
+  let browser = 'unknown browser';
+  if (/Edg\//i.test(ua)) browser = 'Microsoft Edge';
+  else if (/OPR\/|Opera/i.test(ua)) browser = 'Opera';
+  else if (/Firefox\//i.test(ua)) browser = 'Mozilla Firefox';
+  else if (/Chrome\/|CriOS\//i.test(ua)) browser = 'Google Chrome / Chromium';
+  else if (/Safari\//i.test(ua)) browser = 'Apple Safari';
+
+  const brandHint = uaData?.brands?.find(
+    b => !/not.?a.?brand/i.test(b.brand) && !/chromium/i.test(b.brand)
+  );
+  if (brandHint) {
+    browser = `${brandHint.brand} ${brandHint.version}`;
+  }
+
+  let os = uaData?.platform || '';
+  if (!os) {
+    if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
+    else if (/Android/i.test(ua)) os = 'Android';
+    else if (/CrOS/i.test(ua)) os = 'ChromeOS';
+    else if (/Windows/i.test(ua)) os = 'Windows';
+    else if (/Mac OS X|Macintosh/i.test(ua)) os = 'macOS';
+    else if (/Linux/i.test(ua)) os = 'Linux';
+    else os = 'unknown OS';
+  }
+
+  let formFactor: 'mobile' | 'tablet' | 'desktop' = 'desktop';
+  if (/iPad|Tablet/i.test(ua) || (/Android/i.test(ua) && !/Mobile/i.test(ua))) {
+    formFactor = 'tablet';
+  } else if (uaData?.mobile || /Mobi|iPhone|iPod|Android/i.test(ua)) {
+    formFactor = 'mobile';
+  }
+
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown';
+  const language = navigator.language || 'unknown';
+  const viewport = `${window.innerWidth}x${window.innerHeight}`;
+
+  return { ua, browser, os, formFactor, timezone, language, viewport };
+}
+
+export const CloudShell: React.FC<CloudShellProps> = ({
+  onClose,
+  onSlopChange,
+  onVmStart,
+  onShowOsi,
+  onShowOpenStack,
+  onShowHorse,
+  onShowSondheim,
+  onOsiPanic,
+  onRestoreAfterPanic,
+  onSpawnCowardly,
+  onContainCowardly,
+  initialCommand,
+}) => {
   const [history, setHistory] = useState<(React.ReactNode)[]>([
     'welcome to the jordan lenchitz cloud shell.',
     '---------------------------------------------------------------------------------',
@@ -98,7 +193,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
   const [isWaitingForPassword, setIsWaitingForPassword] = useState(false);
   const [onPasswordSubmit, setOnPasswordSubmit] = useState<((val: string) => void) | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
 
   const emitVmOffline = () => {
     window.postMessage({
@@ -119,6 +214,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
   useEffect(() => {
     return () => {
       emitVmOffline();
+      document.body.classList.remove('panic-shake');
     };
   }, []);
 
@@ -165,7 +261,12 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
   }, [isExecuting, isWaitingForPassword]);
 
   useEffect(() => {
-    if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (bodyRef.current) {
+      bodyRef.current.scrollTo({
+        top: bodyRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }, [history]);
 
   const startDrag = (startY: number) => {
@@ -212,29 +313,40 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
 
   const commands: Record<string, CommandHandler> = {
     help: (_args, print, finish) => {
+      const helpItems: Array<{ cmd: string; color: string; desc: string }> = [
+        { cmd: 'quine [module]', color: '#00ffff', desc: 'outputs and sha257sums the live running source code (self/vm/chaos/home/sha257).' },
+        { cmd: 'ls / cat <file>', color: '#7fff00', desc: 'lets you inspect the live virtual quine filesystem.' },
+        { cmd: 'sondheim', color: '#c084fc', desc: 'summons the absurdist stupid hub v3 (sondheim inside).' },
+        { cmd: 'slop_hop', color: '#f472b6', desc: 'summons and jumps straight to the sondheim stupid hub.' },
+        { cmd: 'battle_pass', color: '#facc15', desc: 'checks your current season progress (greg approved).' },
+        { cmd: 'osi', color: '#38bdf8', desc: 'spawns the colorful 7 layer osi absurdity panel.' },
+        { cmd: 'telemetry', color: '#4ade80', desc: 'opens the openstack cluster telemetry debug window.' },
+        { cmd: 'vm', color: '#a3e635', desc: 'provisions an ephemeral webassembly vm.' },
+        { cmd: 'horse', color: '#fb923c', desc: 'fires up the equine categorization engine (100% urine free).' },
+        { cmd: 'cowardly', color: '#f87171', desc: 'spawns the cowardly button in the viewport (or "cowardly clear" to contain it again).' },
+        { cmd: 'slopctl', color: '#2dd4bf', desc: 'tunes the recursive slop engine collision physics.' },
+        { cmd: 'quota_smash', color: '#fbbf24', desc: 'maximizes gcp billing via recursive serverless invocations.' },
+        { cmd: 'osi_panic', color: '#ff5252', desc: 'simulates bgp route flapping directly in the virtual dom.' },
+        { cmd: 'tritone_sub', color: '#e879f9', desc: 'calculates the optimal chromatic tritone substitution vamp.' },
+        { cmd: 'kernel_leak', color: '#ef4444', desc: 'drains browser memory straight into the console for no reason.' },
+        { cmd: 'cloud_seed', color: '#60a5fa', desc: 'spins up a weather powered load balancer.' },
+        { cmd: 'neural_slop', color: '#a78bfa', desc: 'fine tunes a 1 parameter llm on current page rotation.' },
+        { cmd: 'garbage_collect', color: '#34d399', desc: 'sweeps the recursive layers for loose bits.' },
+        { cmd: 'void_ping', color: '#818cf8', desc: 'sends an icmp packet to a nonexistent dimension.' },
+        { cmd: 'entropy_sync', color: '#22d3ee', desc: 'syncs jitter with the cosmic microwave background.' },
+        { cmd: 'root_access', color: '#fdba74', desc: 'grants full administrative privileges over a virtual toaster.' },
+      ];
       print([
-        'available commands:',
-        '  quine [module]   - output & sha257sum the live running source code (self/vm/chaos/home/sha257).',
-        '  ls / cat <file>  - inspect the live virtual quine filesystem.',
-        '  sondheim         - summon the absurdist stupid hub v3 (sondheim inside).',
-        '  slop_hop         - summon and jump to the sondheim stupid hub.',
-        '  battle_pass      - check your current season progress (greg approved).',
-        '  osi              - spawn the colorful 7-layer osi absurdity panel.',
-        '  telemetry        - spawn the openstack cluster telemetry debug window.',
-        '  vm               - provision an ephemeral webassembly vm.',
-        '  horse            - initialize the equine categorization engine (100% urine free).',
-        '  slopctl          - tune the recursive slop engine collision physics.',
-        '  quota_smash      - maximize gcp billing via recursive serverless invocations.',
-        '  osi_panic        - simulate bgp route flapping directly in the virtual dom.',
-        '  tritone_sub      - calculate the optimal chromatic tritone substitution vamp.',
-        '  kernel_leak      - drain browser memory directly into the console for no reason.',
-        '  cloud_seed       - initialize a weather-based load balancer.',
-        '  neural_slop      - fine-tune a 1-parameter llm on current page rotation.',
-        '  garbage_collect  - manually sweep the recursive layers for loose bits.',
-        '  void_ping        - send an icmp packet to a non-existent dimension.',
-        '  entropy_sync     - synchronize jitter with the cosmic microwave background.',
-        '  root_access      - gain full administrative privileges over a virtual toaster.'
-      ].map((line, i) => <div key={i}>{line}</div>));
+        <div key="header">available commands:</div>,
+        ...helpItems.map(({ cmd, color, desc }) => (
+          <div key={cmd} style={{ paddingLeft: '12px' }}>
+            <span style={{ color, fontWeight: 'bold', display: 'inline-block', minWidth: '17ch', marginRight: '1ch' }}>
+              {cmd}
+            </span>
+            <span>{desc}</span>
+          </div>
+        )),
+      ]);
       finish();
     },
     ls: (_args, print, finish) => {
@@ -338,6 +450,23 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       print(<div className="text-orange">success: equine categorization engine v2000 active. (100% urine free)</div>);
       finish();
     },
+    cowardly: async (args, print, finish) => {
+      const sub = args[0]?.toLowerCase();
+      if (sub === 'clear' || sub === 'contain' || sub === 'off' || sub === 'reset') {
+        if (onContainCowardly) onContainCowardly();
+        print(<div className="text-green">[cowardly] containment field restored. cowardly button(s) re-contained.</div>);
+        finish();
+        return;
+      }
+      print('[cowardly] disabling containment field...');
+      await new Promise(r => setTimeout(r, 300));
+      if (onSpawnCowardly) onSpawnCowardly();
+      print(<div className="text-red">warning: cowardly button containment breached!</div>);
+      print(<div className="text-orange">success: "CATCH ME IFF YOU CATCH ME AND" is loose in the viewport. (run "cowardly clear" to re-contain)</div>);
+      finish();
+    },
+    spawn_cowardly: async (args, print, finish) => commands.cowardly(args, print, finish),
+    cowardly_button: async (args, print, finish) => commands.cowardly(args, print, finish),
     osi_panic: async (_args, print, finish) => {
       print('[osi_panic] CRITICAL: BGP ROUTE FLAPPING DETECTED ON LAYER 3.');
       await new Promise(r => setTimeout(r, 300));
@@ -345,6 +474,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       print('recursive loop detected in vlan 42.');
       
       document.body.classList.add('panic-shake');
+      if (onOsiPanic) onOsiPanic();
       
       const flood = [
         'bgp_update: withdrawal 10.0.0.0/8 as_path: {666, 1337}',
@@ -364,6 +494,20 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
       await new Promise(r => setTimeout(r, 1000));
       document.body.classList.remove('panic-shake');
       print(<div className="text-green">recovery: bgp route dampening applied. virtual dom stabilized.</div>);
+      print(<div className="text-cyan">tip: run "restore_after_panic" to reset the ui / background and re-contain the cowardly button.</div>);
+      finish();
+    },
+    restore_after_panic: async (_args, print, finish) => {
+      print('[restore_after_panic] re-establishing cowardly button containment...');
+      await new Promise(r => setTimeout(r, 200));
+      document.body.classList.remove('panic-shake');
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      if (onRestoreAfterPanic) onRestoreAfterPanic();
+      print('[restore_after_panic] clearing panic slopn\'t marquee & background layers...');
+      await new Promise(r => setTimeout(r, 200));
+      print(<div className="text-green">success: ui and background restored to nominal state.</div>);
       finish();
     },
     sondheim: async (_args, print, finish) => {
@@ -582,6 +726,67 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
         `}</pre>);
       print('toast_level: burnt (default)');
       finish();
+    },
+
+    whoami: async (_args, print, finish) => {
+      print(<div className="text-green" style={{ fontWeight: 'bold' }}>website_visitor</div>);
+      print(<div className="text-muted">probing edge headers, ip stack, and client fingerprint...</div>);
+
+      const [serverInfo, v4Probe, v6Probe] = await Promise.all([
+        fetchJsonWithTimeout<WhoamiServerResponse>('/infra/whoami', 2500),
+        fetchJsonWithTimeout<{ ip?: string }>('https://api.ipify.org?format=json', 1500),
+        fetchJsonWithTimeout<{ ip?: string }>('https://api6.ipify.org?format=json', 1500),
+      ]);
+
+      const ipv4 = v4Probe?.ip || (serverInfo?.ip_version === 'IPv4' ? serverInfo.ip : null);
+      const ipv6 = v6Probe?.ip || (serverInfo?.ip_version === 'IPv6' ? serverInfo.ip : null);
+
+      let stackLabel = 'unknown (masked or unreachable)';
+      if (ipv4 && ipv6) stackLabel = 'both (dual-stack IPv4 + IPv6)';
+      else if (ipv4) stackLabel = 'v4 (IPv4 only)';
+      else if (ipv6) stackLabel = 'v6 (IPv6 only)';
+
+      const ipDisplay = [ipv4, ipv6].filter(Boolean).join(' | ') || serverInfo?.ip || 'unavailable';
+
+      const ispDisplay = [serverInfo?.isp, serverInfo?.org && serverInfo.org !== serverInfo.isp ? serverInfo.org : null]
+        .filter(Boolean)
+        .join(' / ') || 'unavailable';
+      const asnDisplay = serverInfo?.asn || 'unavailable';
+
+      const geoParts = [
+        serverInfo?.city,
+        serverInfo?.region,
+        serverInfo?.country || serverInfo?.cf_country,
+      ].filter(Boolean);
+      const geoDisplay = geoParts.length > 0 ? geoParts.join(', ') : 'unavailable';
+      const zipDisplay = serverInfo?.postal || 'unavailable';
+
+      const client = detectClientEnvironment();
+      const rows: Array<{ label: string; value: string; wrap?: boolean }> = [
+        { label: 'ip address:', value: `${ipDisplay} (stack: ${stackLabel})` },
+        { label: 'internet provider:', value: `${ispDisplay} (ASN: ${asnDisplay})` },
+        { label: 'location / zip:', value: `${geoDisplay} | zip: ${zipDisplay}` },
+        { label: 'visiting from:', value: `${client.browser} on ${client.os} (${client.formFactor})` },
+        { label: 'user-agent:', value: client.ua, wrap: true },
+        { label: 'locale / time zone / viewport:', value: `${client.language} | ${serverInfo?.timezone || client.timezone} | ${client.viewport}` },
+      ];
+
+      print(
+        <div style={{ lineHeight: 1.55, marginTop: '4px' }}>
+          <div className="text-cyan">
+            as far as we can tell (so possibly just what your VPN wants us to believe):
+          </div>
+          <div style={{ paddingLeft: '12px' }}>
+            {rows.map(({ label, value, wrap }) => (
+              <div key={label}>
+                <span className="text-orange">{label}</span>{' '}
+                <span style={wrap ? { wordBreak: 'break-all' } : undefined}>{value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+      finish();
     }
   };
 
@@ -696,7 +901,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
           </button>
         </div>
       </div>
-      <div className="cloud-shell-body" onClick={() => !isExecuting && inputRef.current?.focus()}>
+      <div ref={bodyRef} className="cloud-shell-body" onClick={() => !isExecuting && inputRef.current?.focus()}>
         {history.map((line, i) => (
           <div key={i}>{typeof line === 'string' ? <div>{line}</div> : line}</div>
         ))}
@@ -715,7 +920,6 @@ export const CloudShell: React.FC<CloudShellProps> = ({ onClose, onSlopChange, o
           </div>
         )}
         {isExecuting && !isWaitingForPassword && <div className="cursor-blink">█</div>}
-        <div ref={bottomRef} />
       </div>
     </div>
   );
