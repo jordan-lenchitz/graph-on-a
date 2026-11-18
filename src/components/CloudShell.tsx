@@ -22,6 +22,10 @@ interface CloudShellProps {
   onRestoreAfterPanic?: () => void;
   onSpawnCowardly?: () => void;
   onContainCowardly?: () => void;
+  onShowRecursive?: () => void;
+  onClearRecursive?: () => void;
+  onShowBouncingSlop?: () => void;
+  onHideBouncingSlop?: () => void;
   initialCommand?: string;
 }
 
@@ -166,6 +170,10 @@ export const CloudShell: React.FC<CloudShellProps> = ({
   onRestoreAfterPanic,
   onSpawnCowardly,
   onContainCowardly,
+  onShowRecursive,
+  onClearRecursive,
+  onShowBouncingSlop,
+  onHideBouncingSlop,
   initialCommand,
 }) => {
   const [history, setHistory] = useState<(React.ReactNode)[]>([
@@ -324,7 +332,9 @@ export const CloudShell: React.FC<CloudShellProps> = ({
         { cmd: 'vm', color: '#a3e635', desc: 'provisions an ephemeral webassembly vm.' },
         { cmd: 'horse', color: '#fb923c', desc: 'fires up the equine categorization engine (100% urine free).' },
         { cmd: 'cowardly', color: '#f87171', desc: 'spawns the cowardly button in the viewport (or "cowardly clear" to contain it again).' },
-        { cmd: 'slopctl', color: '#2dd4bf', desc: 'tunes the recursive slop engine collision physics.' },
+        { cmd: 'recursive', color: '#38bdf8', desc: 'spawns the 15-layer fractal recursive background (or "recursive clear" to collapse).' },
+        { cmd: 'sliding_slop', color: '#fb7185', desc: 'summons the sliding slopn\'t marquee in the viewport (or "sliding_slop clear" to banish).' },
+        { cmd: 'slopctl', color: '#2dd4bf', desc: 'tunes the sliding slopn\'t marquee speed.' },
         { cmd: 'quota_smash', color: '#fbbf24', desc: 'maximizes gcp billing via recursive serverless invocations.' },
         { cmd: 'osi_panic', color: '#ff5252', desc: 'simulates bgp route flapping directly in the virtual dom.' },
         { cmd: 'tritone_sub', color: '#e879f9', desc: 'calculates the optimal chromatic tritone substitution vamp.' },
@@ -467,6 +477,39 @@ export const CloudShell: React.FC<CloudShellProps> = ({
     },
     spawn_cowardly: async (args, print, finish) => commands.cowardly(args, print, finish),
     cowardly_button: async (args, print, finish) => commands.cowardly(args, print, finish),
+    recursive: async (args, print, finish) => {
+      const sub = args[0]?.toLowerCase();
+      if (sub === 'clear' || sub === 'contain' || sub === 'off' || sub === 'reset') {
+        if (onClearRecursive) onClearRecursive();
+        print(<div className="text-green">[recursive] fractal layers collapsed. recursion depth reset to 0/15.</div>);
+        finish();
+        return;
+      }
+      print('[recursive] unfolding 15-layer spatial recursion matrix...');
+      await new Promise(r => setTimeout(r, 300));
+      if (onShowRecursive) onShowRecursive();
+      print(<div className="text-cyan">success: recursive background active (hover layers to increase recursion depth; run "recursive clear" to collapse).</div>);
+      finish();
+    },
+    recursivesite: async (args, print, finish) => commands.recursive(args, print, finish),
+    recursive_site: async (args, print, finish) => commands.recursive(args, print, finish),
+    sliding_slop: async (args, print, finish) => {
+      const sub = args[0]?.toLowerCase();
+      if (sub === 'clear' || sub === 'contain' || sub === 'off' || sub === 'reset') {
+        if (onHideBouncingSlop) onHideBouncingSlop();
+        print(<div className="text-green">[sliding_slop] slopn't marquee banished back to 300vh.</div>);
+        finish();
+        return;
+      }
+      print('[sliding_slop] elevating slopn\'t marquee from 300vh into active viewport...');
+      await new Promise(r => setTimeout(r, 300));
+      if (onShowBouncingSlop) onShowBouncingSlop();
+      print(<div className="text-orange">success: sliding slopn't marquee active at 18vh. (use "slopctl &lt;sec&gt;" to tune speed or "sliding_slop clear" to banish)</div>);
+      finish();
+    },
+    slidingslop: async (args, print, finish) => commands.sliding_slop(args, print, finish),
+    bouncing_slop: async (args, print, finish) => commands.sliding_slop(args, print, finish),
+    bouncingslop: async (args, print, finish) => commands.sliding_slop(args, print, finish),
     osi_panic: async (_args, print, finish) => {
       print('[osi_panic] CRITICAL: BGP ROUTE FLAPPING DETECTED ON LAYER 3.');
       await new Promise(r => setTimeout(r, 300));
@@ -616,6 +659,7 @@ export const CloudShell: React.FC<CloudShellProps> = ({
         print('current slop collision physics tuned to 15s/rotation.');
       } else {
         if (onSlopChange) onSlopChange(speed);
+        if (onShowBouncingSlop) onShowBouncingSlop();
         print(`[slop] collision physics re-tuned to ${speed}s. recursion stability: nominal.`);
       }
       finish();

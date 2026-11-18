@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import { CowardlyButton } from './components/CowardlyButton';
+import { RecursiveSite } from './components/RecursiveSite';
 import { BouncingSlop } from './components/BouncingSlop';
 import { DraggablePanel } from './components/DraggablePanel';
 import { RealGrafanaPanel } from './components/RealGrafanaPanel';
@@ -65,7 +66,9 @@ function getInitialUrlParams() {
 
 export const NerdHome: React.FC = () => {
   const [initialUrlParams] = useState(getInitialUrlParams);
-  const [maxDepth] = useState(0);
+  const [maxDepth, setMaxDepth] = useState(0);
+  const [showRecursive, setShowRecursive] = useState(false);
+  const [showBouncingSlop, setShowBouncingSlop] = useState(false);
   const [showTerminal, setShowTerminal] = useState(() => Boolean(initialUrlParams.cmd));
   const [showLifeSlop, setShowLifeSlop] = useState(() => Boolean(initialUrlParams.theme));
   const [showOsi, setShowOsi] = useState(false);
@@ -136,6 +139,16 @@ export const NerdHome: React.FC = () => {
   const handleRestoreAfterPanic = useCallback(() => {
     setIsPanicked(false);
     setCowardlyIds([]);
+    setShowBouncingSlop(false);
+  }, []);
+
+  const handleDepthReach = useCallback((d: number) => {
+    setMaxDepth(prev => Math.max(prev, d));
+  }, []);
+
+  const handleClearRecursive = useCallback(() => {
+    setShowRecursive(false);
+    setMaxDepth(0);
   }, []);
 
   const toggleTerminal = useCallback(() => {
@@ -350,8 +363,16 @@ export const NerdHome: React.FC = () => {
 
   return (
     <div className={`nerd-home ${isPanicked ? 'nerd-home-panic' : ''}`}>
+      {showRecursive && (
+        <div className="recursive-container">
+          <RecursiveSite
+            maxDepth={window.innerWidth < 768 ? 6 : 15}
+            onDepthReach={handleDepthReach}
+          />
+        </div>
+      )}
 
-      <BouncingSlop speed={slopSpeed} isPanic={isPanicked} />
+      <BouncingSlop speed={slopSpeed} isPanic={isPanicked} inViewport={showBouncingSlop} />
 
       {cowardlyIds.map(id => (
         <CowardlyButton key={id} inViewport />
@@ -371,6 +392,10 @@ export const NerdHome: React.FC = () => {
             onRestoreAfterPanic={handleRestoreAfterPanic}
             onSpawnCowardly={handleSpawnCowardly}
             onContainCowardly={handleContainCowardly}
+            onShowRecursive={() => setShowRecursive(true)}
+            onClearRecursive={handleClearRecursive}
+            onShowBouncingSlop={() => setShowBouncingSlop(true)}
+            onHideBouncingSlop={() => setShowBouncingSlop(false)}
             initialCommand={initialCmd}
           />
         </Suspense>
